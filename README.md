@@ -21,7 +21,7 @@ Phím `1`–`5` chọn đơn vị, `0` là gỡ. Trong câu ôn, phím `1`–`4`
 ## Đơn vị
 
 - **Đèn kiến thức** — sinh mặt trời.
-- **Tường chung** — chắn một hàng, máu dày (lợi ích chung).
+- **Tường chung** — chắn một hàng, máu dày (lợi ích chung). Đặt bên phải đơn vị bắn, phía virus tới, để đạn vẫn trúng.
 - **Phản biện** — bắn virus cùng hàng.
 - **Cầu đồng** — đạn làm virus chậm lại.
 - **Mốc ranh** — đòn nặng, dành cho mục tiêu máu dày.

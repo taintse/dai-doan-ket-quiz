@@ -253,7 +253,7 @@
     <p class="deck">Cộng đồng số đang bị virus chia rẽ tấn công từ bên phải. Hãy đặt đơn vị giữ mạch, thu mặt trời, và trả lời câu ôn — không để chúng chạm cột sáng bên trái.</p>
     <ol class="steps">
       <li>Chọn đơn vị, chạm một ô (hoặc phím mũi tên rồi Enter).</li>
-      <li>Ba sóng. Virus lọt tới cột cộng đồng sẽ làm giảm đoàn kết.</li>
+      <li>Đặt tường bên phải đơn vị bắn. Ba sóng. Virus chạm cột cộng đồng làm giảm đoàn kết.</li>
       <li>Câu ôn đúng được nhiều mặt trời. Đèn kiến thức sinh mặt trời đều.</li>
     </ol>
     <div class="field">
@@ -310,8 +310,8 @@
     prep: 18,
     skyEvery: 11,
     skyValue: 25,
-    quizFirst: 14,
-    quizEvery: 30,
+    quizFirst: 42,
+    quizEvery: 36,
     quizReward: 80,
     lampEvery: 12,
     lampValue: 25
@@ -319,7 +319,7 @@
 
   var UNITS = [
     { id: "den", name: "Đèn kiến thức", cost: 50, cd: 6, hp: 90, blurb: "Sinh mặt trời theo thời gian. Nên đặt sớm." },
-    { id: "tuong", name: "Tường chung", cost: 50, cd: 8, hp: 540, blurb: "Chắn một hàng. Máu dày, không bắn — như lợi ích chung đứng chắn." },
+    { id: "tuong", name: "Tường chung", cost: 50, cd: 8, hp: 540, blurb: "Chắn một hàng, máu dày. Đặt bên phải đơn vị bắn — phía virus tới." },
     { id: "phan", name: "Phản biện", cost: 100, cd: 5, hp: 130, rate: 1.32, dmg: 24, shot: 6.2, blurb: "Bắn virus cùng hàng." },
     { id: "cau", name: "Cầu đồng", cost: 150, cd: 8, hp: 120, rate: 1.65, dmg: 16, shot: 5.1, slow: 2.8, blurb: "Đạn làm virus chậm lại, không xóa chúng ngay." },
     { id: "moc", name: "Mốc ranh", cost: 200, cd: 12, hp: 150, rate: 2.45, dmg: 78, shot: 4.4, blurb: "Đòn nặng, bắn chậm. Dành cho mục tiêu máu dày." }
@@ -796,31 +796,37 @@
         if (!unit.dmg) continue;
         p.cool -= dt;
         if (p.cool > 0) continue;
-        var target = frontEnemy(r, p.c - 0.05);
+        var target = acquireTarget(r, p.c);
         if (!target) continue;
         p.cool = unit.rate;
+        var dir = target.x >= p.c ? 1 : -1;
         shots.push({
           row: r,
-          x: p.c + 0.62,
-          speed: unit.shot,
+          x: p.c + 0.62 * dir,
+          speed: unit.shot * dir,
           dmg: unit.dmg,
           slow: unit.slow || 0,
           kind: p.id,
           dead: false
         });
-        burst(p.c + 0.7, p.r, p.id === "moc" ? "#e0b85a" : "#8fd0c8", 3);
+        burst(p.c + 0.7 * dir, p.r, p.id === "moc" ? "#e0b85a" : "#8fd0c8", 3);
       }
     }
   }
 
-  function frontEnemy(row, minX) {
-    var best = null;
+  function acquireTarget(row, fromX) {
+    var right = null;
+    var left = null;
     for (var i = 0; i < enemies.length; i++) {
       var e = enemies[i];
-      if (e.dead || e.row !== row || e.x < minX) continue;
-      if (!best || e.x < best.x) best = e;
+      if (e.dead || e.row !== row) continue;
+      if (e.x >= fromX - 0.05) {
+        if (!right || e.x < right.x) right = e;
+      } else if (!left || e.x > left.x) {
+        left = e;
+      }
     }
-    return best;
+    return right || left;
   }
 
   function updateShots(dt) {
@@ -828,13 +834,14 @@
       var p = shots[i];
       if (p.dead) continue;
       var next = p.x + p.speed * dt;
+      var lo = Math.min(p.x, next) - 0.2;
+      var hi = Math.max(p.x, next) + 0.2;
       var target = null;
       for (var j = 0; j < enemies.length; j++) {
         var e = enemies[j];
-        if (e.dead || e.row !== p.row || e.x < p.x - 0.25) continue;
-        if (next + 0.2 >= e.x && p.x - 0.15 <= e.x + 0.35) {
-          if (!target || e.x < target.x) target = e;
-        }
+        if (e.dead || e.row !== p.row) continue;
+        if (e.x < lo - 0.15 || e.x > hi + 0.35) continue;
+        if (!target || Math.abs(e.x - p.x) < Math.abs(target.x - p.x)) target = e;
       }
       if (target) {
         hurtEnemy(target, p.dmg, p.kind);
@@ -842,7 +849,7 @@
         p.dead = true;
       } else {
         p.x = next;
-        if (p.x > COLS + 1.2) p.dead = true;
+        if (p.x < -1.2 || p.x > COLS + 1.2) p.dead = true;
       }
     }
   }
@@ -1060,6 +1067,15 @@
     quiz = null;
     document.getElementById("quiz").classList.add("hidden");
     document.getElementById("quiz").innerHTML = "";
+    if (!countPlants()) pushToast("Chọn đơn vị ở hàng dưới, rồi chạm một ô trên mạch.");
+  }
+
+  function countPlants() {
+    var n = 0;
+    for (var r = 0; r < ROWS; r++) {
+      for (var c = 0; c < COLS; c++) if (grid[r][c]) n += 1;
+    }
+    return n;
   }
 
   function finish(didWin) {
@@ -1321,10 +1337,14 @@
     } else if (p.id === "phan") {
       ctx.fillStyle = "#14756c";
       ctx.beginPath();
-      ctx.arc(-s * 0.04, 0, s * 0.2, 0, Math.PI * 2);
+      ctx.arc(-s * 0.12, 0, s * 0.18, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#d7fff8";
+      roundRect(ctx, -s * 0.02, -s * 0.055, s * 0.36, s * 0.11, 3);
       ctx.fill();
       ctx.fillStyle = "#8fd0c8";
-      roundRect(ctx, s * 0.02, -s * 0.06, s * 0.22, s * 0.12, 4);
+      ctx.beginPath();
+      ctx.arc(-s * 0.16, -s * 0.05, s * 0.04, 0, Math.PI * 2);
       ctx.fill();
     } else if (p.id === "cau") {
       ctx.strokeStyle = "#e0b85a";
@@ -1832,6 +1852,9 @@
             phase: phase,
             phaseT: phaseT,
             enemies: enemies.length,
+            foes: enemies.filter(function (e) { return !e.dead; }).map(function (e) {
+              return e.type + "@" + e.row + " x" + e.x.toFixed(2) + " hp" + Math.round(e.hp);
+            }),
             plants: plants,
             over: over,
             won: won,
