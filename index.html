@@ -4,731 +4,334 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#071416">
-<meta name="description" content="Hành trình ôn tập: đại đoàn kết trong không gian mạng. Chọn cách ứng xử khi bất đồng — tìm điểm chung, tôn trọng khác biệt, phản biện có trách nhiệm.">
-<title>Đại đoàn kết trong không gian mạng</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect fill='%23071416' width='32' height='32'/%3E%3Cpath d='M4 22C10 22 10 10 16 10C22 10 22 22 28 22' fill='none' stroke='%23e0b85a' stroke-width='1.7' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='10' r='2.2' fill='%23e0b85a'/%3E%3C/svg%3E">
+<meta name="description" content="Phòng tuyến Ánh chung — giữ cộng đồng số trước virus chia rẽ. Trò chơi phòng thủ trên lưới, ôn Tư tưởng Hồ Chí Minh.">
+<title>Phòng tuyến Ánh chung</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect fill='%23071416' width='32' height='32'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%23e0b85a'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%231f8a80' stroke-width='1.4'/%3E%3C/svg%3E">
 <style>
   :root {
     --bg: #071416;
     --cream: #f6f1e6;
-    --cream-2: #f3ecdf;
-    --paper: #fffdf8;
     --ink: #172426;
-    --ink-soft: #3c5154;
+    --ink-soft: #3d5458;
     --teal: #0f5c55;
     --teal-2: #1f8a80;
     --gold: #e0b85a;
-    --gold-deep: #7d5e12;
+    --gold-deep: #7a5c12;
     --line: #e0d6c4;
     --good: #1f6b45;
-    --good-bg: #e7f4ec;
     --bad: #9c3b3b;
-    --bad-bg: #f8eceb;
     --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
     --sans: system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    --radius: 24px;
   }
-
   * { box-sizing: border-box; }
-  html { font-size: 16px; }
+  html, body { margin: 0; min-height: 100%; }
   body {
-    margin: 0;
-    min-height: 100vh;
     font-family: var(--sans);
     color: var(--cream);
     background:
-      radial-gradient(1100px 640px at 8% -10%, rgba(31,138,128,.28), transparent 55%),
-      radial-gradient(900px 560px at 110% 0%, rgba(224,184,90,.16), transparent 48%),
-      radial-gradient(800px 480px at 50% 120%, rgba(15,92,85,.35), transparent 50%),
+      radial-gradient(1000px 520px at 8% -10%, rgba(31,138,128,.28), transparent 55%),
+      radial-gradient(800px 480px at 110% 0%, rgba(224,184,90,.14), transparent 46%),
       var(--bg);
     -webkit-font-smoothing: antialiased;
   }
-  button, input { font: inherit; color: inherit; }
+  button, input { font: inherit; }
   button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
-  p { margin: 0 0 .75rem; }
-  h1, h2 { margin: 0; }
-
   .sky {
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    pointer-events: none;
+    position: fixed; inset: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
   }
-  .sky .n { animation: glow 6.8s ease-in-out infinite; }
-  .sky .n2 { animation-delay: -2.2s; }
-  .sky .n3 { animation-delay: -4.1s; }
-  @keyframes glow {
-    0%, 100% { opacity: .35; }
-    50% { opacity: 1; }
-  }
-
-  .app {
-    position: relative;
-    z-index: 1;
-    width: min(1120px, calc(100% - 20px));
-    margin: 0 auto;
-    padding: 16px 0 28px;
-    display: grid;
-    grid-template-columns: 280px minmax(0, 1fr);
-    gap: 22px;
-    align-items: start;
-  }
-  .column { min-width: 0; }
-
-  .map {
-    position: sticky;
-    top: 14px;
-    max-height: calc(100vh - 28px);
-    overflow: auto;
-    padding: 16px 16px 14px;
-    border-radius: 22px;
-    background: rgba(8, 26, 28, .9);
-    border: 1px solid rgba(224,184,90,.28);
-    scrollbar-width: thin;
-  }
-  .brand { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; }
-  .brand svg { width: 64px; height: 40px; flex: 0 0 auto; }
-  .brand-k {
-    margin: 0;
-    font-size: .72rem;
-    font-weight: 800;
-    letter-spacing: .04em;
-    color: var(--gold);
-  }
-  .brand-t {
-    margin: 0;
-    font-family: var(--serif);
-    font-size: 1.45rem;
-    line-height: 1.05;
-    color: var(--cream);
-  }
-  .map-lead {
-    margin: 0 0 6px;
-    font-size: .78rem;
-    font-weight: 800;
-    color: var(--gold);
-  }
-  .path { list-style: none; margin: 0; padding: 0; position: relative; }
-  .path::before {
-    content: "";
-    position: absolute;
-    left: 7px;
-    top: 10px;
-    bottom: 10px;
-    width: 2px;
-    background: linear-gradient(#1f8a80, #e0b85a);
-    opacity: .45;
-  }
-  .path li {
-    display: grid;
-    grid-template-columns: 16px 1fr;
-    gap: 10px;
-    align-items: start;
-    padding: 6px 0;
-    color: #b7c8c5;
-  }
-  .path li.done { color: #e7f3f1; }
-  .path li.on { color: #fffdf8; }
-  .node {
-    width: 16px;
-    height: 16px;
-    margin-top: 2px;
-    border-radius: 50%;
-    border: 2px solid rgba(224,184,90,.8);
-    background: #0c2426;
-    position: relative;
-    z-index: 1;
-  }
-  .path li.done .node { background: var(--gold); border-color: var(--gold); }
-  .path li.on .node {
-    background: #3dbaa8;
-    border-color: #f3fffc;
-    box-shadow: 0 0 0 4px rgba(61,186,168,.28);
-  }
-  .path-name { display: block; font-weight: 700; font-size: .94rem; line-height: 1.25; }
-  .path-sub { display: block; margin-top: 1px; font-size: .75rem; color: #a8c0bd; line-height: 1.35; }
-  .path li.on .path-sub { color: var(--gold); }
-
-  .meter { margin-top: 12px; }
-  .meter-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: .78rem;
-    font-weight: 700;
-    color: #e7f0ee;
-    margin-bottom: 6px;
-  }
-  .meter-track { height: 8px; border-radius: 99px; background: #163236; overflow: hidden; }
-  .meter-fill {
-    height: 100%;
-    width: 0;
-    border-radius: inherit;
-    background: linear-gradient(90deg, var(--teal-2), var(--gold));
-  }
-  .map-quote {
-    margin: 14px 0 0;
-    font-family: var(--serif);
-    font-size: .92rem;
-    line-height: 1.45;
-    color: #e7f0ee;
-  }
-
-  .mobile-bar { display: none; }
-
-  .card {
-    position: relative;
+  .wrap { position: relative; z-index: 1; }
+  .hidden { display: none !important; }
+  .menu {
+    width: min(760px, calc(100% - 24px));
+    margin: 22px auto 32px;
     background:
-      linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,0) 92px),
+      linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,255,255,0) 110px),
       var(--cream);
     color: var(--ink);
-    border-radius: var(--radius);
-    padding: 26px 16px 18px;
-    border: 1px solid rgba(255,248,236,.4);
-    box-shadow: 0 1px 0 rgba(255,255,255,.55) inset, 0 22px 50px rgba(0,0,0,.32);
+    border-radius: 24px;
+    padding: 22px 18px 18px;
+    box-shadow: 0 22px 50px rgba(0,0,0,.32);
+    position: relative;
   }
-  .card::before {
+  .menu::before, .end-card::before, .quiz-card::before {
     content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 4px;
-    border-radius: var(--radius) var(--radius) 0 0;
-    background: linear-gradient(90deg, var(--teal), var(--gold) 55%, var(--teal-2));
+    position: absolute; left: 0; right: 0; top: 0; height: 4px;
+    border-radius: 24px 24px 0 0;
+    background: linear-gradient(90deg, var(--teal), var(--gold), var(--teal-2));
   }
-  .card.rise { animation: rise .42s ease; }
-  @keyframes rise {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: none; }
-  }
-
-  .card-top {
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-    align-items: center;
-    margin-bottom: 8px;
-    font-size: .78rem;
-    font-weight: 700;
-    color: var(--ink-soft);
-  }
-  .pill-mini {
-    background: rgba(15,92,85,.1);
-    color: var(--teal);
-    border-radius: 999px;
-    padding: 4px 8px;
-    white-space: nowrap;
-  }
-  .kicker {
-    color: var(--teal);
-    font-size: .8rem;
-    font-weight: 800;
-    margin-bottom: 6px;
-  }
+  .hero { width: min(100%, 520px); height: auto; display: block; margin: 0 auto 8px; }
+  .kicker { color: var(--teal); font-weight: 800; font-size: .82rem; margin: 0 0 6px; }
   h1 {
-    font-family: var(--serif);
-    font-weight: 600;
-    font-size: clamp(1.7rem, 4.2vw, 2.35rem);
-    line-height: 1.18;
-    letter-spacing: -0.02em;
-    margin-bottom: 10px;
-    color: #122224;
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    line-height: 1.15; margin: 0 0 8px; color: #122224;
   }
-  .rule {
-    width: 72px;
-    height: 3px;
-    border: 0;
-    border-radius: 99px;
-    margin: 0 0 14px;
-    background: linear-gradient(90deg, var(--teal), var(--gold));
-  }
-  .story p, .deck { font-size: 1.02rem; line-height: 1.65; color: var(--ink-soft); }
-  .who {
-    display: inline-block;
-    margin: 0 0 12px;
-    padding: 4px 10px;
-    border-radius: 999px;
-    background: rgba(224,184,90,.28);
-    color: #6a4e0c;
-    font-size: .85rem;
-    font-weight: 800;
-  }
-  .hero-svg { width: min(100%, 280px); height: auto; display: block; margin: 2px auto 6px; }
-
-  .facts {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin: 4px 0 16px;
-    padding: 0;
-    list-style: none;
-  }
-  .facts li {
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 10px 6px;
-    text-align: center;
-  }
-  .facts b {
-    display: block;
-    font-family: var(--serif);
-    font-size: 1.45rem;
-    font-weight: 600;
-    color: var(--teal);
-    line-height: 1.1;
-  }
-  .facts span { font-size: .75rem; font-weight: 700; color: var(--ink-soft); }
-
-  .field { margin: 4px 0 14px; }
-  .field label { display: block; font-weight: 800; margin-bottom: 6px; font-size: .92rem; }
+  .rule { width: 72px; height: 3px; border: 0; border-radius: 99px; margin: 0 0 12px; background: linear-gradient(90deg, var(--teal), var(--gold)); }
+  .deck { color: var(--ink-soft); line-height: 1.6; margin: 0 0 12px; }
+  .steps { margin: 0 0 14px; padding-left: 1.15rem; color: var(--ink); }
+  .steps li { margin: 6px 0; line-height: 1.45; }
+  .field { margin: 8px 0 12px; }
+  .field label { display: block; font-weight: 800; margin-bottom: 6px; }
   .field input {
-    width: 100%;
-    min-height: 52px;
-    padding: 12px 14px;
-    border-radius: 12px;
-    border: 2px solid #ddd3bf;
-    background: #fff;
-    color: var(--ink);
-    font-size: 16px;
+    width: 100%; min-height: 48px; padding: 10px 12px;
+    border-radius: 12px; border: 2px solid #ddd3bf; background: #fff; color: var(--ink); font-size: 16px;
   }
-  .field input:focus-visible {
-    outline: 3px solid var(--teal);
-    outline-offset: 2px;
-    border-color: var(--teal);
-  }
-
   .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    min-height: 52px;
-    padding: 12px 16px;
-    border-radius: 14px;
-    border: 2px solid transparent;
-    font-weight: 800;
-    font-size: 1.05rem;
-    line-height: 1.3;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 100%; min-height: 52px; padding: 12px 16px;
+    border-radius: 14px; border: 2px solid transparent;
+    font-weight: 800; font-size: 1.05rem;
   }
-  .btn:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
-  .btn:active { transform: translateY(1px); }
-  .btn-primary {
-    background: linear-gradient(180deg, #1b7a72 0%, #0e4e49 100%);
-    color: #f7f3ea;
-    box-shadow: 0 8px 20px rgba(8,40,38,.28);
+  .btn:focus-visible, .seed:focus-visible, .option:focus-visible {
+    outline: 3px solid var(--teal); outline-offset: 2px;
   }
-  .btn-primary:hover { filter: brightness(1.08); }
-  .btn-ghost {
-    background: transparent;
-    color: var(--teal);
-    border-color: rgba(15,92,85,.35);
-    margin-top: 0;
+  .btn-primary { background: linear-gradient(180deg, #1b7a72, #0e4e49); color: #f7f3ea; }
+  .btn-primary:hover { filter: brightness(1.06); }
+  .btn-ghost { background: transparent; color: var(--teal); border-color: rgba(15,92,85,.35); }
+  .hint { text-align: center; color: var(--ink-soft); font-size: .82rem; margin: 10px 0 0; }
+  .colophon { width: min(760px, calc(100% - 24px)); margin: 0 auto 24px; color: #c5d4d1; font-size: .78rem; line-height: 1.5; }
+  .game { width: min(1120px, calc(100% - 16px)); margin: 10px auto 20px; }
+  .hud {
+    display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center;
+    justify-content: space-between; margin-bottom: 8px;
   }
-  .btn-ghost:hover { background: rgba(15,92,85,.06); }
-  .actions { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
-  .hint { margin: 10px 0 0; text-align: center; font-size: .8rem; color: var(--ink-soft); }
-
-  h2.question {
-    font-family: var(--sans);
-    font-size: clamp(1.12rem, 2.3vw, 1.45rem);
-    font-weight: 800;
-    line-height: 1.4;
-    color: var(--ink);
-    margin: 14px 0 12px;
+  .sun-read, .integrity-box, .hud-side { display: flex; align-items: center; gap: 8px; font-weight: 800; }
+  .sun-dot {
+    width: 16px; height: 16px; border-radius: 50%; display: inline-block;
+    background: radial-gradient(circle at 35% 35%, #fff4cc, #e0b85a 46%, #a07828);
+    box-shadow: 0 0 0 4px rgba(224,184,90,.18);
   }
-  .options, .choices { display: flex; flex-direction: column; gap: 10px; }
+  #sun-val { font-variant-numeric: tabular-nums; font-size: 1.35rem; min-width: 2ch; }
+  #sun-val.pop { animation: pop .35s ease; }
+  @keyframes pop { 50% { transform: scale(1.18); color: var(--gold); } }
+  .wave-box { flex: 1 1 180px; min-width: 160px; }
+  #wave-label { font-size: .86rem; font-weight: 800; margin-bottom: 4px; }
+  .wavebar { height: 8px; border-radius: 99px; background: #163236; overflow: hidden; }
+  #wavefill { height: 100%; width: 0; background: linear-gradient(90deg, var(--teal-2), var(--gold)); }
+  .hearts { display: flex; gap: 3px; }
+  .hearts i { width: 10px; height: 16px; border-radius: 3px; background: #1c3336; display: block; }
+  .hearts i.on { background: linear-gradient(#f0d48a, #c4962a); }
+  .hearts.hurt { animation: hurt .35s ease; }
+  @keyframes hurt { 50% { transform: translateX(3px); } }
+  #quiz-score { font-size: .82rem; color: #d5e4e1; }
+  #btn-pause {
+    min-height: 40px; padding: 8px 12px; border-radius: 10px;
+    border: 1px solid rgba(224,184,90,.45); background: transparent; color: var(--cream); font-weight: 800;
+  }
+  .stage { position: relative; border-radius: 18px; overflow: hidden; background: #091618; border: 1px solid rgba(224,184,90,.22); }
+  canvas { display: block; width: 100%; height: auto; touch-action: none; }
+  .stage.paused::after {
+    content: "Đang dừng";
+    position: absolute; inset: 0; display: grid; place-items: center;
+    background: rgba(7,20,22,.5); color: var(--cream);
+    font-family: var(--serif); font-size: 2rem; pointer-events: none;
+  }
+  #toast {
+    position: absolute; left: 50%; top: 10px; transform: translateX(-50%);
+    max-width: min(92%, 560px); padding: 8px 12px; border-radius: 999px;
+    background: rgba(246,241,230,.95); color: var(--ink); font-weight: 700;
+    font-size: .9rem; line-height: 1.35; text-align: center;
+    opacity: 0; pointer-events: none; transition: opacity .2s ease;
+  }
+  #toast.show { opacity: 1; }
+  .tray {
+    display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; padding-bottom: 4px;
+  }
+  .seed {
+    position: relative; flex: 1 0 96px; min-height: 92px;
+    border-radius: 14px; border: 2px solid rgba(224,184,90,.28);
+    background: rgba(8,28,30,.88); color: var(--cream);
+    padding: 8px 6px 6px; overflow: hidden;
+  }
+  .seed .ico svg { width: 32px; height: 32px; display: block; margin: 0 auto 2px; }
+  .seed .nm { display: block; font-size: .78rem; font-weight: 800; line-height: 1.2; }
+  .seed .cost { display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 4px; font-size: .8rem; color: var(--gold); font-weight: 800; }
+  .seed .cost .sun-dot { width: 12px; height: 12px; box-shadow: none; }
+  .seed.poor { opacity: .48; }
+  .seed.on { border-color: var(--gold); background: rgba(224,184,90,.12); }
+  .seed .cd { position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: rgba(7,20,22,.55); pointer-events: none; }
+  #unit-help { margin: 8px 2px 0; color: #d5e4e1; font-size: .9rem; min-height: 1.3em; }
+  .overlay {
+    position: fixed; inset: 0; z-index: 20;
+    background: rgba(7,20,22,.72);
+    display: flex; align-items: center; justify-content: center;
+    padding: 16px;
+  }
+  .quiz-card, .end-card {
+    position: relative;
+    width: min(640px, 100%);
+    max-height: min(92vh, 900px);
+    overflow: auto;
+    background: var(--cream); color: var(--ink);
+    border-radius: 22px; padding: 20px 16px 16px;
+    box-shadow: 0 24px 60px rgba(0,0,0,.4);
+  }
+  .quiz-card h2, .end-card h2 {
+    font-family: var(--sans); font-size: 1.15rem; line-height: 1.4; margin: 8px 0 12px;
+  }
+  .options { display: flex; flex-direction: column; gap: 8px; }
   .option {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    width: 100%;
-    text-align: left;
-    min-height: 56px;
-    padding: 13px 14px;
-    border-radius: 14px;
-    border: 2px solid var(--line);
-    background: #fff;
-    color: var(--ink);
-    font-size: 1rem;
-    line-height: 1.45;
-  }
-  .option:hover:not(:disabled) { border-color: var(--teal-2); background: #f3faf9; }
-  .option:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
-  .option:disabled { cursor: default; }
-  .option.dim { opacity: .55; }
-  .option.correct, .option.wrong { opacity: 1; }
-  .letter {
-    flex: 0 0 32px;
-    width: 32px;
-    height: 32px;
-    border-radius: 10px;
-    display: grid;
-    place-items: center;
-    font-weight: 800;
-    background: rgba(15,92,85,.1);
-    color: var(--teal);
-  }
-  .option .text { padding-top: 4px; }
-  .option.correct { border-color: var(--good); background: var(--good-bg); }
-  .option.correct .letter { background: var(--good); color: #fff; }
-  .option.wrong { border-color: var(--bad); background: var(--bad-bg); }
-  .option.wrong .letter { background: var(--bad); color: #fff; }
-  .choice-tag {
-    display: block;
-    font-size: .75rem;
-    font-weight: 800;
-    color: var(--gold-deep);
-    margin-bottom: 3px;
-  }
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0,0,0,0);
-    white-space: nowrap;
-    border: 0;
-  }
-
-  .feedback {
-    margin-top: 14px;
-    padding: 14px 14px 12px;
-    border-radius: 14px;
-    line-height: 1.6;
-    font-size: .98rem;
-  }
-  .feedback strong { display: block; font-size: 1.02rem; margin-bottom: 4px; }
-  .feedback .key { font-weight: 700; margin-bottom: .4rem; }
-  .feedback.ok { background: var(--good-bg); color: #143d28; border-left: 4px solid var(--good); }
-  .feedback.bad { background: var(--bad-bg); color: #5c2424; border-left: 4px solid var(--bad); }
-  .feedback .source { margin: 8px 0 0; font-size: .86rem; font-weight: 750; }
-  .feedback.ok .source { color: #0f4f4a; }
-  .feedback.bad .source { color: #6d3a1e; }
-
-  .fingers {
-    display: flex;
-    gap: 8px;
-    align-items: flex-end;
-    height: 36px;
-    margin: 2px 0 8px;
-  }
-  .fingers span {
-    width: 10px;
-    display: block;
-    border-radius: 99px 99px 4px 4px;
-    background: linear-gradient(var(--gold), var(--teal));
-  }
-  .fingers span:nth-child(1) { height: 16px; }
-  .fingers span:nth-child(2) { height: 26px; }
-  .fingers span:nth-child(3) { height: 36px; }
-  .fingers span:nth-child(4) { height: 24px; }
-  .fingers span:nth-child(5) { height: 14px; }
-
-  .slip {
-    background: var(--paper);
-    border: 1px dashed rgba(125,94,18,.55);
-    border-radius: 14px;
-    padding: 12px 14px 10px;
-    margin: 8px 0 4px;
-  }
-  .slip-title { font-weight: 800; color: var(--gold-deep); margin: 0 0 6px; font-size: .92rem; }
-  .slip ol { margin: 0; padding-left: 1.2rem; }
-  .slip li { margin: 6px 0; line-height: 1.45; }
-
-  .room {
-    margin: 12px 0 8px;
-    font-size: .78rem;
-    font-weight: 800;
-    color: #6d5a32;
-  }
-  .thread { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
-  .msg { display: flex; gap: 10px; align-items: flex-start; }
-  .msg.you { flex-direction: row-reverse; }
-  .av {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    color: #fff;
-    font-weight: 800;
-    flex: 0 0 36px;
-    font-size: .85rem;
-    background: #3e5560;
-  }
-  .av.khoa { background: #8c4e3c; }
-  .av.minh { background: #0f5c55; }
-  .av.ha { background: #8a6b2a; }
-  .av.an { background: #3e5560; }
-  .av.you { background: #1a6f68; }
-  .msg-body {
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 10px 12px;
-    max-width: min(100%, 520px);
-  }
-  .msg.you .msg-body { background: #e5f3f1; border-color: rgba(15,92,85,.2); }
-  .msg-name { font-size: .75rem; font-weight: 800; color: var(--ink-soft); margin-bottom: 2px; }
-  .msg-text { margin: 0; line-height: 1.5; color: var(--ink); }
-  .narr { margin: 0; color: var(--ink-soft); font-style: italic; line-height: 1.5; }
-  .prompt { font-size: 1.05rem; font-weight: 800; margin: 4px 0 10px; color: var(--ink); }
-
-  .end-hero {
-    display: grid;
-    grid-template-columns: 116px 1fr;
-    gap: 14px;
-    align-items: center;
-    margin-bottom: 8px;
-  }
-  .tier {
-    font-family: var(--serif);
-    font-size: clamp(1.45rem, 3vw, 1.9rem);
-    font-weight: 600;
-    line-height: 1.15;
-    margin-bottom: 4px;
-  }
-  .tier.strong { color: #7d5e12; }
-  .tier.ok { color: var(--teal); }
-  .tier.weak { color: #8a3e32; }
-  .role { color: var(--ink-soft); font-size: .92rem; margin: 0; }
-  .ring-wrap { position: relative; width: 116px; height: 116px; }
-  .ring-wrap svg { width: 100%; height: 100%; display: block; }
-  .ring-bg { fill: none; stroke: #e4dac6; stroke-width: 8; }
-  .ring-fg { fill: none; stroke-width: 8; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; }
-  .ring-num {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  .ring-num strong {
-    font-family: var(--serif);
-    font-size: 2rem;
-    line-height: 1;
-    font-weight: 600;
-    color: var(--ink);
-  }
-  .ring-num span { color: var(--ink-soft); font-weight: 800; font-size: .95rem; }
-  .epilogue p { line-height: 1.65; color: var(--ink-soft); font-size: 1.02rem; }
-  .bridge-graphic svg { width: 100%; height: auto; display: block; }
-  .bridge-graphic path { fill: none; stroke: #ddd4c2; stroke-width: 3; stroke-linecap: round; }
-  .bridge-graphic path.on { stroke: var(--gold); }
-  .bridge-caption { text-align: center; color: var(--ink-soft); font-size: .92rem; margin: 2px 0 8px; }
-  .section-title {
-    font-family: var(--sans);
-    font-size: 1.02rem;
-    font-weight: 800;
-    color: var(--teal);
-    margin: 16px 0 8px;
-  }
-  .note { font-size: .88rem; color: var(--ink-soft); margin: -4px 0 8px; }
-  .pills, .principles { list-style: none; margin: 0; padding: 0; }
-  .pills { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .pill, .principles li {
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 8px 10px;
-    font-size: .9rem;
+    display: flex; gap: 10px; align-items: flex-start; text-align: left;
+    width: 100%; min-height: 52px; padding: 12px;
+    border-radius: 14px; border: 2px solid var(--line); background: #fff; color: var(--ink);
     line-height: 1.4;
   }
-  .pill { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
-  .pill .st { font-weight: 800; font-size: .75rem; white-space: nowrap; }
-  .pill.sang .st { color: var(--good); }
-  .pill.noi .st { color: var(--bad); }
-  .principles { display: grid; gap: 6px; }
-  blockquote.closing {
-    margin: 14px 0;
-    padding: 12px 14px;
-    border-left: 3px solid var(--gold);
-    background: var(--cream-2);
-    font-family: var(--serif);
-    font-size: 1.08rem;
-    line-height: 1.5;
-    color: #243433;
+  .letter {
+    flex: 0 0 28px; height: 28px; border-radius: 8px;
+    display: grid; place-items: center; font-weight: 800;
+    background: rgba(15,92,85,.1); color: var(--teal);
   }
-  .colophon {
-    color: #c5d4d1;
-    font-size: .78rem;
-    line-height: 1.5;
-    margin: 12px 2px 0;
+  .option.correct { border-color: var(--good); background: #e7f4ec; }
+  .option.correct .letter { background: var(--good); color: #fff; }
+  .option.wrong { border-color: var(--bad); background: #f8eceb; }
+  .option.wrong .letter { background: var(--bad); color: #fff; }
+  .option:disabled { cursor: default; }
+  .feedback { margin-top: 12px; padding: 12px; border-radius: 12px; line-height: 1.55; }
+  .feedback.ok { background: #e7f4ec; color: #143d28; }
+  .feedback.bad { background: #f8eceb; color: #5c2424; }
+  .feedback .source { margin: 6px 0 0; font-size: .84rem; font-weight: 800; color: var(--teal); }
+  .actions { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0; }
+  .stats div { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 8px; text-align: center; }
+  .stats b { display: block; font-family: var(--serif); font-size: 1.4rem; color: var(--teal); font-weight: 600; }
+  .stats span { font-size: .75rem; color: var(--ink-soft); font-weight: 700; }
+  blockquote {
+    margin: 12px 0; padding: 10px 12px; border-left: 3px solid var(--gold);
+    background: #f3ecdf; font-family: var(--serif); line-height: 1.45;
   }
-  .skip {
-    position: absolute;
-    left: 8px;
-    top: -40px;
-    background: var(--cream);
-    color: var(--ink);
-    padding: 8px 12px;
-    z-index: 5;
-    border-radius: 8px;
-  }
-  .skip:focus { top: 8px; }
-
+  .take { margin: 8px 0 0; padding-left: 1.1rem; }
+  .take li { margin: 4px 0; }
+  .note { color: var(--ink-soft); font-size: .88rem; margin: 4px 0 8px; }
   @media (min-width: 720px) {
-    .card { padding: 32px 32px 26px; }
+    .menu, .quiz-card, .end-card { padding: 26px 26px 20px; }
   }
-  @media (min-width: 1100px) {
-    html { font-size: 17px; }
-    .app { width: min(1180px, calc(100% - 40px)); padding-top: 22px; }
-  }
-  @media (max-width: 860px) {
-    .app { grid-template-columns: 1fr; width: min(640px, calc(100% - 16px)); padding-top: 10px; gap: 10px; }
-    .map { display: none; }
-    .mobile-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      position: sticky;
-      top: 8px;
-      z-index: 4;
-      margin-bottom: 10px;
-      padding: 8px 10px;
-      border-radius: 14px;
-      background: rgba(7,20,22,.94);
-      border: 1px solid rgba(224,184,90,.25);
-    }
-    .mb-brand { font-family: var(--serif); font-size: 1.05rem; color: var(--cream); }
-    .dots { display: flex; gap: 6px; }
-    .dots i {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      border: 1.5px solid rgba(224,184,90,.85);
-      display: block;
-      background: transparent;
-    }
-    .dots i.done { background: var(--gold); }
-    .dots i.on { background: #3dbaa8; box-shadow: 0 0 0 3px rgba(61,186,168,.28); }
-    .mini-score { font-size: .8rem; font-weight: 800; color: var(--cream); font-variant-numeric: tabular-nums; }
-  }
-  @media (max-width: 560px) {
-    .end-hero { grid-template-columns: 1fr; justify-items: center; text-align: center; }
-    .pills { grid-template-columns: 1fr; }
-    h1 { font-size: 1.65rem; }
+  @media (max-width: 640px) {
+    .stats { grid-template-columns: 1fr; }
+    h1 { font-size: 1.7rem; }
   }
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-      animation: none !important;
-      transition: none !important;
-    }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
   }
 </style>
 </head>
 <body>
-<a class="skip" href="#stage">Đến nội dung</a>
-<svg class="sky" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-  <circle cx="600" cy="360" r="150" fill="rgba(224,184,90,0.06)"/>
-  <g stroke="rgba(143,208,200,0.38)" stroke-width="1.2">
-    <line x1="120" y1="180" x2="200" y2="260"/>
-    <line x1="200" y1="260" x2="90" y2="340"/>
-    <line x1="90" y1="340" x2="230" y2="400"/>
-    <line x1="200" y1="260" x2="230" y2="400"/>
-    <line x1="230" y1="400" x2="150" y2="520"/>
-    <line x1="150" y1="520" x2="260" y2="600"/>
-    <line x1="230" y1="400" x2="260" y2="600"/>
-    <line x1="980" y1="200" x2="1080" y2="300"/>
-    <line x1="1080" y1="300" x2="940" y2="380"/>
-    <line x1="980" y1="200" x2="940" y2="380"/>
-    <line x1="940" y1="380" x2="1100" y2="470"/>
-    <line x1="1100" y1="470" x2="990" y2="560"/>
-    <line x1="990" y1="560" x2="1060" y2="660"/>
-    <line x1="940" y1="380" x2="990" y2="560"/>
-  </g>
-  <g stroke="rgba(224,184,90,0.6)" stroke-width="1.7">
-    <line x1="230" y1="400" x2="400" y2="420"/>
-    <line x1="400" y1="420" x2="520" y2="360"/>
-    <line x1="520" y1="360" x2="600" y2="330"/>
-    <line x1="600" y1="330" x2="680" y2="360"/>
-    <line x1="680" y1="360" x2="800" y2="420"/>
-    <line x1="800" y1="420" x2="940" y2="380"/>
+<svg class="sky" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <g stroke="rgba(143,208,200,.35)" stroke-width="1.1" fill="none">
+    <path d="M40 120 L160 200 L120 320 L240 400"/>
+    <path d="M160 200 L300 160 L420 240"/>
+    <path d="M900 140 L1040 220 L980 340 L1120 420"/>
+    <path d="M420 240 L600 300 L780 240 L980 340"/>
   </g>
   <g fill="#9fd9d1">
-    <circle class="n" cx="120" cy="180" r="4.2"/>
-    <circle cx="200" cy="260" r="3.4"/>
-    <circle class="n n2" cx="90" cy="340" r="3.2"/>
-    <circle cx="230" cy="400" r="4.4"/>
-    <circle cx="150" cy="520" r="3"/>
-    <circle cx="260" cy="600" r="3.4"/>
-    <circle cx="980" cy="200" r="4"/>
-    <circle class="n n3" cx="1080" cy="300" r="3.5"/>
-    <circle cx="940" cy="380" r="4.4"/>
-    <circle cx="1100" cy="470" r="3.1"/>
-    <circle cx="990" cy="560" r="3.4"/>
-    <circle class="n" cx="1060" cy="660" r="3.2"/>
-    <circle cx="400" cy="420" r="3.4"/>
-    <circle cx="520" cy="360" r="3.3"/>
-    <circle cx="680" cy="360" r="3.3"/>
-    <circle cx="800" cy="420" r="3.4"/>
+    <circle cx="40" cy="120" r="3.5"/><circle cx="160" cy="200" r="3"/>
+    <circle cx="600" cy="300" r="4"/><circle cx="1040" cy="220" r="3.5"/>
   </g>
-  <circle cx="600" cy="330" r="7" fill="#e0b85a"/>
-  <circle cx="600" cy="330" r="16" fill="none" stroke="rgba(224,184,90,0.45)"/>
+  <circle cx="600" cy="300" r="7" fill="#e0b85a"/>
 </svg>
 
-<div class="app">
-  <aside class="map" id="map">
-    <div class="brand">
-      <svg class="mark" viewBox="0 0 64 40" aria-hidden="true">
-        <path d="M4 30C16 30 16 12 32 12C48 12 48 30 60 30" fill="none" stroke="#e0b85a" stroke-width="1.7" stroke-linecap="round"/>
-        <circle cx="4" cy="30" r="2.3" fill="#9fd9d1"/>
-        <circle cx="16" cy="20" r="1.8" fill="#9fd9d1"/>
-        <circle cx="32" cy="12" r="3.2" fill="#e0b85a"/>
-        <circle cx="48" cy="20" r="1.8" fill="#9fd9d1"/>
-        <circle cx="60" cy="30" r="2.3" fill="#9fd9d1"/>
-      </svg>
-      <div>
-        <p class="brand-k">Không gian mạng</p>
-        <p class="brand-t">Ánh chung</p>
-      </div>
-    </div>
-    <p class="map-lead" id="map-lead">Hành trình</p>
-    <ol class="path" aria-label="Bảy chương">
-      <li data-chapter="1"><span class="node" aria-hidden="true"></span><span class="path-text"><span class="path-name">Đèn hải đăng</span><span class="path-sub">Tầm nhìn chiến lược</span></span></li>
-      <li data-chapter="2"><span class="node" aria-hidden="true"></span><span class="path-text"><span class="path-name">Vòng tròn mở</span><span class="path-sub">Chủ thể rộng mở</span></span></li>
-      <li data-chapter="3"><span class="node" aria-hidden="true"></span><span class="path-text"><span class="path-name">Ngọn lửa chung</span><span class="path-sub">Điểm quy tụ, lợi ích chung</span></span></li>
-      <li data-chapter="4"><span class="node" aria-hidden="true"></span><span class="path-text"><span class="path-name">Năm ngón tay</span><span class="path-sub">Khoan dung</span></span></li>
-      <li data-chapter="5"><span class="node" aria-hidden="true"></span><span class="path-text"><span class="path-name">Chiếc cầu</span><span class="path-sub">Cầu đồng tồn dị</span></span></li>
-      <li data-chapter="6"><span class="node" aria-hidden="true"></span><span class="path-text"><span class="path-name">Đường ranh</span><span class="path-sub">Thử thách và giới hạn</span></span></li>
-      <li data-chapter="7"><span class="node" aria-hidden="true"></span><span class="path-text"><span class="path-name">Dấu ấn</span><span class="path-sub">Văn hóa giao tiếp số</span></span></li>
+<div class="wrap">
+  <section id="screen-menu" class="menu">
+    <svg class="hero" viewBox="0 0 640 168" aria-hidden="true">
+      <rect x="16" y="24" width="36" height="120" rx="10" fill="#e0b85a"/>
+      <g fill="none" stroke="#1f8a80" stroke-width="2" opacity=".85">
+        <path d="M70 44 H560"/><path d="M70 84 H560"/><path d="M70 124 H560"/>
+      </g>
+      <g fill="#14756c">
+        <circle cx="150" cy="84" r="12"/><circle cx="250" cy="44" r="11"/><circle cx="250" cy="124" r="11"/>
+        <rect x="330" y="68" width="28" height="32" rx="6" fill="#c4962a"/>
+      </g>
+      <g>
+        <circle cx="470" cy="44" r="10" fill="#7ec8c3"/>
+        <path d="M500 84 l16 10 l-16 10 z" fill="#c45b4a"/>
+        <circle cx="540" cy="124" r="12" fill="none" stroke="#8b78b0" stroke-width="4"/>
+      </g>
+    </svg>
+    <p class="kicker">Tư tưởng Hồ Chí Minh · Không gian mạng</p>
+    <h1>Phòng tuyến Ánh chung</h1>
+    <hr class="rule">
+    <p class="deck">Cộng đồng số đang bị virus chia rẽ tấn công từ bên phải. Hãy đặt đơn vị giữ mạch, thu mặt trời, và trả lời câu ôn — không để chúng chạm cột sáng bên trái.</p>
+    <ol class="steps">
+      <li>Chọn đơn vị, chạm một ô (hoặc phím mũi tên rồi Enter).</li>
+      <li>Đặt tường bên phải đơn vị bắn. Ba sóng. Virus chạm cột cộng đồng làm giảm đoàn kết.</li>
+      <li>Câu ôn đúng được nhiều mặt trời. Đèn kiến thức sinh mặt trời đều.</li>
     </ol>
-    <div class="meter" aria-hidden="true">
-      <div class="meter-row"><span>Ánh chung</span><span id="meter-label">0/12</span></div>
-      <div class="meter-track"><div class="meter-fill" id="meter-fill"></div></div>
+    <div class="field">
+      <label for="player-name">Tên người giữ mạch (không bắt buộc)</label>
+      <input id="player-name" maxlength="40" autocomplete="off" placeholder="Ví dụ: Minh Anh" autocapitalize="words">
     </div>
-    <p class="map-quote">“Đoàn kết trên không gian mạng không bắt đầu từ việc nghĩ giống nhau, mà từ cách ứng xử khi không giống nhau.”</p>
-  </aside>
+    <button class="btn btn-primary" id="btn-start" type="button">Bắt đầu giữ mạch</button>
+    <p class="hint">Phím 1–5 chọn đơn vị, 0 để gỡ. Trong câu ôn, phím 1–4 để trả lời. Một lượt khoảng 8–12 phút.</p>
+  </section>
+  <p class="colophon" id="foot-note">Nội dung ôn bám Giáo trình Tư tưởng Hồ Chí Minh (2021), Chương V — I.1.a (tr.97–99), I.2.a (tr.100), I.3 (tr.101–103), I.4.b (tr.103–104), III.2 (tr.114–115) — và phần vận dụng của nhóm.</p>
 
-  <div class="column">
-    <header class="mobile-bar" aria-label="Tiến trình">
-      <div class="mb-brand">Ánh chung</div>
-      <div class="dots" aria-hidden="true">
-        <i data-chapter="1"></i><i data-chapter="2"></i><i data-chapter="3"></i><i data-chapter="4"></i><i data-chapter="5"></i><i data-chapter="6"></i><i data-chapter="7"></i>
+  <section id="screen-game" class="game hidden">
+    <header class="hud">
+      <div class="sun-read" aria-live="polite">
+        <span class="sun-dot" aria-hidden="true"></span>
+        <strong id="sun-val">0</strong>
       </div>
-      <div class="mini-score" id="mini-score">0/12</div>
+      <div class="wave-box">
+        <div id="wave-label">Chuẩn bị</div>
+        <div class="wavebar" aria-hidden="true"><div id="wavefill"></div></div>
+      </div>
+      <div class="integrity-box">
+        <span>Đoàn kết</span>
+        <div class="hearts" id="hearts"></div>
+      </div>
+      <div class="hud-side">
+        <span id="quiz-score">Ôn 0/0</span>
+        <button type="button" id="btn-pause">Tạm dừng</button>
+      </div>
     </header>
-    <main id="stage" tabindex="-1">
-      <noscript>
-        <article class="card">
-          <h1>Cần bật JavaScript</h1>
-          <p>Hành trình chạy ngay trên trang này. Hãy bật JavaScript rồi tải lại.</p>
-        </article>
-      </noscript>
-    </main>
-    <p class="colophon">Nội dung bám Giáo trình Tư tưởng Hồ Chí Minh (2021), Chương V — I.1.a (tr.97–99), I.2.a (tr.100), I.3 (tr.101–103), I.4.b (tr.103–104), III.2 (tr.114–115) — và phần vận dụng của nhóm.</p>
-  </div>
+    <div class="stage" id="stage">
+      <canvas id="board" width="960" height="420"></canvas>
+      <div id="toast" role="status"></div>
+    </div>
+    <div class="tray" id="tray" role="toolbar" aria-label="Đơn vị bảo vệ"></div>
+    <p id="unit-help">Chọn một đơn vị, rồi một ô trên mạch.</p>
+  </section>
 </div>
-<div id="live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+<div id="quiz" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="quiz-title"></div>
+<div id="screen-end" class="overlay hidden"></div>
+<div id="live" class="sr-only" aria-live="polite"></div>
+<style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}</style>
 
 <script>
 (function () {
   "use strict";
+
+  var CONFIG = {
+    cols: 7,
+    rows: 5,
+    startSun: 175,
+    integrity: 10,
+    prep: 18,
+    skyEvery: 11,
+    skyValue: 25,
+    quizFirst: 42,
+    quizEvery: 36,
+    quizReward: 80,
+    lampEvery: 12,
+    lampValue: 25
+  };
+
+  var UNITS = [
+    { id: "den", name: "Đèn kiến thức", cost: 50, cd: 6, hp: 90, blurb: "Sinh mặt trời theo thời gian. Nên đặt sớm." },
+    { id: "tuong", name: "Tường chung", cost: 50, cd: 8, hp: 540, blurb: "Chắn một hàng, máu dày. Đặt bên phải đơn vị bắn — phía virus tới." },
+    { id: "phan", name: "Phản biện", cost: 100, cd: 5, hp: 130, rate: 1.32, dmg: 24, shot: 6.2, blurb: "Bắn virus cùng hàng." },
+    { id: "cau", name: "Cầu đồng", cost: 150, cd: 8, hp: 120, rate: 1.65, dmg: 16, shot: 5.1, slow: 2.8, blurb: "Đạn làm virus chậm lại, không xóa chúng ngay." },
+    { id: "moc", name: "Mốc ranh", cost: 200, cd: 12, hp: 150, rate: 2.45, dmg: 78, shot: 4.4, blurb: "Đòn nặng, bắn chậm. Dành cho mục tiêu máu dày." }
+  ];
+
+  var VIRUS = {
+    tin: { name: "Tin giả", hp: 76, speed: 0.4, dps: 11, leak: 1, blurb: "tin không nguồn, máu thấp, đi đều." },
+    congkich: { name: "Công kích", hp: 56, speed: 0.64, dps: 18, leak: 1, blurb: "nhắm vào người, đi nhanh, máu mỏng." },
+    echo: { name: "Buồng vọng", hp: 270, speed: 0.23, dps: 9, leak: 1, blurb: "chỉ nghe một phía. Máu dày, đi chậm." },
+    spam: { name: "Spam thù", hp: 28, speed: 0.72, dps: 8, leak: 1, blurb: "bầy nhỏ, rất nhanh." },
+    kichdong: { name: "Kích động", hp: 460, speed: 0.28, dps: 26, leak: 2, blurb: "kéo cả dòng về một phía. Chạm cộng đồng mất hai nhịp." }
+  };
 
   var FOUR = [
     "Có điểm chung nào?",
@@ -736,403 +339,1408 @@
     "Phản biện vấn đề hay công kích con người?",
     "Diễn đạt giúp tiếp tục hay đẩy xa hơn?"
   ];
-  var PRINCIPLES = [
-    "Tìm điểm chung",
-    "Tôn trọng khác biệt",
-    "Phản biện vấn đề",
-    "Không công kích con người",
-    "Trách nhiệm với cộng đồng"
-  ];
   var CLOSING = "Đoàn kết trên không gian mạng không bắt đầu từ việc nghĩ giống nhau, mà từ cách ứng xử khi không giống nhau.";
 
-  var SCENES = [
+  var QUESTIONS = [
     {
-      id: "prologue",
-      type: "story",
-      chapter: 0,
-      kicker: "Mở đầu",
-      title: "Cổng diễn đàn",
-      cta: "Bước qua cổng",
-      body: [
-        "Đêm trước buổi trình bày, diễn đàn lớp — Không gian Ánh chung — mất nhịp. Bình luận chồng lên bình luận. Vài mạch nói chuyện tách nhau, sáng một màu lạnh.",
-        "Bạn bước vào như một thành viên cộng đồng số, người kết nối. Việc của bạn không phải bắt mọi người nghĩ giống nhau. Việc của bạn là giữ đại đoàn kết: tìm điểm chung, để khác biệt chính đáng còn chỗ, và phản biện cho có trách nhiệm."
-      ]
-    },
-    {
-      id: "strategy",
-      type: "quiz",
-      chapter: 1,
-      mode: "Trắc nghiệm",
-      kicker: "Chương 1 · Tầm nhìn chiến lược",
-      title: "Đèn hải đăng",
-      log: "Chiến lược lâu dài",
-      body: [
-        "Một dòng được nhiều người chia sẻ: “Đại đoàn kết là khẩu hiệu lúc bão. Bão tan thì thôi.” Có người thấy thế cho nhẹ. Trên sơ đồ mạng của diễn đàn, vài nút đang tắt — như thể đoàn kết chỉ là một công tắc."
-      ],
       q: "Theo Tư tưởng Hồ Chí Minh, đại đoàn kết toàn dân tộc mang tính chất nào?",
       choices: [
         "Chỉ là giải pháp tạm thời khi gặp khó khăn lớn",
         "Là chiến lược lâu dài, xuyên suốt quá trình cách mạng",
-        "Chỉ đúng trong thời kỳ kháng chiến, không còn ý nghĩa hôm nay",
-        "Là câu khẩu hiệu tuyên truyền, không phải nguyên tắc nền tảng"
+        "Chỉ đúng trong thời kỳ kháng chiến",
+        "Là khẩu hiệu tuyên truyền, không phải nguyên tắc nền tảng"
       ],
       answer: 1,
-      okTitle: "Hải đăng không tắt theo cơn sóng",
-      badTitle: "Đó là công tắc, không phải hải đăng",
-      explain: "Đại đoàn kết toàn dân tộc là chiến lược lâu dài, xuyên suốt quá trình cách mạng — không phải sách lược nhất thời, cũng không phải khẩu hiệu lúc khó rồi bỏ. Diễn đàn có lúc căng, tinh thần ấy vẫn là hướng đi, không phải công tắc.",
-      source: "Giáo trình Tư tưởng Hồ Chí Minh (2021), Chương V, mục I.1.a (tr.97–99)."
+      explain: "Đại đoàn kết là chiến lược lâu dài, không phải sách lược nhất thời.",
+      source: "Giáo trình TT HCM 2021, Chương V, I.1.a (tr.97–99)."
     },
     {
-      id: "subject",
-      type: "quiz",
-      chapter: 2,
-      mode: "Đúng / Sai",
-      kicker: "Chương 2 · Chủ thể rộng mở",
-      title: "Vòng tròn mở",
-      log: "Chủ thể rộng",
-      body: [
-        "Khoa viết trong một nhóm nhỏ: “Muốn yên thì chỉ giữ người cùng chí hướng. Ai khác ý thì để ngoài vòng.” Vài người gật. Vòng tròn trên diễn đàn đang khép."
-      ],
-      q: "Chủ thể của đại đoàn kết chỉ gồm những người có cùng tư tưởng, cùng quan điểm chính trị.",
+      q: "Chủ thể của đại đoàn kết chỉ gồm những người có cùng tư tưởng, cùng quan điểm.",
       choices: ["Đúng", "Sai"],
       answer: 1,
-      okTitle: "Vòng tròn ấy phải mở",
-      badTitle: "Vòng tròn ấy quá hẹp",
-      explain: "Sai. Chủ thể đại đoàn kết rất rộng — toàn dân — không thu lại thành những người nghĩ giống mình. Khép vòng cho “cùng chí hướng” là làm nghèo chính khối đoàn kết.",
-      source: "Giáo trình Tư tưởng Hồ Chí Minh (2021), Chương V, mục I.2.a (tr.100)."
+      explain: "Sai. Chủ thể rất rộng — toàn dân — không chỉ những người nghĩ giống mình.",
+      source: "Giáo trình TT HCM 2021, Chương V, I.2.a (tr.100)."
     },
     {
-      id: "interest",
-      type: "quiz",
-      chapter: 3,
-      mode: "Trắc nghiệm",
-      kicker: "Chương 3 · Điểm quy tụ",
-      title: "Ngọn lửa chung",
-      log: "Lợi ích chung",
-      body: [
-        "Cuộc nói tách nhiều hướng: điểm số, cách trình bày, thói quen từng nhóm. Có người bảo, muốn đoàn kết thì mỗi người phải bỏ hết phần khác mình. Ngọn lửa giữa diễn đàn nhỏ dần, vì chưa ai gọi tên điều mọi người đang cùng cần."
-      ],
-      q: "Điểm tập hợp lực lượng trong đại đoàn kết được xây dựng trên yếu tố nào?",
+      q: "Điểm tập hợp lực lượng trong đại đoàn kết dựa trên yếu tố nào?",
       choices: [
-        "Buộc mọi người từ bỏ mọi khác biệt cá nhân",
-        "Lợi ích chung, đồng thời tôn trọng những khác biệt chính đáng",
+        "Buộc mọi người từ bỏ mọi khác biệt",
+        "Lợi ích chung, đồng thời tôn trọng khác biệt chính đáng",
         "Chỉ lợi ích trước mắt của nhóm đang mạnh hơn",
-        "Chỉ tập hợp những người vốn đã không khác gì nhau"
+        "Chỉ những người vốn đã giống nhau"
       ],
       answer: 1,
-      okTitle: "Lửa quy tụ, không lửa đồng hóa",
-      badTitle: "Chưa chạm điểm quy tụ",
-      explain: "Điểm quy tụ là lợi ích chung — điều mọi người cùng cần — và vẫn còn chỗ cho khác biệt chính đáng. Đoàn kết không đòi xóa người khác cho giống một khuôn.",
-      source: "Giáo trình Tư tưởng Hồ Chí Minh (2021), Chương V, mục I.3 (tr.101–103)."
+      explain: "Điểm quy tụ là lợi ích chung, và vẫn còn chỗ cho khác biệt chính đáng.",
+      source: "Giáo trình TT HCM 2021, Chương V, I.3 (tr.101–103)."
     },
     {
-      id: "fingers",
-      type: "quiz",
-      chapter: 4,
-      mode: "Trắc nghiệm",
-      ornament: "fingers",
-      kicker: "Chương 4 · Khoan dung",
-      title: "Năm ngón tay",
-      log: "Khoan dung",
-      body: [
-        "Một bình luận rời khỏi bài và chuyển sang gọi tên, mỉa mai cách ăn nói của một bạn. Có người biện hộ: “Thẳng mới mau.” Năm ngón không dài bằng nhau. Việc cần làm chưa bao giờ là bẻ ngón cho đều."
-      ],
-      q: "Hình ảnh “năm ngón tay” trong tư tưởng Hồ Chí Minh gợi điều gì về thái độ với con người?",
+      q: "Hình ảnh năm ngón tay gợi điều gì về thái độ với con người?",
       choices: [
-        "Phải loại người khác biệt, như loại một ngón tay thừa",
-        "Khoan dung, tôn trọng con người; phê phán việc làm, không công kích cá nhân",
-        "Chỉ đoàn kết với người giống mình từ đầu đến cuối",
-        "Khác biệt không cần được tôn trọng nếu mình đang vội"
+        "Loại người khác biệt như loại một ngón thừa",
+        "Khoan dung: phê phán việc làm, không công kích cá nhân",
+        "Chỉ đoàn kết với người giống mình",
+        "Khác biệt không cần tôn trọng khi đang vội"
       ],
       answer: 1,
-      okTitle: "Bàn tay còn đủ ngón",
-      badTitle: "Khoan dung không phải loại người",
-      explain: "Năm ngón có ngón vắn ngón dài, vẫn nằm trong một bàn tay. Ẩn dụ ấy nhấn khoan dung và tôn trọng con người: phản biện vấn đề, không công kích cá nhân, không phủ nhận người vì họ khác mình.",
-      source: "Cùng mạch Giáo trình Tư tưởng Hồ Chí Minh (2021), Chương V, mục I.3 (tr.101–103)."
+      explain: "Ngón vắn ngón dài vẫn một bàn tay. Phản biện vấn đề, không phủ nhận người.",
+      source: "Cùng mạch Giáo trình TT HCM 2021, Chương V, I.3 (tr.101–103)."
     },
     {
-      id: "cau",
-      type: "quiz",
-      chapter: 5,
-      mode: "Trắc nghiệm",
-      kicker: "Chương 5 · Cầu đồng tồn dị",
-      title: "Hai bờ của một chữ",
-      log: "Cầu đồng tồn dị",
-      body: [
-        "Minh muốn bài nói rõ: đoàn kết không xóa khác biệt. Khoa trả lời ngay: “Khác biệt làm loãng thông điệp. Giữ một ý thôi.” Hai người đứng hai bờ. Câu hỏi là có nhịp cầu nào chịu được cả hai."
-      ],
-      q: "Nguyên tắc “cầu đồng tồn dị” nghĩa là gì?",
+      q: "Cầu đồng tồn dị nghĩa là gì?",
       choices: [
         "Tìm điểm chung rồi bắt mọi người phải giống nhau",
-        "Bỏ qua mọi khác biệt, kể cả khi khác biệt làm hại cộng đồng",
-        "Tìm điểm chung, đồng thời để những khác biệt chính đáng được tồn tại",
-        "Tránh mọi tranh luận để giữ hòa khí bề ngoài"
+        "Bỏ qua mọi khác biệt, kể cả khác biệt gây hại",
+        "Tìm điểm chung, để khác biệt chính đáng cùng tồn tại",
+        "Tránh mọi tranh luận cho êm bề mặt"
       ],
       answer: 2,
-      okTitle: "Cầu chịu được hai bờ",
-      badTitle: "Chưa phải cầu đồng tồn dị",
-      explain: "Cầu đồng tồn dị là chủ động tìm chỗ giống nhau, và chấp nhận sự khác biệt chính đáng cùng tồn tại. Không phải hòa cả làng, không phải đồng hóa, cũng không phải im để yên bề mặt.",
-      source: "Giáo trình Tư tưởng Hồ Chí Minh (2021), Chương V, mục I.4.b (tr.103–104)."
+      explain: "Chủ động tìm chỗ giống nhau, và chấp nhận khác biệt chính đáng cùng tồn tại.",
+      source: "Giáo trình TT HCM 2021, Chương V, I.4.b (tr.103–104)."
     },
     {
-      id: "talk-bridge",
-      type: "talk",
-      chapter: 5,
-      mode: "Hội thoại",
-      kicker: "Chương 5 · Cầu đồng tồn dị",
-      title: "Nhóm soạn bài",
-      log: "Hội thoại: giữ người trong cuộc",
-      body: [
-        "Định nghĩa chưa đủ. Cuộc trao đổi tràn vào nhóm đang dựng bài, nơi một câu gửi đi có thể giữ người lại hoặc đẩy người ra."
-      ],
-      room: "Nhóm soạn bài · tối nay",
-      thread: [
-        { who: "Khoa", tone: "khoa", text: "Ai không đồng ý hướng này thì thôi, khỏi góp. Mình chốt một mạch cho nhanh." },
-        { who: "Minh", tone: "minh", text: "Mình không đòi bài thành nhiều giọng loạn. Mình chỉ muốn phần khác biệt chính đáng còn được nói. Nếu không, đại đoàn kết trên bài chỉ là một câu cho giống nhau." }
-      ],
-      prompt: "Bạn gửi điều gì vào nhóm?",
+      q: "Một bạn trong nhóm bất đồng với hướng bài. Cách nào gần cầu đồng tồn dị hơn?",
       choices: [
-        {
-          tag: "Đẩy ra",
-          text: "Không cùng hướng thì rời nhóm soạn. Ở lại chỉ làm chậm.",
-          ok: false,
-          flag: "exclude",
-          resultTitle: "Vòng khép lại một người",
-          after: [
-            { who: "Bạn", tone: "you", text: "Không cùng hướng thì rời nhóm soạn. Ở lại chỉ làm chậm." },
-            { who: "Khoa", tone: "khoa", text: "Đúng. Gọn thì xong việc." },
-            { who: "Minh", tone: "minh", text: "Mình hiểu. Mình im phần này." }
-          ],
-          reflect: "Nhóm gọn hơn một người, và hẹp hơn một cách nhìn. Cầu đồng tồn dị không bắt đầu bằng cách mời người khác bước ra. Hãy gọi tên điều cả hai cùng muốn — bài rõ, đứng được — rồi góp vào ý, không đẩy người.",
-          source: "Tinh thần cầu đồng tồn dị. Giáo trình TT HCM 2021, Chương V, mục I.4.b (tr.103–104)."
-        },
-        {
-          tag: "Im lặng",
-          text: "Không gửi gì. Chỉ thả một biểu tượng, rồi để Khoa chốt.",
-          ok: false,
-          flag: "silence",
-          resultTitle: "Bề mặt yên, cầu chưa có",
-          after: [
-            { who: "Diễn biến", tone: "narr", text: "Bạn không gõ. Một biểu tượng nhỏ trôi qua rồi chìm." },
-            { who: "Khoa", tone: "khoa", text: "Không ai phản đối thì mình chốt một mạch." },
-            { who: "Minh", tone: "minh", text: "…" }
-          ],
-          reflect: "Im lặng giữ bề mặt êm, không giữ cuộc nói. Cầu đồng tồn dị cần một câu tìm điểm chung và một câu giữ chỗ cho khác biệt chính đáng — không phải một dấu hiệu cho qua.",
-          source: "Tinh thần cầu đồng tồn dị. Giáo trình TT HCM 2021, Chương V, mục I.4.b (tr.103–104)."
-        },
-        {
-          tag: "Nối cầu",
-          text: "Mình thấy cả hai đều muốn bài rõ và đứng được. Giữ trục đại đoàn kết, đồng thời để khác biệt chính đáng có mặt. Mình góp ý vào ý — không đẩy ai ra khỏi nhóm.",
-          ok: true,
-          flag: "bridge",
-          resultTitle: "Cầu vừa chịu một nhịp",
-          after: [
-            { who: "Bạn", tone: "you", text: "Mình thấy cả hai đều muốn bài rõ và đứng được. Giữ trục đại đoàn kết, đồng thời để khác biệt chính đáng có mặt. Mình góp ý vào ý — không đẩy ai ra khỏi nhóm." },
-            { who: "Khoa", tone: "khoa", text: "Trục rõ thì mình theo được. Miễn là không thành năm bài trong một." },
-            { who: "Minh", tone: "minh", text: "Vậy mình viết phần khác biệt như một cách làm trục ấy dày thêm, không phải một hướng ngược." }
-          ],
-          reflect: "Đó là cầu đồng tồn dị trong một nhóm đang soạn bài: điểm chung được gọi tên, khác biệt chính đáng còn chỗ, người ở lại cuộc nói.",
-          source: "Giáo trình TT HCM 2021, Chương V, mục I.4.b (tr.103–104)."
-        }
-      ]
+        "Không đồng ý thì rời nhóm",
+        "Im lặng cho xong việc",
+        "Tìm việc chung, phản biện nội dung, giữ người ở lại cuộc nói",
+        "Công kích cá nhân để thắng cuộc tranh luận"
+      ],
+      answer: 2,
+      explain: "Gọi tên điểm chung, góp vào ý, không đẩy người ra.",
+      source: "Tinh thần I.4.b (tr.103–104)."
     },
     {
-      id: "limit",
-      type: "quiz",
-      chapter: 6,
-      mode: "Đúng / Sai",
-      kicker: "Chương 6 · Thử thách và giới hạn",
-      title: "Tin không nguồn",
-      log: "Không bỏ qua chia rẽ",
-      body: [
-        "Sáng hôm sau, một bài đăng lan trong diễn đàn lớp. An chuyển một đoạn không rõ nguồn, kèm câu tách sinh viên theo vùng miền và gán cho một phía là gánh nặng của lớp. Vài người cười cho qua. Hà — người bị câu ấy chạm — tắt trạng thái hoạt động."
-      ],
-      q: "Đại đoàn kết có nghĩa là bỏ qua mọi mâu thuẫn, không đấu tranh với hành vi chia rẽ cộng đồng.",
-      choices: ["Đúng", "Sai"],
-      answer: 1,
-      okTitle: "Đoàn kết không phải làm ngơ",
-      badTitle: "Im trước chia rẽ không phải đoàn kết",
-      explain: "Sai. Đoàn kết không có nghĩa là bỏ qua mọi xung đột. Với hành vi chia rẽ, phá hoại khối đại đoàn kết, cần thấy rõ và đấu tranh — không nhân nhượng sự chia rẽ. Khoan dung với con người không đồng nghĩa với làm ngơ trước lời hại cộng đồng.",
-      source: "Giáo trình Tư tưởng Hồ Chí Minh (2021), Chương V, mục III.2 (tr.114–115)."
-    },
-    {
-      id: "four",
-      type: "quiz",
-      chapter: 6,
-      mode: "Trắc nghiệm",
-      kicker: "Chương 6 · Thử thách và giới hạn",
-      title: "Thẻ trước ô soạn",
-      log: "Bốn câu tự kiểm",
-      slipTitle: "Thẻ tự kiểm của nhóm",
-      slip: FOUR,
-      body: [
-        "Con trỏ đang nhấp trong ô trả lời. Nhóm bạn từng dán ở đây một thẻ nhỏ — bốn câu, để đọc trước khi gõ. Hà vẫn im. Tin kia vẫn nằm trên diễn đàn."
-      ],
-      q: "Bốn câu tự kiểm ấy là gì?",
+      q: "Bốn câu tự kiểm trước khi bình luận (điểm chung, khác biệt, phản biện hay công kích, lời nói nối hay đẩy) là gì?",
       choices: [
-        "Nguyên văn trích từ Giáo trình Tư tưởng Hồ Chí Minh 2021",
-        "Vận dụng của nhóm từ tinh thần đại đoàn kết — không phải nguyên văn giáo trình",
-        "Bốn điều khoản trong quy định pháp luật về bình luận trên mạng",
-        "Bốn câu Bác Hồ đã viết đúng từng chữ như vậy cho không gian mạng"
+        "Nguyên văn trong Giáo trình Tư tưởng Hồ Chí Minh 2021",
+        "Vận dụng của nhóm — không phải nguyên văn giáo trình",
+        "Bốn điều khoản luật về bình luận trên mạng",
+        "Bốn câu Bác Hồ viết đúng từng chữ cho không gian mạng"
       ],
       answer: 1,
-      okTitle: "Đây là vận dụng của nhóm",
-      badTitle: "Đừng gắn nhầm vào nguyên văn",
-      explain: "Bốn câu này là vận dụng của nhóm, rút từ tinh thần đại đoàn kết và cầu đồng tồn dị, để dùng trước khi bình luận. Không phải nguyên văn giáo trình, cũng không phải trích dẫn từng chữ của Bác, càng không phải điều khoản luật.",
+      explain: "Đây là vận dụng của nhóm, rút từ tinh thần đại đoàn kết, để dùng trước khi gõ.",
       source: "Vận dụng của nhóm — không phải nguyên văn giáo trình."
     },
     {
-      id: "talk-rumor",
-      type: "talk",
-      chapter: 6,
-      mode: "Hội thoại",
-      kicker: "Chương 6 · Thử thách và giới hạn",
-      title: "Khi Hà đang im",
-      log: "Hội thoại: tin chia rẽ",
-      body: [
-        "Thẻ đã đọc. Bài đăng đang được người khác chuyển tiếp. Đây là lúc đường ranh hiện ra: không làm ngơ, và cũng không biến cuộc đấu tranh thành công kích người."
-      ],
-      room: "Diễn đàn lớp · sáng",
-      thread: [
-        { who: "An", tone: "an", text: "Mình chỉ chuyển thôi. Trong bài có câu sinh viên một vùng thì kéo cả lớp xuống — thấy cũng hợp lý một phần. Nói thẳng cho lớp biết." },
-        { who: "Hà", tone: "ha", text: "Mình đọc được. Mình không muốn phải chứng minh mình thuộc về lớp này." }
-      ],
-      prompt: "Bạn ứng xử thế nào?",
-      choices: [
-        {
-          tag: "Im lặng",
-          text: "Không bình luận. Bạn nghĩ: đoàn kết là tránh tranh cãi.",
-          ok: false,
-          flag: "quietRumor",
-          resultTitle: "Tin sai vẫn nằm đó",
-          after: [
-            { who: "Diễn biến", tone: "narr", text: "Bạn không viết gì. Bài đăng tiếp tục được chuyển. Hà không nói thêm." }
-          ],
-          reflect: "Im lặng trước hành vi chia rẽ không phải khoan dung. Đại đoàn kết không có nghĩa là tránh mọi va chạm. Bốn câu tự kiểm — vận dụng của nhóm — không dùng để khỏi phải nói, mà để nói cho đúng.",
-          source: "Giáo trình TT HCM 2021, Chương V, mục III.2 (tr.114–115). Bốn câu tự kiểm là vận dụng của nhóm."
-        },
-        {
-          tag: "Công kích",
-          text: "An thật độc và hèn. Biến khỏi diễn đàn đi.",
-          ok: false,
-          flag: "attack",
-          resultTitle: "Cuộc nói đổi ngôi",
-          after: [
-            { who: "Bạn", tone: "you", text: "An thật độc và hèn. Biến khỏi diễn đàn đi." },
-            { who: "An", tone: "an", text: "Bạn mới độc. Mình chuyển một bài mà bị chửi thế này?" },
-            { who: "Diễn biến", tone: "narr", text: "Mạch chuyện thành cuộc công kích. Tin sai không còn là việc đang bàn. Hà vẫn chưa được gọi vào chuyện chung của lớp." }
-          ],
-          reflect: "Bạn đã không làm ngơ, nhưng nhằm vào người thay vì vào tin sai. Phản biện vấn đề khác với công kích con người. Cần bác nội dung chia rẽ, giữ nhân phẩm, và kéo cuộc nói về việc chung của cả lớp.",
-          source: "Mục III.2 (tr.114–115) cùng tinh thần khoan dung ở mục I.3. Bốn câu tự kiểm là vận dụng của nhóm."
-        },
-        {
-          tag: "Bác tin sai",
-          text: "Mình phản đối tin không nguồn đang tách lớp theo vùng miền. Khác biệt ấy không phải lỗi, cũng không phải lý do để hạ nhau. Mình góp ý việc chuyển tin — không phủ nhận An — và lớp mình vẫn có một việc chung phải làm cùng nhau.",
-          ok: true,
-          flag: "refute",
-          resultTitle: "Đường ranh được giữ",
-          after: [
-            { who: "Bạn", tone: "you", text: "Mình phản đối tin không nguồn đang tách lớp theo vùng miền. Khác biệt ấy không phải lỗi, cũng không phải lý do để hạ nhau. Mình góp ý việc chuyển tin — không phủ nhận An — và lớp mình vẫn có một việc chung phải làm cùng nhau." },
-            { who: "An", tone: "an", text: "Mình gỡ phần chuyển tiếp. Mình không kiểm tra nguồn." },
-            { who: "Hà", tone: "ha", text: "Cảm ơn. Câu ấy nói về tin sai, và mình vẫn ở trong chuyện chung của lớp." }
-          ],
-          reflect: "Đây là giới hạn của đại đoàn kết trên mạng: không bỏ qua hành vi chia rẽ, và không biến cuộc đấu tranh thành công kích người. Bốn câu tự kiểm — vận dụng của nhóm — vừa được dùng: có điểm chung, khác biệt vùng miền có thể cùng tồn tại, phản biện việc chứ không phủ nhận người, lời nói giữ cuộc chuyện tiếp tục.",
-          source: "Giáo trình TT HCM 2021, Chương V, mục III.2 (tr.114–115). Bốn câu tự kiểm là vận dụng của nhóm."
-        },
-        {
-          tag: "Rời đi",
-          text: "Thoát diễn đàn. Chuyện này đụng vào dễ bị liên lụy.",
-          ok: false,
-          flag: "leave",
-          resultTitle: "Diễn đàn thiếu một người ở lại",
-          after: [
-            { who: "Diễn biến", tone: "narr", text: "Bạn thoát. Mạch chuyện chạy tiếp không có bạn. Câu của Hà nằm đó, chưa có lời nào đứng về phía sự thật của tin." }
-          ],
-          reflect: "Rời đi tránh cho mình một rủi ro, và để cộng đồng một mình với tin sai. Trách nhiệm với cộng đồng là một nhịp trong văn hóa giao tiếp số mà nhóm muốn kết lại — không chỉ trách nhiệm với sự an toàn của riêng mình.",
-          source: "Giáo trình TT HCM 2021, Chương V, mục III.2 (tr.114–115), cùng nguyên tắc trách nhiệm với cộng đồng của nhóm."
-        }
-      ]
+      q: "Đại đoàn kết có nghĩa là bỏ qua mọi mâu thuẫn, không đấu tranh với hành vi chia rẽ.",
+      choices: ["Đúng", "Sai"],
+      answer: 1,
+      explain: "Sai. Khoan dung với con người không có nghĩa là làm ngơ trước hành vi chia rẽ cộng đồng.",
+      source: "Giáo trình TT HCM 2021, Chương V, III.2 (tr.114–115)."
     },
     {
-      id: "principles",
-      type: "quiz",
-      chapter: 7,
-      mode: "Trắc nghiệm",
-      kicker: "Chương 7 · Văn hóa giao tiếp số",
-      title: "Năm nhịp mang theo",
-      log: "Nguyên tắc kết",
-      body: [
-        "Đến chiều, diễn đàn không trở thành một giọng. Nó bớt gãy. Trước khi khóa trang cuối, nhóm đọc lại nguyên tắc mình muốn cả lớp mang theo khi rời buổi nói."
-      ],
-      q: "Nguyên tắc kết thúc bài thuyết trình của nhóm gồm những nội dung nào?",
+      q: "Một tin không nguồn đang tách lớp theo vùng miền. Cách ứng xử nào đúng tinh thần đại đoàn kết?",
       choices: [
-        "Chỉ tìm điểm chung; bỏ qua mọi khác biệt",
-        PRINCIPLES.join(" – "),
+        "Im lặng vì đoàn kết là không tranh cãi",
+        "Công kích người đã đăng tin",
+        "Bác nội dung sai, giữ nhân phẩm, kéo về việc chung của lớp",
+        "Rời diễn đàn cho khỏi liên lụy"
+      ],
+      answer: 2,
+      explain: "Đấu tranh với hành vi chia rẽ, và không biến cuộc đấu tranh thành công kích người.",
+      source: "III.2 (tr.114–115). Bốn câu tự kiểm là vận dụng của nhóm."
+    },
+    {
+      q: "Nguyên tắc kết của nhóm gồm những nội dung nào?",
+      choices: [
+        "Chỉ tìm điểm chung, bỏ qua mọi khác biệt",
+        "Tìm điểm chung – tôn trọng khác biệt – phản biện vấn đề – không công kích con người – trách nhiệm với cộng đồng",
         "Thắng mọi tranh luận bằng mọi giá",
-        "Chỉ trách nhiệm với bản thân, không cần cộng đồng"
+        "Chỉ trách nhiệm với bản thân"
       ],
       answer: 1,
-      okTitle: "Đủ năm nhịp",
-      badTitle: "Nguyên tắc kết còn thiếu nhịp",
-      explain: "Nhóm khép bài bằng năm nhịp cùng đi với nhau: tìm điểm chung, tôn trọng khác biệt, phản biện vấn đề, không công kích con người, và giữ trách nhiệm với cộng đồng.",
-      source: "Nguyên tắc kết của nhóm trong bài thuyết trình — vận dụng, không phải một câu nguyên văn trong giáo trình."
+      explain: "Năm nhịp ấy đi cùng nhau trong cách ứng xử trên mạng.",
+      source: "Nguyên tắc kết của nhóm — vận dụng, không phải nguyên văn giáo trình."
     },
     {
-      id: "message",
-      type: "quiz",
-      chapter: 7,
-      mode: "Trắc nghiệm",
-      kicker: "Chương 7 · Văn hóa giao tiếp số",
-      title: "Dòng cuối",
-      log: "Thông điệp kết",
-      body: [
-        "Dòng cuối trên trang chiếu chưa chốt. Cả nhóm nhìn nhau: câu nào đáng để diễn đàn còn nhắc lại sau buổi nói, khi mọi người đã về và lại mở phần bình luận?"
-      ],
-      q: "Thông điệp kết nào phản ánh đúng tinh thần bài thuyết trình?",
+      q: "Thông điệp kết nào đúng với tinh thần bài thuyết trình?",
       choices: [
         "Đoàn kết trên mạng bắt đầu từ việc mọi người phải nghĩ giống nhau.",
         CLOSING,
-        "Trên mạng không cần đoàn kết, vì mỗi người một thế giới riêng.",
-        "Chỉ đoàn kết với người cùng quan điểm; người khác thì loại trừ."
+        "Trên mạng không cần đoàn kết.",
+        "Chỉ đoàn kết với người cùng quan điểm."
       ],
       answer: 1,
-      okTitle: "Đúng dòng cuối của nhóm",
-      badTitle: "Thông điệp ấy lệch trục",
-      explain: "Đoàn kết trên không gian mạng không bắt đầu từ việc nghĩ giống nhau. Nó bắt đầu từ cách ứng xử lúc không giống nhau — khi vẫn còn điểm chung để tìm, và vẫn còn khác biệt chính đáng để tôn trọng.",
+      explain: "Đoàn kết bắt đầu từ cách ứng xử khi người ta không giống nhau.",
       source: "Thông điệp kết của nhóm."
     },
     {
-      id: "critique",
-      type: "quiz",
-      chapter: 7,
-      mode: "Tình huống",
-      kicker: "Chương 7 · Văn hóa giao tiếp số",
-      title: "Góp ý gay, không nhằm người",
-      log: "Phân biệt ý và người",
-      body: [
-        "Ngay sau đó, một bạn để lại góp ý dài dưới bản nháp. Lời gay, chỉ thẳng một lỗ hổng lập luận. Không xúc phạm ai, không kéo vùng miền, không đụng chuyện đời tư."
-      ],
-      q: "Cách ứng xử phù hợp nhất với góp ý ấy là gì?",
+      q: "Một góp ý gay vào ý tưởng, không xúc phạm ai. Cách phù hợp nhất?",
       choices: [
-        "Coi mọi chỉ trích là công kích cá nhân và đáp trả tương tự",
-        "Phản hồi nội dung: làm rõ điểm chung, giải thích khác biệt, giữ thái độ tôn trọng",
-        "Xóa góp ý ngay vì cho rằng góp ý gay là phá đoàn kết",
+        "Coi đó là công kích và đáp trả tương tự",
+        "Phản hồi nội dung, làm rõ điểm chung, giữ tôn trọng",
+        "Xóa góp ý vì cho rằng góp ý gay là phá đoàn kết",
         "Bỏ bài vì có người không đồng ý"
       ],
       answer: 1,
-      okTitle: "Phân biệt được ý và người",
-      badTitle: "Góp ý gay chưa phải công kích",
-      explain: "Phê phán ý tưởng khác với công kích con người. Hãy trả lời vào nội dung: điểm chung còn đó, khác biệt được giải thích, thái độ vẫn tôn trọng. Xóa hay đáp trả cá nhân là thu hẹp diễn đàn, không phải giữ đoàn kết.",
-      source: "Tinh thần mục I.3 và I.4.b, cùng nguyên tắc phản biện vấn đề của nhóm."
+      explain: "Phê phán ý khác với công kích người. Hãy trả lời vào nội dung.",
+      source: "Tinh thần I.3 và I.4.b, cùng nguyên tắc của nhóm."
     }
   ];
 
-  var LETTERS = ["A", "B", "C", "D"];
-  var TOTAL = 0;
-  var state = freshState();
+  function pack(name, hint, duration, rows) {
+    return {
+      name: name,
+      hint: hint,
+      duration: duration,
+      spawns: rows.map(function (row) { return { t: row[0], type: row[1], row: row[2], done: false }; })
+    };
+  }
 
-  function freshState() {
-    return { step: -1, name: "", score: 0, marks: {}, flags: {}, phase: "open", lastChoice: null };
+  var WAVE_SRC = [
+    pack("Sóng 1 · Tin đồn", "Ba hàng giữa. Đặt đèn và phản biện trước khi tin giả tới.", 96, [
+      [2, "tin", 2], [8, "tin", 1], [14, "tin", 3], [22, "tin", 2], [30, "tin", 1],
+      [38, "congkich", 3], [46, "tin", 2], [54, "tin", 3], [62, "tin", 1], [70, "congkich", 2],
+      [78, "tin", 3], [88, "tin", 2]
+    ]),
+    pack("Sóng 2 · Năm hàng", "Cả năm hàng mở. Buồng vọng máu dày — cầu đồng làm chúng chậm.", 118, [
+      [2, "tin", 0], [6, "tin", 4], [10, "tin", 1], [14, "congkich", 3], [18, "tin", 2],
+      [24, "echo", 2], [30, "tin", 0], [36, "tin", 4], [42, "congkich", 1], [48, "echo", 0],
+      [54, "tin", 3], [60, "congkich", 4], [66, "spam", 2], [74, "echo", 4], [80, "tin", 1],
+      [86, "congkich", 0], [92, "tin", 3], [98, "tin", 2], [108, "congkich", 1]
+    ]),
+    pack("Sóng 3 · Đường ranh", "Kích động sắp vào. Chạm cột cộng đồng sẽ mất hai nhịp đoàn kết.", 142, [
+      [2, "tin", 1], [6, "spam", 0], [12, "congkich", 3], [16, "tin", 4], [22, "echo", 1],
+      [28, "spam", 4], [34, "congkich", 2], [40, "kichdong", 2], [48, "tin", 0], [54, "echo", 3],
+      [60, "spam", 1], [66, "congkich", 4], [72, "tin", 3], [78, "echo", 2], [84, "congkich", 0],
+      [90, "spam", 3], [96, "kichdong", 3], [104, "congkich", 1], [110, "tin", 4], [116, "congkich", 2],
+      [126, "spam", 2], [134, "tin", 0]
+    ])
+  ];
+
+  var COLS = CONFIG.cols;
+  var ROWS = CONFIG.rows;
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var SPEED = 1;
+  var testMode = false;
+
+  var canvas = document.getElementById("board");
+  var ctx = canvas.getContext("2d");
+  var stage = document.getElementById("stage");
+  var running = false;
+  var raf = 0;
+  var last = 0;
+  var geom = null;
+  var time = 0;
+
+  var grid, enemies, shots, particles, suns, floaters;
+  var sun, integrity, maxIntegrity;
+  var gameTime, phase, phaseT, waveIndex, waves;
+  var skyT, nextQuizAt, quizIndex;
+  var quiz, quizTimer, quizAsked, quizCorrect;
+  var killed, leaked, over, won;
+  var selected, shovel, aim, readyAt, placeLock;
+  var manualPause, seenVirus, playerName;
+  var hurtT, shakeT;
+
+  function unitById(id) {
+    for (var i = 0; i < UNITS.length; i++) if (UNITS[i].id === id) return UNITS[i];
+    return null;
+  }
+
+  function emptyGrid() {
+    var g = [];
+    for (var r = 0; r < ROWS; r++) {
+      g[r] = [];
+      for (var c = 0; c < COLS; c++) g[r][c] = null;
+    }
+    return g;
+  }
+
+  function cloneWaves() {
+    return WAVE_SRC.map(function (w) {
+      return {
+        name: w.name,
+        hint: w.hint,
+        duration: w.duration,
+        spawns: w.spawns.map(function (s) { return { t: s.t, type: s.type, row: s.row, done: false }; })
+      };
+    });
+  }
+
+  function announce(msg) {
+    var live = document.getElementById("live");
+    live.textContent = "";
+    setTimeout(function () { live.textContent = msg; }, 20);
+  }
+
+  var toastTimer = 0;
+  var toastQueue = [];
+  var lastToastText = "";
+  var lastToastAt = 0;
+  function pushToast(text) {
+    var now = Date.now();
+    if (text === lastToastText && now - lastToastAt < 1400) return;
+    lastToastText = text;
+    lastToastAt = now;
+    toastQueue.push(text);
+    pumpToast();
+  }
+  function pumpToast() {
+    if (toastTimer) return;
+    var el = document.getElementById("toast");
+    if (!toastQueue.length) {
+      el.classList.remove("show");
+      el.textContent = "";
+      return;
+    }
+    el.textContent = toastQueue.shift();
+    el.classList.add("show");
+    toastTimer = setTimeout(function () {
+      toastTimer = 0;
+      el.classList.remove("show");
+      setTimeout(pumpToast, 180);
+    }, 2600);
+  }
+
+  function showMenu() {
+    document.getElementById("screen-menu").classList.remove("hidden");
+    document.getElementById("screen-game").classList.add("hidden");
+    document.getElementById("foot-note").classList.remove("hidden");
+    document.getElementById("screen-end").classList.add("hidden");
+    document.getElementById("quiz").classList.add("hidden");
+  }
+
+  function resetMatch() {
+    running = false;
+    cancelAnimationFrame(raf);
+    clearInterval(quizTimer);
+    grid = emptyGrid();
+    enemies = [];
+    shots = [];
+    particles = [];
+    suns = [];
+    floaters = [];
+    sun = CONFIG.startSun;
+    maxIntegrity = CONFIG.integrity;
+    integrity = maxIntegrity;
+    gameTime = 0;
+    time = 0;
+    phase = "prep";
+    phaseT = 0;
+    waveIndex = 0;
+    waves = cloneWaves();
+    skyT = 2;
+    nextQuizAt = CONFIG.quizFirst;
+    quizIndex = 0;
+    quiz = null;
+    quizAsked = 0;
+    quizCorrect = 0;
+    killed = 0;
+    leaked = 0;
+    over = false;
+    won = false;
+    selected = null;
+    shovel = false;
+    aim = { c: 2, r: 2 };
+    readyAt = {};
+    UNITS.forEach(function (u) { readyAt[u.id] = 0; });
+    placeLock = 0;
+    manualPause = false;
+    seenVirus = {};
+    hurtT = 0;
+    shakeT = 0;
+    toastQueue = [];
+    stage.classList.remove("paused");
+    document.getElementById("btn-pause").textContent = "Tạm dừng";
+    document.getElementById("quiz").classList.add("hidden");
+    document.getElementById("screen-end").classList.add("hidden");
+  }
+
+  function startGame() {
+    var input = document.getElementById("player-name");
+    playerName = String((input && input.value) || "").replace(/\s+/g, " ").trim().slice(0, 40);
+    resetMatch();
+    document.getElementById("screen-menu").classList.add("hidden");
+    document.getElementById("foot-note").classList.add("hidden");
+    document.getElementById("screen-game").classList.remove("hidden");
+    buildTray();
+    updateHud();
+    renderHearts();
+    layout();
+    pushToast("Chuẩn bị · " + waves[0].name + ". " + waves[0].hint);
+    announce("Bắt đầu phòng tuyến. " + waves[0].name);
+    running = true;
+    last = performance.now();
+    raf = requestAnimationFrame(frame);
+  }
+
+  function frozen() { return manualPause || !!quiz || over; }
+
+  function frame(now) {
+    if (!running) return;
+    raf = requestAnimationFrame(frame);
+    var raw = Math.min(0.1, (now - last) / 1000 || 0);
+    last = now;
+    time += raw;
+    if (!geom) layout();
+    var budget = frozen() ? 0 : raw * SPEED;
+    var guard = 0;
+    while (budget > 0 && guard < 48 && !over && !quiz) {
+      var step = Math.min(0.05, budget);
+      tick(step);
+      budget -= step;
+      guard += 1;
+    }
+    if (hurtT > 0) hurtT = Math.max(0, hurtT - raw);
+    if (shakeT > 0) shakeT = Math.max(0, shakeT - raw);
+    render();
+    paintCooldowns();
+  }
+
+  function tick(dt) {
+    gameTime += dt;
+    updateDirector(dt);
+    skyT += dt;
+    if (skyT >= CONFIG.skyEvery && geom) {
+      skyT = 0;
+      var span = Math.max(40, geom.cssW - geom.gutter - 50);
+      suns.push({
+        x: geom.gutter + 24 + Math.random() * span,
+        y: -12,
+        age: 0,
+        value: CONFIG.skyValue,
+        settled: false,
+        bob: 0,
+        dead: false
+      });
+    }
+    updatePlants(dt);
+    updateShots(dt);
+    updateEnemies(dt);
+    updateSuns(dt);
+    updateFx(dt);
+    enemies = enemies.filter(function (e) { return !e.dead; });
+    shots = shots.filter(function (s) { return !s.dead; });
+    particles = particles.filter(function (p) { return p.life > 0; });
+    suns = suns.filter(function (s) { return !s.dead; });
+    floaters = floaters.filter(function (f) { return f.age < 0.9; });
+    if (phase === "clear" && enemies.length === 0 && !over) finish(true);
+    maybeQuiz();
+    updateHud();
+  }
+
+  function updateDirector(dt) {
+    var wave = waves[waveIndex];
+    if (!wave) return;
+    if (phase === "prep") {
+      phaseT += dt;
+      if (phaseT >= CONFIG.prep) {
+        phase = "combat";
+        phaseT = 0;
+        pushToast(wave.name + " bắt đầu.");
+        announce(wave.name + " bắt đầu.");
+      }
+    } else if (phase === "combat") {
+      phaseT += dt;
+      wave.spawns.forEach(function (sp) {
+        if (!sp.done && phaseT >= sp.t) {
+          sp.done = true;
+          spawnVirus(sp.type, sp.row);
+        }
+      });
+      if (phaseT >= wave.duration) {
+        if (waveIndex < waves.length - 1) {
+          waveIndex += 1;
+          phase = "prep";
+          phaseT = 0;
+          pushToast("Khoảng lặng · " + waves[waveIndex].name + ". " + waves[waveIndex].hint);
+          announce("Khoảng lặng. " + waves[waveIndex].hint);
+        } else {
+          phase = "clear";
+          pushToast("Sóng cuối đã qua. Dọn nốt virus còn trên mạch.");
+        }
+      }
+    }
+  }
+
+  function spawnVirus(type, row) {
+    var spec = VIRUS[type];
+    var count = type === "spam" ? 3 : 1;
+    for (var i = 0; i < count; i++) {
+      enemies.push({
+        type: type,
+        row: row,
+        x: COLS + 0.15 + i * 0.42,
+        hp: spec.hp,
+        max: spec.hp,
+        slowT: 0,
+        dead: false
+      });
+    }
+    if (!seenVirus[type]) {
+      seenVirus[type] = true;
+      pushToast(spec.name + " — " + spec.blurb);
+    }
+  }
+
+  function updatePlants(dt) {
+    for (var r = 0; r < ROWS; r++) {
+      for (var c = 0; c < COLS; c++) {
+        var p = grid[r][c];
+        if (!p) continue;
+        if (p.hp <= 0) {
+          burst(p.c + 0.5, p.r, "#e0b85a", 8);
+          grid[r][c] = null;
+          continue;
+        }
+        if (p.id === "den") {
+          p.sunT += dt;
+          if (p.sunT >= CONFIG.lampEvery) {
+            p.sunT = 0;
+            sun += CONFIG.lampValue;
+            floaters.push({ c: p.c, r: p.r, text: "+" + CONFIG.lampValue, age: 0 });
+          }
+        }
+        var unit = unitById(p.id);
+        if (!unit.dmg) continue;
+        p.cool -= dt;
+        if (p.cool > 0) continue;
+        var target = acquireTarget(r, p.c);
+        if (!target) continue;
+        p.cool = unit.rate;
+        var dir = target.x >= p.c ? 1 : -1;
+        shots.push({
+          row: r,
+          x: p.c + 0.62 * dir,
+          speed: unit.shot * dir,
+          dmg: unit.dmg,
+          slow: unit.slow || 0,
+          kind: p.id,
+          dead: false
+        });
+        burst(p.c + 0.7 * dir, p.r, p.id === "moc" ? "#e0b85a" : "#8fd0c8", 3);
+      }
+    }
+  }
+
+  function acquireTarget(row, fromX) {
+    var right = null;
+    var left = null;
+    for (var i = 0; i < enemies.length; i++) {
+      var e = enemies[i];
+      if (e.dead || e.row !== row) continue;
+      if (e.x >= fromX - 0.05) {
+        if (!right || e.x < right.x) right = e;
+      } else if (!left || e.x > left.x) {
+        left = e;
+      }
+    }
+    return right || left;
+  }
+
+  function updateShots(dt) {
+    for (var i = 0; i < shots.length; i++) {
+      var p = shots[i];
+      if (p.dead) continue;
+      var next = p.x + p.speed * dt;
+      var lo = Math.min(p.x, next) - 0.2;
+      var hi = Math.max(p.x, next) + 0.2;
+      var target = null;
+      for (var j = 0; j < enemies.length; j++) {
+        var e = enemies[j];
+        if (e.dead || e.row !== p.row) continue;
+        if (e.x < lo - 0.15 || e.x > hi + 0.35) continue;
+        if (!target || Math.abs(e.x - p.x) < Math.abs(target.x - p.x)) target = e;
+      }
+      if (target) {
+        hurtEnemy(target, p.dmg, p.kind);
+        if (p.slow) target.slowT = Math.max(target.slowT, p.slow);
+        p.dead = true;
+      } else {
+        p.x = next;
+        if (p.x < -1.2 || p.x > COLS + 1.2) p.dead = true;
+      }
+    }
+  }
+
+  function hurtEnemy(e, dmg, kind) {
+    e.hp -= dmg;
+    burst(e.x, e.row, kind === "moc" ? "#f0d48a" : "#d5fff8", 4);
+    if (e.hp <= 0 && !e.dead) {
+      e.dead = true;
+      killed += 1;
+      burst(e.x, e.row, virusColor(e.type), 10);
+    }
+  }
+
+  function updateEnemies(dt) {
+    for (var i = 0; i < enemies.length; i++) {
+      var e = enemies[i];
+      if (e.dead) continue;
+      if (e.slowT > 0) e.slowT -= dt;
+      var block = blockingPlant(e);
+      if (block) {
+        var face = block.c + 0.64;
+        if (e.x < face) e.x = face;
+        block.hp -= VIRUS[e.type].dps * dt;
+      } else {
+        e.x -= enemySpeed(e) * dt;
+        if (e.x < -0.42) {
+          e.dead = true;
+          leaked += 1;
+          integrity -= VIRUS[e.type].leak;
+          if (integrity < 0) integrity = 0;
+          hurtT = 0.45;
+          shakeT = reduceMotion ? 0 : 0.35;
+          var hearts = document.getElementById("hearts");
+          hearts.classList.remove("hurt");
+          void hearts.offsetWidth;
+          hearts.classList.add("hurt");
+          renderHearts();
+          announce(VIRUS[e.type].name + " đã chạm cộng đồng.");
+          if (integrity <= 0 && !over) finish(false);
+        }
+      }
+    }
+  }
+
+  function blockingPlant(e) {
+    var block = null;
+    for (var c = 0; c < COLS; c++) {
+      var p = grid[e.row][c];
+      if (!p || p.hp <= 0) continue;
+      if (e.x <= p.c + 0.8 && e.x > p.c - 0.15) {
+        if (!block || p.c > block.c) block = p;
+      }
+    }
+    return block;
+  }
+
+  function enemySpeed(e) {
+    var base = VIRUS[e.type].speed;
+    if (e.type === "kichdong" && e.x < 2.7) base = 0.5;
+    if (e.slowT > 0) base *= 0.55;
+    return base;
+  }
+
+  function updateSuns(dt) {
+    if (!geom) return;
+    for (var i = 0; i < suns.length; i++) {
+      var s = suns[i];
+      s.age += dt;
+      if (!s.settled) {
+        s.y += 42 * dt;
+        var land = 36 + Math.abs(Math.sin(s.x * 0.07)) * Math.max(30, geom.cssH - 80);
+        if (s.y >= land) { s.y = land; s.settled = true; }
+      } else if (!reduceMotion) {
+        s.bob = Math.sin(s.age * 2.4) * 3;
+      }
+      if (s.age > 9.5) s.dead = true;
+    }
+  }
+
+  function updateFx(dt) {
+    for (var i = 0; i < particles.length; i++) {
+      var p = particles[i];
+      p.life -= dt;
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.vy += 18 * dt;
+    }
+    for (var j = 0; j < floaters.length; j++) floaters[j].age += dt;
+  }
+
+  function burst(col, row, color, n) {
+    if (!geom) return;
+    var x = colToPx(col);
+    var y = rowToPy(row);
+    var count = reduceMotion ? Math.min(3, n) : n;
+    for (var i = 0; i < count; i++) {
+      var a = Math.random() * Math.PI * 2;
+      var sp = 20 + Math.random() * 50;
+      particles.push({
+        x: x, y: y,
+        vx: Math.cos(a) * sp,
+        vy: Math.sin(a) * sp - 20,
+        life: 0.45 + Math.random() * 0.25,
+        color: color,
+        size: 2 + Math.random() * 2.5
+      });
+    }
+    if (particles.length > 160) particles.splice(0, particles.length - 160);
+  }
+
+  function maybeQuiz() {
+    if (over || quiz || manualPause) return;
+    if (quizIndex >= QUESTIONS.length) return;
+    if (gameTime < nextQuizAt) return;
+    nextQuizAt = gameTime + CONFIG.quizEvery;
+    openQuiz();
+  }
+
+  function openQuiz() {
+    quiz = { q: QUESTIONS[quizIndex], picked: null };
+    quizIndex += 1;
+    renderQuiz();
+    document.getElementById("quiz").classList.remove("hidden");
+    announce("Câu ôn. " + quiz.q.q);
+  }
+
+  function renderQuiz() {
+    var root = document.getElementById("quiz");
+    root.innerHTML = "";
+    var card = el("div", "quiz-card");
+    var kicker = el("p", "kicker");
+    kicker.id = "quiz-title";
+    kicker.textContent = "Ôn bài · câu đúng được " + CONFIG.quizReward + " mặt trời";
+    card.appendChild(kicker);
+    var h = el("h2");
+    h.textContent = quiz.q.q;
+    card.appendChild(h);
+    var list = el("div", "options");
+    var letters = ["A", "B", "C", "D"];
+    quiz.q.choices.forEach(function (choice, i) {
+      var btn = el("button", "option");
+      btn.type = "button";
+      btn.setAttribute("data-i", String(i));
+      var letter = el("span", "letter");
+      letter.textContent = letters[i] || String(i + 1);
+      var text = el("span");
+      text.textContent = choice;
+      btn.appendChild(letter);
+      btn.appendChild(text);
+      if (quiz.picked !== null) {
+        btn.disabled = true;
+        if (i === quiz.q.answer) btn.classList.add("correct");
+        else if (i === quiz.picked) btn.classList.add("wrong");
+      } else {
+        btn.addEventListener("click", function () { pickAnswer(i); });
+      }
+      list.appendChild(btn);
+    });
+    card.appendChild(list);
+    if (quiz.picked !== null) {
+      var ok = quiz.picked === quiz.q.answer;
+      var fb = el("div", "feedback " + (ok ? "ok" : "bad"));
+      var strong = el("strong");
+      strong.textContent = ok ? "Đúng · +" + CONFIG.quizReward + " mặt trời" : "Chưa đúng · không thêm mặt trời";
+      var body = el("p");
+      body.textContent = (ok ? "" : "Hợp lý hơn: " + quiz.q.choices[quiz.q.answer] + " ") + quiz.q.explain;
+      var src = el("p", "source");
+      src.textContent = quiz.q.source;
+      fb.appendChild(strong);
+      fb.appendChild(body);
+      fb.appendChild(src);
+      card.appendChild(fb);
+      var actions = el("div", "actions");
+      var next = el("button", "btn btn-primary");
+      next.type = "button";
+      next.id = "quiz-next";
+      next.textContent = "Tiếp tục (8)";
+      next.addEventListener("click", closeQuiz);
+      actions.appendChild(next);
+      card.appendChild(actions);
+      armQuizTimer(next);
+    }
+    root.appendChild(card);
+  }
+
+  function armQuizTimer(btn) {
+    clearInterval(quizTimer);
+    var left = 8;
+    quizTimer = setInterval(function () {
+      left -= 1;
+      if (left <= 0) closeQuiz();
+      else if (btn) btn.textContent = "Tiếp tục (" + left + ")";
+    }, 1000);
+  }
+
+  function pickAnswer(i) {
+    if (!quiz || quiz.picked !== null) return;
+    quiz.picked = i;
+    quizAsked += 1;
+    var ok = i === quiz.q.answer;
+    if (ok) {
+      quizCorrect += 1;
+      sun += CONFIG.quizReward;
+      pulseSun();
+    }
+    updateHud();
+    renderQuiz();
+    announce(ok ? "Đúng. Thêm mặt trời." : "Chưa đúng. " + quiz.q.explain);
+  }
+
+  function closeQuiz() {
+    clearInterval(quizTimer);
+    quizTimer = 0;
+    quiz = null;
+    document.getElementById("quiz").classList.add("hidden");
+    document.getElementById("quiz").innerHTML = "";
+    if (!countPlants()) pushToast("Chọn đơn vị ở hàng dưới, rồi chạm một ô trên mạch.");
+  }
+
+  function countPlants() {
+    var n = 0;
+    for (var r = 0; r < ROWS; r++) {
+      for (var c = 0; c < COLS; c++) if (grid[r][c]) n += 1;
+    }
+    return n;
+  }
+
+  function finish(didWin) {
+    if (over) return;
+    over = true;
+    won = didWin;
+    closeQuiz();
+    running = false;
+    cancelAnimationFrame(raf);
+    render();
+    var root = document.getElementById("screen-end");
+    root.innerHTML = "";
+    var card = el("div", "end-card");
+    var kicker = el("p", "kicker");
+    kicker.textContent = playerName ? playerName : "Người giữ mạch";
+    card.appendChild(kicker);
+    var title = el("h1");
+    title.textContent = didWin ? "Mạch còn sáng" : "Mạch bị đứt";
+    card.appendChild(title);
+    var sub = el("p", "deck");
+    if (!didWin) sub.textContent = "Virus chia rẽ đã chạm cột cộng đồng quá nhiều. Đại đoàn kết không tự giữ — hãy dựng lại đèn, tường, và phản biện.";
+    else if (integrity >= 8) sub.textContent = "Đoàn kết vững. Cộng đồng còn dày ánh sau cả ba sóng.";
+    else if (integrity >= 4) sub.textContent = "Đang nối cầu. Mạch giữ được, và vẫn còn chỗ để dày thêm.";
+    else sub.textContent = "Giữ được trận, nhưng ánh còn mỏng. Thêm tường và mốc ranh ở những hàng bị thủng.";
+    card.appendChild(sub);
+    var stats = el("div", "stats");
+    [
+      [String(killed), "virus đã chặn"],
+      [String(leaked), "lần lọt mạch"],
+      [quizAsked ? (quizCorrect + "/" + quizAsked) : "0", "câu ôn đúng"]
+    ].forEach(function (item) {
+      var box = el("div");
+      var b = el("b");
+      b.textContent = item[0];
+      var s = el("span");
+      s.textContent = item[1];
+      box.appendChild(b);
+      box.appendChild(s);
+      stats.appendChild(box);
+    });
+    card.appendChild(stats);
+    var waveNote = el("p", "note");
+    waveNote.textContent = didWin ? "Đã qua cả ba sóng." : ("Dừng ở " + waves[Math.min(waveIndex, waves.length - 1)].name + ".");
+    card.appendChild(waveNote);
+    var quote = el("blockquote");
+    quote.textContent = CLOSING;
+    card.appendChild(quote);
+    var note = el("p", "note");
+    note.textContent = "Bốn câu trước khi gõ — vận dụng của nhóm, không phải nguyên văn giáo trình:";
+    card.appendChild(note);
+    var list = el("ol", "take");
+    FOUR.forEach(function (item) {
+      var li = el("li");
+      li.textContent = item;
+      list.appendChild(li);
+    });
+    card.appendChild(list);
+    var actions = el("div", "actions");
+    var again = el("button", "btn btn-primary");
+    again.type = "button";
+    again.textContent = "Chơi lại";
+    again.addEventListener("click", startGame);
+    var home = el("button", "btn btn-ghost");
+    home.type = "button";
+    home.textContent = "Về cổng";
+    home.addEventListener("click", function () {
+      running = false;
+      showMenu();
+    });
+    actions.appendChild(again);
+    actions.appendChild(home);
+    card.appendChild(actions);
+    root.appendChild(card);
+    root.classList.remove("hidden");
+    announce((didWin ? "Thắng. " : "Thua. ") + title.textContent);
+  }
+
+  function layout() {
+    var cssW = stage.clientWidth;
+    if (cssW < 40) return;
+    var narrow = cssW < 680;
+    var gutter = narrow ? 26 : 58;
+    var gap = narrow ? 5 : 7;
+    var cellW = (cssW - gutter - gap * (COLS + 1)) / COLS;
+    var cellH = Math.max(narrow ? 50 : 66, Math.min(narrow ? 62 : 92, cellW * 0.56));
+    var cssH = gap + ROWS * (cellH + gap);
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    canvas.style.width = cssW + "px";
+    canvas.style.height = cssH + "px";
+    canvas.width = Math.floor(cssW * dpr);
+    canvas.height = Math.floor(cssH * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    geom = { cssW: cssW, cssH: cssH, cellW: cellW, cellH: cellH, gutter: gutter, gap: gap, dpr: dpr };
+  }
+
+  function cellOrigin(c, r) {
+    return {
+      x: geom.gutter + geom.gap + c * (geom.cellW + geom.gap),
+      y: geom.gap + r * (geom.cellH + geom.gap)
+    };
+  }
+  function colToPx(col) {
+    return geom.gutter + geom.gap + col * (geom.cellW + geom.gap) + geom.cellW * 0.5;
+  }
+  function rowToPy(row) {
+    return geom.gap + row * (geom.cellH + geom.gap) + geom.cellH * 0.5;
+  }
+
+  function render() {
+    if (!geom) return;
+    var w = geom.cssW;
+    var h = geom.cssH;
+    ctx.clearRect(0, 0, w, h);
+    ctx.save();
+    if (shakeT > 0) ctx.translate((Math.random() - 0.5) * 8 * shakeT, (Math.random() - 0.5) * 4 * shakeT);
+    ctx.fillStyle = "#091618";
+    ctx.fillRect(0, 0, w, h);
+
+    var pillarW = Math.max(14, geom.gutter - 10);
+    var grd = ctx.createLinearGradient(0, 0, 0, h);
+    grd.addColorStop(0, "#f0d48a");
+    grd.addColorStop(0.45, "#e0b85a");
+    grd.addColorStop(1, "#1f8a80");
+    roundRect(ctx, 6, 8, pillarW, h - 16, 10);
+    ctx.fillStyle = grd;
+    ctx.fill();
+    if (hurtT > 0) {
+      ctx.fillStyle = "rgba(180,50,40," + (0.45 * hurtT / 0.45) + ")";
+      roundRect(ctx, 6, 8, pillarW, h - 16, 10);
+      ctx.fill();
+    }
+
+    for (var r = 0; r < ROWS; r++) {
+      var y = rowToPy(r);
+      ctx.save();
+      ctx.strokeStyle = "rgba(143,208,200,.28)";
+      ctx.lineWidth = 2;
+      ctx.setLineDash([7, 11]);
+      ctx.lineDashOffset = reduceMotion ? 0 : -time * 28;
+      ctx.beginPath();
+      ctx.moveTo(geom.gutter, y);
+      ctx.lineTo(w - 8, y);
+      ctx.stroke();
+      ctx.restore();
+      for (var c = 0; c < COLS; c++) {
+        var o = cellOrigin(c, r);
+        roundRect(ctx, o.x, o.y, geom.cellW, geom.cellH, 10);
+        ctx.fillStyle = (c + r) % 2 === 0 ? "#10282c" : "#0d2226";
+        ctx.fill();
+        ctx.strokeStyle = "rgba(159,217,209,.14)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        if (!grid[r][c]) {
+          ctx.fillStyle = "rgba(224,184,90,.35)";
+          ctx.beginPath();
+          ctx.arc(o.x + geom.cellW * 0.5, o.y + geom.cellH * 0.5, 2.1, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+
+    if (aim && !over) {
+      var ao = cellOrigin(aim.c, aim.r);
+      roundRect(ctx, ao.x + 1, ao.y + 1, geom.cellW - 2, geom.cellH - 2, 10);
+      ctx.strokeStyle = shovel ? "#c45b4a" : "#e0b85a";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    for (var rr = 0; rr < ROWS; rr++) {
+      for (var cc = 0; cc < COLS; cc++) {
+        if (grid[rr][cc]) drawPlant(grid[rr][cc]);
+      }
+    }
+    if (selected && aim && !shovel && !grid[aim.r][aim.c]) {
+      ctx.save();
+      ctx.globalAlpha = 0.45;
+      drawPlant({ id: selected, c: aim.c, r: aim.r, hp: 1, max: 1 });
+      ctx.restore();
+    }
+
+    enemies.forEach(drawEnemy);
+    shots.forEach(drawShot);
+    particles.forEach(function (p) {
+      ctx.globalAlpha = Math.max(0, p.life * 2);
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    });
+    suns.forEach(function (s) {
+      var alpha = s.age > 8 ? Math.max(0, 1 - (s.age - 8) / 1.5) : 1;
+      drawSun(s.x, s.y + (s.bob || 0), 15, alpha);
+    });
+    floaters.forEach(function (f) {
+      ctx.globalAlpha = 1 - f.age / 0.9;
+      ctx.fillStyle = "#f0d48a";
+      ctx.font = "700 14px system-ui, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(f.text, colToPx(f.c), rowToPy(f.r) - 18 - f.age * 22);
+      ctx.globalAlpha = 1;
+    });
+    ctx.restore();
+  }
+
+  function drawSun(x, y, rad, alpha) {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = "rgba(224,184,90,.28)";
+    ctx.beginPath();
+    ctx.arc(x, y, rad + 10, 0, Math.PI * 2);
+    ctx.fill();
+    var g = ctx.createRadialGradient(x - 4, y - 4, 2, x, y, rad);
+    g.addColorStop(0, "#fff6d2");
+    g.addColorStop(0.5, "#e0b85a");
+    g.addColorStop(1, "#a07828");
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(x, y, rad, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawPlant(p) {
+    var x = colToPx(p.c);
+    var y = rowToPy(p.r);
+    var s = Math.min(geom.cellW, geom.cellH);
+    ctx.save();
+    ctx.translate(x, y);
+    if (p.id === "den") {
+      ctx.fillStyle = "rgba(224,184,90,.2)";
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.34, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#e0b85a";
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.16, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "#f0d48a";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.26, time * 0.8, time * 0.8 + 1.2);
+      ctx.stroke();
+    } else if (p.id === "tuong") {
+      roundRect(ctx, -s * 0.22, -s * 0.3, s * 0.44, s * 0.6, 6);
+      ctx.fillStyle = "#d7b15a";
+      ctx.fill();
+      ctx.strokeStyle = "#f6e7b8";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.strokeStyle = "#0f5c55";
+      ctx.beginPath();
+      ctx.moveTo(0, -s * 0.18);
+      ctx.lineTo(0, s * 0.18);
+      ctx.moveTo(-s * 0.1, 0);
+      ctx.lineTo(s * 0.1, 0);
+      ctx.stroke();
+    } else if (p.id === "phan") {
+      ctx.fillStyle = "#14756c";
+      ctx.beginPath();
+      ctx.arc(-s * 0.12, 0, s * 0.18, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#d7fff8";
+      roundRect(ctx, -s * 0.02, -s * 0.055, s * 0.36, s * 0.11, 3);
+      ctx.fill();
+      ctx.fillStyle = "#8fd0c8";
+      ctx.beginPath();
+      ctx.arc(-s * 0.16, -s * 0.05, s * 0.04, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (p.id === "cau") {
+      ctx.strokeStyle = "#e0b85a";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(-s * 0.2, s * 0.08);
+      ctx.quadraticCurveTo(0, -s * 0.28, s * 0.2, s * 0.08);
+      ctx.stroke();
+      ctx.fillStyle = "#1f8a80";
+      ctx.beginPath();
+      ctx.arc(-s * 0.2, s * 0.08, s * 0.07, 0, Math.PI * 2);
+      ctx.arc(s * 0.2, s * 0.08, s * 0.07, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (p.id === "moc") {
+      ctx.fillStyle = "#0f4f4a";
+      roundRect(ctx, -s * 0.1, -s * 0.08, s * 0.2, s * 0.36, 4);
+      ctx.fill();
+      ctx.fillStyle = "#e0b85a";
+      ctx.beginPath();
+      ctx.moveTo(0, -s * 0.34);
+      ctx.lineTo(s * 0.12, -s * 0.08);
+      ctx.lineTo(-s * 0.12, -s * 0.08);
+      ctx.closePath();
+      ctx.fill();
+    }
+    ctx.restore();
+    if (p.hp < p.max) drawBar(colToPx(p.c), rowToPy(p.r) - geom.cellH * 0.38, geom.cellW * 0.6, p.hp / p.max, "#8fd0c8");
+  }
+
+  function virusColor(type) {
+    if (type === "tin") return "#7ec8c3";
+    if (type === "congkich") return "#c45b4a";
+    if (type === "echo") return "#8b78b0";
+    if (type === "spam") return "#c46b8a";
+    return "#e08a3c";
+  }
+
+  function drawEnemy(e) {
+    var x = colToPx(e.x);
+    var y = rowToPy(e.row);
+    var s = Math.min(geom.cellW, geom.cellH);
+    var bob = reduceMotion ? 0 : Math.sin(time * 3 + e.row) * 1.5;
+    if (blockingPlant(e) && !reduceMotion) bob = Math.sin(time * 14) * 1.2;
+    ctx.save();
+    ctx.translate(x, y + bob);
+    var colr = virusColor(e.type);
+    ctx.fillStyle = colr;
+    if (e.type === "tin") {
+      ctx.globalAlpha = 0.35;
+      ctx.beginPath();
+      ctx.arc(7, -4, s * 0.16, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.18, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "#e7fffc";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(-4, -2);
+      ctx.lineTo(1, 3);
+      ctx.lineTo(5, -1);
+      ctx.stroke();
+    } else if (e.type === "congkich") {
+      ctx.beginPath();
+      ctx.moveTo(-s * 0.22, 0);
+      ctx.lineTo(s * 0.16, -s * 0.16);
+      ctx.lineTo(s * 0.16, s * 0.16);
+      ctx.closePath();
+      ctx.fill();
+    } else if (e.type === "echo") {
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = colr;
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.12, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.globalAlpha = 0.75;
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.22, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    } else if (e.type === "spam") {
+      for (var k = -1; k <= 1; k++) {
+        ctx.beginPath();
+        ctx.moveTo(k * 7, -s * 0.1);
+        ctx.lineTo(k * 7 + 4, 0);
+        ctx.lineTo(k * 7, s * 0.1);
+        ctx.lineTo(k * 7 - 4, 0);
+        ctx.closePath();
+        ctx.fill();
+      }
+    } else {
+      polygon(ctx, 6, s * 0.26, time * 0.4);
+      ctx.fill();
+      ctx.fillStyle = "#f6e7b8";
+      polygon(ctx, 6, s * 0.1, -time * 0.6);
+      ctx.fill();
+    }
+    if (e.slowT > 0) {
+      ctx.strokeStyle = "rgba(224,184,90,.9)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.3, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.restore();
+    drawBar(x, y - s * 0.4, Math.max(28, s * 0.55), Math.max(0, e.hp / e.max), colr);
+  }
+
+  function drawShot(p) {
+    var x = colToPx(p.x);
+    var y = rowToPy(p.row);
+    ctx.save();
+    ctx.translate(x, y);
+    if (p.kind === "moc") {
+      ctx.fillStyle = "#f0d48a";
+      ctx.beginPath();
+      ctx.arc(0, 0, 6, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (p.kind === "cau") {
+      ctx.strokeStyle = "#e0b85a";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(0, 0, 6, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.fillStyle = "#1f8a80";
+      ctx.beginPath();
+      ctx.arc(0, 0, 3, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.fillStyle = "#b7fff4";
+      roundRect(ctx, -8, -3, 16, 6, 3);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function drawBar(x, y, w, ratio, color) {
+    var h = 4;
+    ctx.fillStyle = "rgba(0,0,0,.45)";
+    roundRect(ctx, x - w / 2, y, w, h, 2);
+    ctx.fill();
+    ctx.fillStyle = color;
+    roundRect(ctx, x - w / 2, y, Math.max(0, w * ratio), h, 2);
+    ctx.fill();
+  }
+
+  function polygon(ctx, n, r, rot) {
+    ctx.beginPath();
+    for (var i = 0; i < n; i++) {
+      var a = rot + (i / n) * Math.PI * 2;
+      var px = Math.cos(a) * r;
+      var py = Math.sin(a) * r;
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+  }
+
+  function roundRect(ctx, x, y, w, h, r) {
+    var rr = Math.max(0, Math.min(r, w / 2, h / 2));
+    ctx.beginPath();
+    ctx.moveTo(x + rr, y);
+    ctx.arcTo(x + w, y, x + w, y + h, rr);
+    ctx.arcTo(x + w, y + h, x, y + h, rr);
+    ctx.arcTo(x, y + h, x, y, rr);
+    ctx.arcTo(x, y, x + w, y, rr);
+    ctx.closePath();
+  }
+
+  function pickCell(px, py) {
+    if (!geom) return null;
+    for (var r = 0; r < ROWS; r++) {
+      for (var c = 0; c < COLS; c++) {
+        var o = cellOrigin(c, r);
+        if (px >= o.x && px <= o.x + geom.cellW && py >= o.y && py <= o.y + geom.cellH) return { c: c, r: r };
+      }
+    }
+    return null;
+  }
+
+  function pickSun(px, py) {
+    for (var i = suns.length - 1; i >= 0; i--) {
+      var s = suns[i];
+      var dx = px - s.x;
+      var dy = py - (s.y + (s.bob || 0));
+      if (dx * dx + dy * dy < 34 * 34) return s;
+    }
+    return null;
+  }
+
+  function collectSun(s) {
+    s.dead = true;
+    sun += s.value;
+    pulseSun();
+    burstPx(s.x, s.y, "#f0d48a", 6);
+    updateHud();
+  }
+
+  function burstPx(x, y, color, n) {
+    var count = reduceMotion ? 2 : n;
+    for (var i = 0; i < count; i++) {
+      var a = Math.random() * Math.PI * 2;
+      particles.push({
+        x: x, y: y,
+        vx: Math.cos(a) * 40,
+        vy: Math.sin(a) * 40,
+        life: 0.4,
+        color: color,
+        size: 2
+      });
+    }
+  }
+
+  function pointerPos(e) {
+    var rect = canvas.getBoundingClientRect();
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  }
+
+  function tryAct() {
+    if (!aim || over || frozen()) return;
+    if (gameTime < placeLock) return;
+    placeLock = gameTime + 0.22;
+    var existing = grid[aim.r][aim.c];
+    if (shovel) {
+      if (!existing) return;
+      var refund = Math.floor(unitById(existing.id).cost * 0.5);
+      sun += refund;
+      burst(existing.c + 0.2, existing.r, "#e0b85a", 6);
+      grid[aim.r][aim.c] = null;
+      floaters.push({ c: aim.c, r: aim.r, text: "+" + refund, age: 0 });
+      updateHud();
+      return;
+    }
+    if (!selected) {
+      pushToast("Hãy chọn một đơn vị ở hàng dưới.");
+      return;
+    }
+    var unit = unitById(selected);
+    if (gameTime < readyAt[unit.id]) {
+      pushToast("Đơn vị đang hồi.");
+      return;
+    }
+    if (sun < unit.cost) {
+      pushToast("Chưa đủ mặt trời.");
+      pulseSun();
+      return;
+    }
+    if (existing) {
+      pushToast("Ô này đã có đơn vị.");
+      return;
+    }
+    sun -= unit.cost;
+    readyAt[unit.id] = gameTime + unit.cd;
+    grid[aim.r][aim.c] = {
+      id: unit.id,
+      r: aim.r,
+      c: aim.c,
+      hp: unit.hp,
+      max: unit.hp,
+      cool: 0.12 + aim.r * 0.05,
+      sunT: unit.id === "den" ? 6 : 0
+    };
+    burst(aim.c, aim.r, "#e0b85a", 5);
+    updateHud();
+    paintCooldowns();
+  }
+
+  function selectUnit(id) {
+    shovel = false;
+    selected = selected === id ? null : id;
+    updateTray();
+    var unit = selected ? unitById(selected) : null;
+    document.getElementById("unit-help").textContent = unit
+      ? unit.name + " — " + unit.blurb + " Giá " + unit.cost + " mặt trời."
+      : "Chọn một đơn vị, rồi một ô trên mạch.";
+  }
+
+  function selectShovel() {
+    shovel = !shovel;
+    if (shovel) selected = null;
+    updateTray();
+    document.getElementById("unit-help").textContent = shovel
+      ? "Gỡ một đơn vị, nhận lại nửa số mặt trời."
+      : "Chọn một đơn vị, rồi một ô trên mạch.";
+  }
+
+  function icon(id) {
+    if (id === "den") return '<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="7" fill="#e0b85a"/><g stroke="#f0d48a" stroke-width="2" stroke-linecap="round"><path d="M24 8v5M24 35v5M8 24h5M35 24h5M13 13l3 3M32 32l3 3M35 13l-3 3M16 32l-3 3"/></g></svg>';
+    if (id === "tuong") return '<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="14" y="10" width="20" height="28" rx="4" fill="#d7b15a" stroke="#f6e7b8"/><path d="M24 16v16M18 24h12" stroke="#0f5c55" stroke-width="2"/></svg>';
+    if (id === "phan") return '<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="18" cy="24" r="8" fill="#14756c"/><rect x="22" y="21" width="14" height="6" rx="3" fill="#8fd0c8"/></svg>';
+    if (id === "cau") return '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 30 Q24 8 38 30" fill="none" stroke="#e0b85a" stroke-width="3"/><circle cx="10" cy="30" r="3.5" fill="#1f8a80"/><circle cx="38" cy="30" r="3.5" fill="#1f8a80"/></svg>';
+    if (id === "moc") return '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 8 L32 22 H16 Z" fill="#e0b85a"/><rect x="20" y="22" width="8" height="16" rx="2" fill="#0f4f4a"/></svg>';
+    return '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M14 34 L30 14" stroke="#f0d48a" stroke-width="3"/><rect x="28" y="10" width="10" height="8" rx="2" fill="#c45b4a"/></svg>';
+  }
+
+  function buildTray() {
+    var tray = document.getElementById("tray");
+    tray.innerHTML = "";
+    UNITS.forEach(function (unit, index) {
+      var btn = el("button", "seed");
+      btn.type = "button";
+      btn.setAttribute("data-unit", unit.id);
+      btn.innerHTML = '<span class="cd"></span><span class="ico">' + icon(unit.id) + '</span><span class="nm"></span><span class="cost"><span class="sun-dot"></span> ' + unit.cost + "</span>";
+      btn.querySelector(".nm").textContent = unit.name;
+      btn.title = "Phím " + (index + 1);
+      btn.addEventListener("click", function () { selectUnit(unit.id); });
+      tray.appendChild(btn);
+    });
+    var cut = el("button", "seed");
+    cut.type = "button";
+    cut.setAttribute("data-unit", "shovel");
+    cut.innerHTML = '<span class="ico">' + icon("shovel") + '</span><span class="nm"></span><span class="cost">Gỡ</span>';
+    cut.querySelector(".nm").textContent = "Thu hồi";
+    cut.addEventListener("click", selectShovel);
+    tray.appendChild(cut);
+    updateTray();
+  }
+
+  function updateTray() {
+    var buttons = document.querySelectorAll(".seed");
+    for (var i = 0; i < buttons.length; i++) {
+      var id = buttons[i].getAttribute("data-unit");
+      var on = (id === "shovel" && shovel) || (id === selected);
+      buttons[i].classList.toggle("on", on);
+      if (id !== "shovel") {
+        var unit = unitById(id);
+        buttons[i].classList.toggle("poor", sun < unit.cost);
+      }
+    }
+  }
+
+  function paintCooldowns() {
+    var buttons = document.querySelectorAll(".seed");
+    for (var i = 0; i < buttons.length; i++) {
+      var id = buttons[i].getAttribute("data-unit");
+      var bar = buttons[i].querySelector(".cd");
+      if (!bar) continue;
+      if (id === "shovel") { bar.style.height = "0"; continue; }
+      var unit = unitById(id);
+      var remain = Math.max(0, readyAt[id] - gameTime);
+      bar.style.height = (unit.cd ? Math.min(1, remain / unit.cd) * 100 : 0) + "%";
+    }
+  }
+
+  function updateHud() {
+    var val = document.getElementById("sun-val");
+    var text = String(sun);
+    if (val.textContent !== text) {
+      val.textContent = text;
+      pulseSun();
+    }
+    var wave = waves && waves[waveIndex] ? waves[waveIndex] : null;
+    var label = document.getElementById("wave-label");
+    var fill = document.getElementById("wavefill");
+    if (wave) {
+      if (phase === "prep") {
+        label.textContent = "Chuẩn bị · " + wave.name;
+        fill.style.width = Math.min(100, (phaseT / CONFIG.prep) * 100) + "%";
+      } else if (phase === "combat") {
+        label.textContent = wave.name + " · " + (waveIndex + 1) + "/" + waves.length;
+        fill.style.width = Math.min(100, (phaseT / wave.duration) * 100) + "%";
+      } else {
+        label.textContent = "Dọn mạch";
+        fill.style.width = "100%";
+      }
+    }
+    document.getElementById("quiz-score").textContent = "Ôn " + quizCorrect + "/" + quizAsked;
+    updateTray();
+    renderHearts();
+  }
+
+  function pulseSun() {
+    var val = document.getElementById("sun-val");
+    val.classList.remove("pop");
+    void val.offsetWidth;
+    val.classList.add("pop");
+  }
+
+  function renderHearts() {
+    var box = document.getElementById("hearts");
+    if (!box) return;
+    if (box.childNodes.length !== maxIntegrity) {
+      box.innerHTML = "";
+      for (var i = 0; i < maxIntegrity; i++) box.appendChild(el("i"));
+    }
+    for (var j = 0; j < box.childNodes.length; j++) {
+      box.childNodes[j].className = j < integrity ? "on" : "";
+    }
+  }
+
+  function togglePause() {
+    if (over || quiz) return;
+    manualPause = !manualPause;
+    stage.classList.toggle("paused", manualPause);
+    document.getElementById("btn-pause").textContent = manualPause ? "Tiếp tục" : "Tạm dừng";
   }
 
   function el(tag, className) {
@@ -1141,758 +1749,129 @@
     return node;
   }
 
-  function isScored(scene) {
-    return scene.type === "quiz" || scene.type === "talk";
-  }
-
-  function displayName() {
-    return state.name || "Người kết nối";
-  }
-
-  function youName() {
-    return state.name || "Bạn";
-  }
-
-  function announce(msg) {
-    var live = document.getElementById("live");
-    live.textContent = "";
-    window.setTimeout(function () { live.textContent = msg; }, 30);
-  }
-
-  function currentChapter() {
-    if (state.step < 0) return -1;
-    if (state.step >= SCENES.length) return 99;
-    return SCENES[state.step].chapter;
-  }
-
-  function beatLabel(scene) {
-    if (!isScored(scene)) return "Mở đầu";
-    var i = 0;
-    var total = 0;
-    SCENES.forEach(function (s) {
-      if (!isScored(s)) return;
-      total += 1;
-      if (s.id === scene.id) i = total;
-    });
-    var label = "Nhịp " + i + " / " + total;
-    if (scene.mode) label += " · " + scene.mode;
-    return label;
-  }
-
-  function validate() {
-    var seen = {};
-    var n = 0;
-    var prev = 0;
-    SCENES.forEach(function (s) {
-      if (!s.id || seen[s.id]) throw new Error("Trùng mã cảnh: " + s.id);
-      seen[s.id] = true;
-      if (s.chapter < prev) throw new Error("Lệch thứ tự chương: " + s.id);
-      prev = s.chapter;
-      if (s.type === "quiz") {
-        n += 1;
-        if (typeof s.answer !== "number" || s.answer < 0 || s.answer >= s.choices.length) {
-          throw new Error("Đáp án lệch: " + s.id);
-        }
-      } else if (s.type === "talk") {
-        n += 1;
-        var oks = s.choices.filter(function (c) { return c.ok; });
-        if (oks.length !== 1) throw new Error("Cần đúng một lối ứng xử sáng: " + s.id);
-      } else if (s.type !== "story") {
-        throw new Error("Loại cảnh lạ: " + s.id);
-      }
-    });
-    if (n < 10 || n > 14) throw new Error("Số nhịp ngoài khoảng 10–14: " + n);
-  }
-
-  function renderChrome() {
-    var cur = currentChapter();
-    var ended = state.step >= SCENES.length;
-    document.querySelectorAll("[data-chapter]").forEach(function (node) {
-      var id = Number(node.getAttribute("data-chapter"));
-      var on = state.step >= 0 && !ended && id === cur;
-      var done = ended || (state.step >= 0 && cur > id);
-      node.classList.toggle("on", on);
-      node.classList.toggle("done", done);
-      if (node.tagName === "LI") {
-        if (on) node.setAttribute("aria-current", "step");
-        else node.removeAttribute("aria-current");
-      }
-    });
-    var label = state.score + "/" + TOTAL;
-    document.getElementById("meter-label").textContent = label;
-    document.getElementById("mini-score").textContent = label;
-    document.getElementById("meter-fill").style.width = (TOTAL ? (state.score / TOTAL) * 100 : 0) + "%";
-    var lead = document.getElementById("map-lead");
-    if (state.step < 0) lead.textContent = "Hành trình";
-    else if (ended) lead.textContent = "Đã khép chặng";
-    else if (cur === 0) lead.textContent = "Cổng diễn đàn";
-    else lead.textContent = "Đang ở chương " + cur;
-  }
-
-  function nextLabel() {
-    var scene = SCENES[state.step];
-    if (scene && scene.type === "story") return scene.cta || "Tiếp tục";
-    var next = SCENES[state.step + 1];
-    if (!next) return "Xem hồ sơ ứng xử số";
-    if (scene && next.chapter !== scene.chapter) return "Sang chương tiếp";
-    return "Tiếp tục";
-  }
-
-  function nextButton() {
-    var btn = el("button", "btn btn-primary");
-    btn.type = "button";
-    btn.id = "btn-next";
-    btn.setAttribute("data-act", "next");
-    btn.textContent = nextLabel();
-    var wrap = el("div", "actions");
-    wrap.appendChild(btn);
-    return wrap;
-  }
-
-  function cardTop(scene, label) {
-    var row = el("div", "card-top");
-    var beat = el("span");
-    beat.textContent = label || beatLabel(scene);
-    row.appendChild(beat);
-    if (state.score > 0) {
-      var pill = el("span", "pill-mini");
-      pill.textContent = state.score + " nhịp sáng";
-      row.appendChild(pill);
-    }
-    return row;
-  }
-
-  function storyBlock(scene) {
-    var box = el("div", "story");
-    (scene.body || []).forEach(function (para) {
-      var p = el("p");
-      p.textContent = para;
-      box.appendChild(p);
-    });
-    return box;
-  }
-
-  function fingers() {
-    var box = el("div", "fingers");
-    box.setAttribute("role", "img");
-    box.setAttribute("aria-label", "Năm ngón dài ngắn khác nhau, vẫn một bàn tay");
-    for (var i = 0; i < 5; i += 1) box.appendChild(el("span"));
-    return box;
-  }
-
-  function slip(scene) {
-    var box = el("div", "slip");
-    var title = el("p", "slip-title");
-    title.textContent = scene.slipTitle || "Thẻ tự kiểm của nhóm";
-    box.appendChild(title);
-    var list = el("ol");
-    scene.slip.forEach(function (item) {
-      var li = el("li");
-      li.textContent = item;
-      list.appendChild(li);
-    });
-    box.appendChild(list);
-    return box;
-  }
-
-  function feedbackBlock(kind, title, keyText, explain, source) {
-    var box = el("div", "feedback " + kind);
-    box.id = "feedback";
-    box.setAttribute("tabindex", "-1");
-    var strong = el("strong");
-    strong.textContent = title;
-    box.appendChild(strong);
-    if (keyText) {
-      var key = el("p", "key");
-      key.textContent = keyText;
-      box.appendChild(key);
-    }
-    var body = el("p");
-    body.textContent = explain;
-    box.appendChild(body);
-    if (source) {
-      var src = el("p", "source");
-      src.textContent = source;
-      box.appendChild(src);
-    }
-    return box;
-  }
-
-  function optionButton(index, label, extra) {
-    var btn = el("button", "option");
-    btn.type = "button";
-    btn.setAttribute("data-act", "choice");
-    btn.setAttribute("data-i", String(index));
-    var letter = el("span", "letter");
-    letter.textContent = LETTERS[index] || String(index + 1);
-    var text = el("span", "text");
-    if (extra) {
-      var tag = el("span", "choice-tag");
-      tag.textContent = extra;
-      text.appendChild(tag);
-    }
-    text.appendChild(document.createTextNode(label));
-    btn.appendChild(letter);
-    btn.appendChild(text);
-    return btn;
-  }
-
-  function quizBlock(scene) {
-    var wrap = el("div");
-    var q = el("h2", "question");
-    q.textContent = scene.q;
-    wrap.appendChild(q);
-    var list = el("div", "options");
-    var locked = state.phase === "locked";
-    scene.choices.forEach(function (choice, i) {
-      var btn = optionButton(i, choice);
-      if (locked) {
-        btn.disabled = true;
-        if (i === scene.answer) {
-          btn.classList.add("correct");
-          var ok = el("span", "sr-only");
-          ok.textContent = " Đáp án phù hợp.";
-          btn.appendChild(ok);
-        } else if (i === state.lastChoice) {
-          btn.classList.add("wrong");
-        } else {
-          btn.classList.add("dim");
-        }
-      }
-      list.appendChild(btn);
-    });
-    wrap.appendChild(list);
-    if (locked) {
-      var correct = state.lastChoice === scene.answer;
-      wrap.appendChild(feedbackBlock(
-        correct ? "ok" : "bad",
-        correct ? scene.okTitle : scene.badTitle,
-        correct ? "" : "Hợp lý hơn: " + scene.choices[scene.answer],
-        scene.explain,
-        scene.source
-      ));
-      wrap.appendChild(nextButton());
-    }
-    return wrap;
-  }
-
-  function initialOf(who) {
-    if (who === "Bạn") {
-      var name = state.name.trim();
-      return name ? name.charAt(0).toUpperCase() : "B";
-    }
-    return who.charAt(0);
-  }
-
-  function threadBlock(lines) {
-    var box = el("div", "thread");
-    lines.forEach(function (line) {
-      if (line.tone === "narr") {
-        var narr = el("p", "narr");
-        narr.textContent = line.text;
-        box.appendChild(narr);
-        return;
-      }
-      var row = el("div", "msg" + (line.who === "Bạn" ? " you" : ""));
-      var av = el("span", "av " + (line.who === "Bạn" ? "you" : (line.tone || "")));
-      av.textContent = initialOf(line.who);
-      av.setAttribute("aria-hidden", "true");
-      var body = el("div", "msg-body");
-      var name = el("div", "msg-name");
-      name.textContent = line.who === "Bạn" ? youName() : line.who;
-      var text = el("p", "msg-text");
-      text.textContent = line.text;
-      body.appendChild(name);
-      body.appendChild(text);
-      row.appendChild(av);
-      row.appendChild(body);
-      box.appendChild(row);
-    });
-    return box;
-  }
-
-  function talkBlock(scene) {
-    var wrap = el("div");
-    var room = el("p", "room");
-    room.textContent = scene.room;
-    wrap.appendChild(room);
-    var lines = scene.thread.slice();
-    var locked = state.phase === "locked";
-    var chosen = locked ? scene.choices[state.lastChoice] : null;
-    if (chosen) lines = lines.concat(chosen.after);
-    wrap.appendChild(threadBlock(lines));
-    if (!locked) {
-      var prompt = el("h2", "prompt");
-      prompt.textContent = scene.prompt;
-      wrap.appendChild(prompt);
-      var list = el("div", "choices");
-      scene.choices.forEach(function (choice, i) {
-        list.appendChild(optionButton(i, choice.text, choice.tag));
-      });
-      wrap.appendChild(list);
-    } else {
-      wrap.appendChild(feedbackBlock(
-        chosen.ok ? "ok" : "bad",
-        chosen.resultTitle,
-        "",
-        chosen.reflect,
-        chosen.source
-      ));
-      wrap.appendChild(nextButton());
-    }
-    return wrap;
-  }
-
-  function renderStart() {
-    document.body.dataset.screen = "start";
-    document.body.dataset.scene = "";
-    var stage = document.getElementById("stage");
-    stage.innerHTML = "";
-    var card = el("article", "card rise");
-    var mark = document.querySelector(".brand svg");
-    if (mark) {
-      var hero = mark.cloneNode(true);
-      hero.classList.add("hero-svg");
-      card.appendChild(hero);
-    }
-    var kicker = el("p", "kicker");
-    kicker.textContent = "Tư tưởng Hồ Chí Minh · Chương V";
-    card.appendChild(kicker);
-    var title = el("h1");
-    title.textContent = "Đại đoàn kết trong không gian mạng";
-    card.appendChild(title);
-    var rule = el("hr", "rule");
-    card.appendChild(rule);
-    var deck = el("p", "deck");
-    deck.textContent = "Diễn đàn lớp đang căng vì bất đồng. Bạn là người kết nối — không xóa khác biệt, mà chọn cách ứng xử để đại đoàn kết còn chỗ đứng trên không gian mạng.";
-    card.appendChild(deck);
-    var facts = el("ul", "facts");
-    [
-      [String(chapterTotal()), "chương"],
-      [String(TOTAL), "nhịp"],
-      [String(talkTotal()), "ngã rẽ"]
-    ].forEach(function (item) {
-      var li = el("li");
-      var b = el("b");
-      b.textContent = item[0];
-      var span = el("span");
-      span.textContent = item[1];
-      li.appendChild(b);
-      li.appendChild(span);
-      facts.appendChild(li);
-    });
-    card.appendChild(facts);
-    var cover = el("p", "deck");
-    cover.textContent = "Ôn lại bài thuyết trình: chiến lược đại đoàn kết, chủ thể rộng, lợi ích chung, khoan dung, cầu đồng tồn dị, và giới hạn trước hành vi chia rẽ.";
-    card.appendChild(cover);
-    var field = el("div", "field");
-    var label = el("label");
-    label.setAttribute("for", "player-name");
-    label.textContent = "Tên hiển thị trên diễn đàn (không bắt buộc)";
-    var input = el("input");
-    input.id = "player-name";
-    input.type = "text";
-    input.maxLength = 40;
-    input.placeholder = "Ví dụ: Minh Anh";
-    input.autocomplete = "off";
-    input.spellcheck = false;
-    input.setAttribute("autocapitalize", "words");
-    input.setAttribute("enterkeyhint", "go");
-    if (state.name) input.value = state.name;
-    field.appendChild(label);
-    field.appendChild(input);
-    card.appendChild(field);
-    var btn = el("button", "btn btn-primary");
-    btn.type = "button";
-    btn.setAttribute("data-act", "start");
-    btn.textContent = "Bước vào diễn đàn";
-    card.appendChild(btn);
-    var hint = el("p", "hint");
-    hint.textContent = "Khi chiếu: phím 1–4 hoặc A–D để chọn, Enter để đi tiếp.";
-    card.appendChild(hint);
-    stage.appendChild(card);
-  }
-
-  function chapterTotal() {
-    var map = {};
-    SCENES.forEach(function (s) { if (s.chapter > 0) map[s.chapter] = true; });
-    return Object.keys(map).length;
-  }
-
-  function talkTotal() {
-    return SCENES.filter(function (s) { return s.type === "talk"; }).length;
-  }
-
-  function renderScene() {
-    var scene = SCENES[state.step];
-    document.body.dataset.screen = "scene";
-    document.body.dataset.scene = scene.id;
-    var stage = document.getElementById("stage");
-    stage.innerHTML = "";
-    var card = el("article", "card" + (state.phase === "open" ? " rise" : ""));
-    card.appendChild(cardTop(scene));
-    var kicker = el("p", "kicker");
-    kicker.textContent = scene.kicker;
-    card.appendChild(kicker);
-    var title = el("h1");
-    title.id = "scene-title";
-    title.textContent = scene.title;
-    card.appendChild(title);
-    if (scene.id === "prologue") {
-      var who = el("p", "who");
-      who.textContent = "Vai của bạn · " + displayName();
-      card.appendChild(who);
-    }
-    card.appendChild(storyBlock(scene));
-    if (scene.ornament === "fingers") card.appendChild(fingers());
-    if (scene.slip) card.appendChild(slip(scene));
-    if (scene.type === "story") card.appendChild(nextButton());
-    else if (scene.type === "quiz") card.appendChild(quizBlock(scene));
-    else if (scene.type === "talk") card.appendChild(talkBlock(scene));
-    stage.appendChild(card);
-    if (state.phase === "open") {
-      announce(scene.kicker + ". " + scene.title);
-    } else {
-      var fb = document.getElementById("feedback");
-      if (fb) {
-        var heading = fb.querySelector("strong");
-        announce((heading ? heading.textContent + ". " : "") + (fb.querySelector("p") ? fb.querySelector("p").textContent : ""));
-        window.setTimeout(function () {
-          fb.scrollIntoView({ block: "nearest", behavior: "smooth" });
-        }, 40);
-      }
-    }
-  }
-
-  function tierOf(score, total) {
-    var ratio = total ? score / total : 0;
-    if (ratio >= 0.8) return "strong";
-    if (ratio >= 0.5) return "ok";
-    return "weak";
-  }
-
-  function tierCopy(tier) {
-    if (tier === "strong") {
-      return {
-        name: "Đoàn kết vững",
-        note: "Hồ sơ nghiêng về ứng xử có trách nhiệm khi bất đồng.",
-        bridge: "Cầu đã nối hai bờ",
-        color: "#c4962a",
-        text: "Đến cuối chặng, Không gian Ánh chung không trở thành một màu. Các luồng ý vẫn còn — và chính vì thế chiếc cầu mới có việc. Ánh sáng giữ được nhờ cách ứng xử lúc mọi người không giống nhau: tìm điểm chung, để khác biệt chính đáng tồn tại, phản biện vấn đề, và không làm ngơ trước lời chia rẽ."
-      };
-    }
-    if (tier === "ok") {
-      return {
-        name: "Đang nối cầu",
-        note: "Hồ sơ đã chạm tinh thần đại đoàn kết, và còn vài nhịp cần nối.",
-        bridge: "Cầu đang thành",
-        color: "#1f8a80",
-        text: "Một vài nhịp, cầu đã chịu lực. Một vài nhịp, mạch nói còn hụt. Không gian mạng không ghi nhận bạn bằng cuộc cãi thắng. Nó để lại dấu ở cách bạn nói khi bất đồng — và phần ấy vẫn luyện lại được."
-      };
-    }
-    return {
-      name: "Ánh sáng còn mỏng",
-      note: "Hồ sơ còn nhẹ ánh. Phần nền có thể dựng lại trong lượt sau.",
-      bridge: "Cầu còn đứt đoạn",
-      color: "#b4632e",
-      text: "Diễn đàn vẫn mở, nhưng ánh chung còn mỏng. Đại đoàn kết không tự trở lại chỉ vì ta muốn yên, cũng không vững lên bằng cách đẩy người khác ra ngoài. Hãy mang bốn câu tự kiểm của nhóm theo, rồi đi lại chặng này như người đang nối cầu."
-    };
-  }
-
-  function branchLines() {
-    var lines = [];
-    if (state.flags.bridge) lines.push("Trong nhóm soạn bài, Minh ở lại. Khác biệt chính đáng được viết như phần làm dày trục chung, không phải một hướng để loại.");
-    if (state.flags.exclude) lines.push("Minh im phần của mình. Nhóm soạn gọn hơn một người — và chiếc cầu khuyết một nhịp.");
-    if (state.flags.silence) lines.push("Cuộc tranh luận trong nhóm bị gác dưới một lớp im lặng. Việc chưa được nói, chỉ được hoãn.");
-    if (state.flags.refute) lines.push("Tin chia rẽ theo vùng miền bị gọi đúng tên. Hà thấy diễn đàn còn một chỗ đứng, vì câu trả lời nhắm vào tin sai và giữ nhân phẩm.");
-    if (state.flags.attack) lines.push("Mạch chuyện đổi thành cuộc công kích. Tin sai không được bác; nó chỉ bị át bởi một lời nặng hơn.");
-    if (state.flags.quietRumor) lines.push("Hà đọc đến cuối mạch và không thấy ai đứng ra. Im lặng giữ cho bạn khỏi va chạm, không giữ khối đoàn kết.");
-    if (state.flags.leave) lines.push("Bạn rời diễn đàn khi tin sai còn đó. Ánh chung không tự giữ lấy mình.");
-    return lines;
-  }
-
-  function ring(score, total, color) {
-    var wrap = el("div", "ring-wrap");
-    var circ = 2 * Math.PI * 46;
-    var ratio = total ? score / total : 0;
-    wrap.innerHTML =
-      '<svg viewBox="0 0 120 120" aria-hidden="true">' +
-      '<circle class="ring-bg" cx="60" cy="60" r="46"></circle>' +
-      '<circle class="ring-fg" cx="60" cy="60" r="46" stroke="' + color + '" stroke-dasharray="' +
-      circ.toFixed(2) + '" stroke-dashoffset="' + ((1 - ratio) * circ).toFixed(2) + '"></circle>' +
-      "</svg>";
-    var num = el("div", "ring-num");
-    var strong = el("strong");
-    strong.textContent = String(score);
-    var span = el("span");
-    span.textContent = "/" + total;
-    num.appendChild(strong);
-    num.appendChild(span);
-    wrap.appendChild(num);
-    return wrap;
-  }
-
-  function bridgeGraphic(level) {
-    var wrap = el("div", "bridge-graphic");
-    wrap.innerHTML =
-      '<svg viewBox="0 0 320 88" aria-hidden="true">' +
-      '<path d="M18 66 H88"></path>' +
-      '<path d="M88 66 C 118 66, 124 34, 160 34"></path>' +
-      '<path d="M160 34 C 196 34, 202 66, 232 66"></path>' +
-      '<path d="M232 66 H302"></path>' +
-      '<circle cx="18" cy="66" r="5"></circle>' +
-      '<circle cx="88" cy="66" r="4"></circle>' +
-      '<circle cx="160" cy="34" r="6.5"></circle>' +
-      '<circle cx="232" cy="66" r="4"></circle>' +
-      '<circle cx="302" cy="66" r="5"></circle>' +
-      "</svg>";
-    var maxOn = level === 0 ? 0 : level === 1 ? 2 : 3;
-    var paths = wrap.querySelectorAll("path");
-    for (var i = 0; i < paths.length; i += 1) {
-      if (i <= maxOn) paths[i].classList.add("on");
-    }
-    var dots = wrap.querySelectorAll("circle");
-    var maxDot = level === 0 ? 1 : level === 1 ? 3 : 4;
-    for (var j = 0; j < dots.length; j += 1) {
-      if (j <= maxDot) dots[j].setAttribute("fill", j === 2 ? "#e0b85a" : "#1f8a80");
-      else dots[j].setAttribute("fill", "#d9d0bc");
-    }
-    return wrap;
-  }
-
-  function renderEnd() {
-    document.body.dataset.screen = "end";
-    document.body.dataset.scene = "end";
-    var tierKey = tierOf(state.score, TOTAL);
-    var tier = tierCopy(tierKey);
-    var stage = document.getElementById("stage");
-    stage.innerHTML = "";
-    var card = el("article", "card rise");
-    card.appendChild(cardTop({ type: "story", id: "end" }, "Khép chặng"));
-    var kicker = el("p", "kicker");
-    kicker.textContent = "Hồ sơ ứng xử số";
-    card.appendChild(kicker);
-
-    var hero = el("div", "end-hero");
-    hero.appendChild(ring(state.score, TOTAL, tier.color));
-    var ident = el("div");
-    var who = el("p", "who");
-    who.textContent = displayName();
-    var tierName = el("h1", "tier " + tierKey);
-    tierName.textContent = tier.name;
-    var role = el("p", "role");
-    role.textContent = tier.note;
-    ident.appendChild(who);
-    ident.appendChild(tierName);
-    ident.appendChild(role);
-    hero.appendChild(ident);
-    card.appendChild(hero);
-
-    var epi = el("div", "epilogue");
-    [tier.text].concat(branchLines()).forEach(function (para) {
-      var p = el("p");
-      p.textContent = para;
-      epi.appendChild(p);
-    });
-    card.appendChild(epi);
-
-    var level = tierKey === "strong" ? 2 : tierKey === "ok" ? 1 : 0;
-    card.appendChild(bridgeGraphic(level));
-    var cap = el("p", "bridge-caption");
-    cap.textContent = tier.bridge;
-    card.appendChild(cap);
-
-    var quote = el("blockquote", "closing");
-    quote.textContent = "“" + CLOSING + "”";
-    card.appendChild(quote);
-
-    var logTitle = el("h2", "section-title");
-    logTitle.textContent = "Các nhịp đã đi";
-    card.appendChild(logTitle);
-    var pills = el("ul", "pills");
-    SCENES.forEach(function (scene) {
-      if (!isScored(scene)) return;
-      var ok = !!state.marks[scene.id];
-      var li = el("li", "pill " + (ok ? "sang" : "noi"));
-      var name = el("span");
-      name.textContent = scene.log;
-      var st = el("span", "st");
-      st.textContent = ok ? "Sáng" : "Cần nối";
-      li.appendChild(name);
-      li.appendChild(st);
-      pills.appendChild(li);
-    });
-    card.appendChild(pills);
-
-    var fourTitle = el("h2", "section-title");
-    fourTitle.textContent = "Bốn câu trước khi gõ";
-    card.appendChild(fourTitle);
-    var fourNote = el("p", "note");
-    fourNote.textContent = "Vận dụng của nhóm — không phải nguyên văn giáo trình.";
-    card.appendChild(fourNote);
-    card.appendChild(slip({ slip: FOUR, slipTitle: "Mang theo" }));
-
-    var prinTitle = el("h2", "section-title");
-    prinTitle.textContent = "Nguyên tắc mang theo";
-    card.appendChild(prinTitle);
-    var principles = el("ul", "principles");
-    PRINCIPLES.forEach(function (item) {
-      var li = el("li");
-      li.textContent = item;
-      principles.appendChild(li);
-    });
-    card.appendChild(principles);
-
-    var actions = el("div", "actions");
-    var again = el("button", "btn btn-primary");
-    again.type = "button";
-    again.setAttribute("data-act", "home");
-    again.textContent = "Về cổng diễn đàn";
-    var same = el("button", "btn btn-ghost");
-    same.type = "button";
-    same.setAttribute("data-act", "same");
-    same.textContent = "Đi lại với cùng tên";
-    actions.appendChild(again);
-    actions.appendChild(same);
-    card.appendChild(actions);
-    stage.appendChild(card);
-    announce("Hồ sơ ứng xử số. " + displayName() + ". " + tier.name + ". " + state.score + " trên " + TOTAL + ".");
-    window.scrollTo(0, 0);
-  }
-
-  function startGame() {
-    var input = document.getElementById("player-name");
-    var raw = input ? input.value : state.name;
-    state.name = String(raw || "").replace(/\s+/g, " ").trim().slice(0, 40);
-    state.step = 0;
-    state.score = 0;
-    state.marks = {};
-    state.flags = {};
-    state.phase = "open";
-    state.lastChoice = null;
-    renderScene();
-    renderChrome();
-    window.scrollTo(0, 0);
-  }
-
-  function choose(index) {
-    if (state.phase !== "open") return;
-    var scene = SCENES[state.step];
-    if (!scene || !isScored(scene)) return;
-    if (index < 0 || index >= scene.choices.length) return;
-    state.phase = "locked";
-    state.lastChoice = index;
-    if (scene.type === "quiz") {
-      var ok = index === scene.answer;
-      state.marks[scene.id] = ok;
-      if (ok) state.score += 1;
-    } else {
-      var choice = scene.choices[index];
-      state.marks[scene.id] = !!choice.ok;
-      state.flags[choice.flag] = true;
-      if (choice.ok) state.score += 1;
-    }
-    renderScene();
-    renderChrome();
-  }
-
-  function advance() {
-    var scene = SCENES[state.step];
-    if (!scene) return;
-    if (scene.type !== "story" && state.phase !== "locked") return;
-    if (state.phase === "advancing") return;
-    state.phase = "advancing";
-    state.step += 1;
-    state.lastChoice = null;
-    if (state.step >= SCENES.length) {
-      state.phase = "end";
-      renderEnd();
-    } else {
-      state.phase = "open";
-      renderScene();
-      window.scrollTo(0, 0);
-    }
-    renderChrome();
-  }
-
-  function goHome(keepName) {
-    var name = keepName ? state.name : "";
-    state = freshState();
-    state.name = name;
-    renderStart();
-    renderChrome();
-    window.scrollTo(0, 0);
-    if (keepName) {
-      var input = document.getElementById("player-name");
-      if (input) input.value = name;
-    }
-  }
-
-  function onStageClick(event) {
-    var node = event.target;
-    if (!node || node.nodeType !== 1) node = node.parentElement;
-    if (!node) return;
-    var target = node.closest("[data-act]");
-    if (!target) return;
-    var act = target.getAttribute("data-act");
-    if (act === "start") startGame();
-    else if (act === "choice") choose(Number(target.getAttribute("data-i")));
-    else if (act === "next") advance();
-    else if (act === "home") goHome(false);
-    else if (act === "same") goHome(true);
-  }
-
-  function onKey(event) {
-    var active = document.activeElement;
-    var act = active && active.getAttribute && active.getAttribute("data-act");
-    if (event.key === "Enter") {
-      if (act) return;
-      if (document.body.dataset.screen === "start") {
-        event.preventDefault();
+  function onKey(e) {
+    var tag = document.activeElement && document.activeElement.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA") {
+      if (e.key === "Enter" && !document.getElementById("screen-menu").classList.contains("hidden")) {
+        e.preventDefault();
         startGame();
-      } else if (document.body.dataset.screen === "scene") {
-        var scene = SCENES[state.step];
-        if (scene && (scene.type === "story" || state.phase === "locked")) {
-          event.preventDefault();
-          advance();
-        }
       }
       return;
     }
-    if (document.body.dataset.screen !== "scene" || state.phase !== "open") return;
-    var map = { "1": 0, "2": 1, "3": 2, "4": 3, a: 0, b: 1, c: 2, d: 3, A: 0, B: 1, C: 2, D: 3 };
-    if (map[event.key] === undefined) return;
-    var scene = SCENES[state.step];
-    if (!scene || !isScored(scene)) return;
-    if (map[event.key] >= scene.choices.length) return;
-    event.preventDefault();
-    choose(map[event.key]);
-  }
-
-  function init() {
-    try {
-      validate();
-      TOTAL = SCENES.filter(isScored).length;
-    } catch (err) {
-      var stage = document.getElementById("stage");
-      stage.innerHTML = "";
-      var card = el("article", "card");
-      var title = el("h1");
-      title.textContent = "Không mở được hành trình";
-      var note = el("p");
-      note.textContent = err && err.message ? err.message : "Lỗi dữ liệu.";
-      card.appendChild(title);
-      card.appendChild(note);
-      stage.appendChild(card);
+    if (!document.getElementById("screen-menu").classList.contains("hidden")) {
+      if (e.key === "Enter" && tag !== "BUTTON") startGame();
       return;
     }
-    document.getElementById("stage").addEventListener("click", onStageClick);
-    document.addEventListener("keydown", onKey);
-    renderStart();
-    renderChrome();
+    if (quiz) {
+      var map = { "1": 0, "2": 1, "3": 2, "4": 3 };
+      if (quiz.picked === null && map[e.key] !== undefined && map[e.key] < quiz.q.choices.length) {
+        e.preventDefault();
+        pickAnswer(map[e.key]);
+      } else if (quiz.picked !== null && (e.key === "Enter" || e.key === " ")) {
+        e.preventDefault();
+        closeQuiz();
+      }
+      return;
+    }
+    if (over) return;
+    if (e.key === " " && tag !== "BUTTON") {
+      e.preventDefault();
+      togglePause();
+      return;
+    }
+    if (e.key >= "1" && e.key <= String(UNITS.length)) {
+      selectUnit(UNITS[Number(e.key) - 1].id);
+      return;
+    }
+    if (e.key === "0" || e.key === "x" || e.key === "X") {
+      selectShovel();
+      return;
+    }
+    if (e.key === "Escape") {
+      selected = null;
+      shovel = false;
+      updateTray();
+      return;
+    }
+    if (!aim) aim = { c: 0, r: 0 };
+    if (e.key === "ArrowLeft") { e.preventDefault(); aim.c = Math.max(0, aim.c - 1); }
+    else if (e.key === "ArrowRight") { e.preventDefault(); aim.c = Math.min(COLS - 1, aim.c + 1); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); aim.r = Math.max(0, aim.r - 1); }
+    else if (e.key === "ArrowDown") { e.preventDefault(); aim.r = Math.min(ROWS - 1, aim.r + 1); }
+    else if (e.key === "Enter" && tag !== "BUTTON") { e.preventDefault(); tryAct(); }
   }
 
-  init();
+  canvas.addEventListener("pointerdown", function (e) {
+    if (!geom || over) return;
+    var pos = pointerPos(e);
+    var sunHit = pickSun(pos.x, pos.y);
+    if (sunHit) { collectSun(sunHit); return; }
+    if (frozen()) return;
+    var cell = pickCell(pos.x, pos.y);
+    if (!cell) return;
+    aim = cell;
+    tryAct();
+  });
+  canvas.addEventListener("pointermove", function (e) {
+    if (!geom) return;
+    var pos = pointerPos(e);
+    var sunHit = pickSun(pos.x, pos.y);
+    canvas.style.cursor = sunHit ? "pointer" : (selected || shovel ? "crosshair" : "default");
+    if (sunHit || frozen()) return;
+    var cell = pickCell(pos.x, pos.y);
+    if (cell) aim = cell;
+  });
+  window.addEventListener("resize", function () {
+    if (!document.getElementById("screen-game").classList.contains("hidden")) layout();
+  });
+  document.getElementById("btn-start").addEventListener("click", startGame);
+  document.getElementById("btn-pause").addEventListener("click", togglePause);
+  document.addEventListener("keydown", onKey);
+
+  try {
+    var params = new URLSearchParams(location.search);
+    if (params.get("test") === "1") {
+      testMode = true;
+      SPEED = Math.max(1, Math.min(12, Number(params.get("speed")) || 1));
+      window.__GAME = {
+        select: selectUnit,
+        shovel: selectShovel,
+        place: function (c, r) { aim = { c: c, r: r }; tryAct(); },
+        answer: function (i) { if (quiz && quiz.picked === null) pickAnswer(i); },
+        closeQuiz: closeQuiz,
+        start: startGame,
+        state: function () {
+          var plants = [];
+          for (var r = 0; r < ROWS; r++) {
+            for (var c = 0; c < COLS; c++) if (grid[r][c]) plants.push(grid[r][c].id + "@" + c + "," + r);
+          }
+          return {
+            sun: sun,
+            integrity: integrity,
+            wave: waveIndex,
+            phase: phase,
+            phaseT: phaseT,
+            enemies: enemies.length,
+            foes: enemies.filter(function (e) { return !e.dead; }).map(function (e) {
+              return e.type + "@" + e.row + " x" + e.x.toFixed(2) + " hp" + Math.round(e.hp);
+            }),
+            plants: plants,
+            over: over,
+            won: won,
+            killed: killed,
+            leaked: leaked,
+            asked: quizAsked,
+            correct: quizCorrect,
+            quiz: quiz ? { answer: quiz.q.answer, picked: quiz.picked, n: quiz.q.choices.length } : null,
+            gameTime: gameTime,
+            suns: suns.map(function (s) { return { x: s.x, y: s.y + (s.bob || 0) }; })
+          };
+        }
+      };
+    }
+  } catch (err) { /* file:// without URLSearchParams still plays */ }
+
+  showMenu();
 })();
 </script>
 </body>
