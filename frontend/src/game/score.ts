@@ -29,6 +29,18 @@ export interface Summary {
 }
 
 const BEST_KEY = "phong-tuyen-anh-chung-best-v1";
+const BOARD_KEY = "phong-tuyen-anh-chung-board-v1";
+
+export interface BoardEntry {
+  id: string;
+  name: string;
+  score: number;
+  rankId: RankId;
+  rank: string;
+  accuracy: number;
+  avgSeconds: number;
+  at: string;
+}
 
 export interface BestScore {
   score: number;
@@ -117,19 +129,125 @@ export function saveBest(summary: Summary): { best: BestScore; isNew: boolean } 
   return { best: prev, isNew: false };
 }
 
-export function shareText(summary: Summary, best: number | null): string {
+export function shareText(summary: Summary, best: number | null, at = new Date().toISOString()): string {
   const pct = Math.round(summary.accuracy * 100);
   const sec = summary.correct ? summary.avgSeconds.toFixed(1) : "–";
   const clock = formatClock(summary.clock);
+  const token = `#ptac1|${encodeURIComponent(summary.name)}|${summary.score}|${summary.rank.id}|${pct}|${summary.correct ? summary.avgSeconds.toFixed(1) : "0"}|${at}`;
   return [
     `Phòng tuyến Ánh chung — ${summary.name}`,
     `Hạng ${summary.rank.name} · ${summary.score} điểm`,
     `Đúng ${pct}% (${summary.correct}/${summary.answered || 0}) · TB ${sec}s · Chuỗi ${summary.maxStreak} · Bừng sáng ${summary.feverCount}`,
     `Sóng ${summary.wavesCleared}/${summary.waves} · Đoàn kết ${summary.solidarity} · ${clock} · ${summary.outcome === "won" ? "Giữ được phòng tuyến" : "Phòng tuyến đứt"}`,
     best !== null ? `Kỷ lục máy này: ${best}` : "",
+    token,
   ]
     .filter(Boolean)
     .join("\n");
+}
+
+function boardId(name: string, score: number, at: string) {
+  return `${name}|${score}|${at}`;
+}
+
+function rankIdFromName(name: string | undefined): RankId {
+  if (name === "Ánh chung") return "anh";
+  if (name === "Vàng") return "vang";
+  if (name === "Bạc") return "bac";
+  return "dong";
+}
+
+export function loadBoard(): BoardEntry[] {
+  if (typeof localStorage === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(BOARD_KEY);
+    if (!raw) return [];
+    const data = JSON.parse(raw) as BoardEntry[];
+    if (!Array.isArray(data)) return [];
+    return data
+      .filter((e) => e && typeof e.score === "number" && typeof e.name === "string")
+      .sort((a, b) => b.score - a.score || a.at.localeCompare(b.at));
+  } catch {
+    return [];
+  }
+}
+
+function writeBoard(entries: BoardEntry[]) {
+  const next = entries
+    .sort((a, b) => b.score - a.score || a.at.localeCompare(b.at))
+    .slice(0, 40);
+  if (typeof localStorage !== "undefined") localStorage.setItem(BOARD_KEY, JSON.stringify(next));
+  return next;
+}
+
+export function addBoardEntry(entry: Omit<BoardEntry, "id">): BoardEntry[] {
+  const name = (entry.name || "Ẩn danh").slice(0, 24);
+  const row: BoardEntry = { ...entry, name, id: boardId(name, entry.score, entry.at) };
+  const cur = loadBoard().filter((e) => e.id !== row.id);
+  return writeBoard([row, ...cur]);
+}
+
+export function clearBoard() {
+  if (typeof localStorage === "undefined") return;
+  localStorage.removeItem(BOARD_KEY);
+}
+
+function entryFromToken(line: string): BoardEntry | null {
+  const m = line.trim().match(/^#ptac1\|([^|]*)\|(\d+)\|([a-z]+)\|(\d+(?:\.\d+)?)\|(\d+(?:\.\d+)*)\|(.+)$/);
+  if (!m) return null;
+  let name = "Ẩn danh";
+  try {
+    name = decodeURIComponent(m[1]).slice(0, 24) || "Ẩn danh";
+  } catch {
+    name = m[1].slice(0, 24) || "Ẩn danh";
+  }
+  const score = Number(m[2]);
+  const rankId = (["dong", "bac", "vang", "anh"].includes(m[3]) ? m[3] : "dong") as RankId;
+  const accuracy = Number(m[4]) / 100;
+  const avgSeconds = Number(m[5]);
+  const at = m[6];
+  if (!Number.isFinite(score) || !at) return null;
+  return { id: boardId(name, score, at), name, score, rankId, rank: rankFor(score).name, accuracy, avgSeconds, at };
+}
+
+function entryFromProse(text: string): BoardEntry | null {
+  const name = text.match(/Phòng tuyến Ánh chung —\s*(.+)/)?.[1]?.trim().slice(0, 24);
+  const score = Number(text.match(/(\d+)\s*điểm/)?.[1]);
+  const rankName = text.match(/Hạng\s+([^·\n]+)/)?.[1]?.trim();
+  const pct = Number(text.match(/Đúng\s+(\d+(?:\.\d+)?)%/)?.[1]);
+  const sec = text.match(/TB\s+([\d.]+)s/);
+  if (!name || !Number.isFinite(score)) return null;
+  const at = new Date().toISOString();
+  const rankId = rankName ? rankIdFromName(rankName) : rankFor(score).id;
+  return {
+    id: boardId(name, score, at.slice(0, 16)),
+    name,
+    score,
+    rankId,
+    rank: rankFor(score).name,
+    accuracy: Number.isFinite(pct) ? pct / 100 : 0,
+    avgSeconds: sec ? Number(sec[1]) : 0,
+    at,
+  };
+}
+
+export function importBoardText(text: string): { added: number; entries: BoardEntry[] } {
+  const tokens = text
+    .split(/\r?\n/)
+    .map(entryFromToken)
+    .filter((e): e is BoardEntry => !!e);
+  const found = tokens.length ? tokens : [entryFromProse(text)].filter((e): e is BoardEntry => !!e);
+  if (!found.length) return { added: 0, entries: loadBoard() };
+  const cur = loadBoard();
+  const ids = new Set(cur.map((e) => e.id));
+  let added = 0;
+  for (const row of found) {
+    if (ids.has(row.id)) continue;
+    ids.add(row.id);
+    cur.push(row);
+    added++;
+  }
+  return { added, entries: writeBoard(cur) };
 }
 
 export function formatClock(sec: number): string {

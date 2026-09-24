@@ -40,6 +40,10 @@ export interface Virus {
   dead: boolean;
   echoUp: boolean;
   bob: number;
+  marked: boolean;
+  lit: boolean;
+  enraged: boolean;
+  asked: boolean;
 }
 
 export interface Shot {
@@ -100,8 +104,13 @@ export interface Banner {
   life: number;
 }
 
+export interface TeaserState {
+  type: VirusId;
+  life: number;
+}
+
 export interface QuizState {
-  kind: "ulti" | "clutch" | "lesson";
+  kind: "ulti" | "clutch" | "lesson" | "mark";
   ulti?: UltiId;
   question: RuntimeQuestion;
   time: number;
@@ -149,6 +158,8 @@ export interface GameState {
   banner: Banner | null;
   toast: Banner | null;
   quiz: QuizState | null;
+  teaser: TeaserState | null;
+  teaserShown: number;
   recent: string[];
   forcedCursor: number;
   waveIndex: number;

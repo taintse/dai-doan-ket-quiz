@@ -29,6 +29,7 @@ import {
   type UnitId,
   type VirusId,
 } from "./balance";
+import { MARK_BUDGET, MARK_HP, MARK_POOL } from "./marks";
 import { FORCED_IDS, QUESTIONS, type Question, type QuestionTag } from "./questions";
 import type { GameState, QuizState, RuntimeQuestion, Unit, Virus } from "./types";
 
@@ -82,6 +83,8 @@ export function createGame(name: string, seed = Date.now(), opts?: { thu?: boole
     },
     toast: null,
     quiz: null,
+    teaser: null,
+    teaserShown: -1,
     recent: [],
     forcedCursor: 0,
     waveIndex: 0,
@@ -258,6 +261,21 @@ export function cycleSpeed(s: GameState) {
   rememberSpeed(next);
 }
 
+export function dismissTeaser(s: GameState) {
+  s.teaser = null;
+}
+
+export function openMarkQuiz(s: GameState, virusId?: number) {
+  if (s.status !== "playing" || s.manualPause || s.quiz) return;
+  const v = s.viruses.find(
+    (x) => living(x) && x.marked && !x.asked && !x.lit && (virusId === undefined || x.id === virusId),
+  );
+  if (!v) return;
+  const prefer = MARK_POOL[v.type].find((id) => !s.recent.includes(id)) ?? MARK_POOL[v.type][0];
+  s.teaser = null;
+  openQuiz(s, "mark", MARK_BUDGET, "lesson", { virusId: v.id, lane: v.lane }, prefer);
+}
+
 export function setSelection(s: GameState, selection: GameState["selection"]) {
   s.selection = s.selection === selection ? null : selection;
 }
@@ -323,10 +341,10 @@ function hurtSolidarity(s: GameState, amount: number) {
   if (s.solidarity <= 0) s.status = "lost";
 }
 
-function spawnVirus(s: GameState, type: VirusId, lane: number, x = COLS + 0.28): Virus {
+function spawnVirus(s: GameState, type: VirusId, lane: number, x = COLS + 0.28, mark = false): Virus {
   const spec = VIRUSES[type];
   const scale = waveScale(s.waveIndex);
-  const hp = spec.hp * scale.hp;
+  const hp = spec.hp * scale.hp * (mark ? MARK_HP : 1);
   const v: Virus = {
     id: nid(s),
     type,
@@ -341,8 +359,13 @@ function spawnVirus(s: GameState, type: VirusId, lane: number, x = COLS + 0.28):
     dead: false,
     echoUp: true,
     bob: rand(s) * 2,
+    marked: mark,
+    lit: false,
+    enraged: false,
+    asked: false,
   };
   s.viruses.push(v);
+  if (mark && !s.teaser && !s.quiz) s.teaser = { type, life: 4.6 };
   return v;
 }
 
@@ -359,6 +382,7 @@ function beginFight(s: GameState) {
   s.phase = "fight";
   s.phaseT = 0;
   s.spawnCursor = 0;
+  s.teaserShown = -1;
   s.banner = { title: wave.name, text: wave.hint, life: 3.4 };
   if (wave.lesson && !s.lessonDone) {
     s.lessonDone = true;
@@ -497,7 +521,37 @@ function onCorrect(s: GameState, quiz: QuizState) {
     burst(s, 0.4, quiz.lane, "#22d3ee", 16);
   } else if (quiz.kind === "lesson") {
     for (const v of s.viruses) if (living(v)) v.stun = Math.max(v.stun, 1.5);
+  } else if (quiz.kind === "mark") {
+    const v = s.viruses.find((x) => x.id === quiz.virusId && living(x));
+    if (v) illuminate(s, v);
   }
+}
+
+function illuminate(s: GameState, v: Virus) {
+  v.lit = true;
+  v.asked = true;
+  v.enraged = false;
+  v.echoUp = false;
+  v.hp = Math.max(1, v.hp * 0.38);
+  v.slow = Math.max(v.slow, 3.6);
+  v.flash = 0.25;
+  if (v.hp <= 8) {
+    killVirus(s, v);
+    floater(s, v.x, v.lane, "đã chiếu sáng", "#fde68a");
+    return;
+  }
+  floater(s, v.x, v.lane, "đã chiếu sáng", "#fde68a");
+  burst(s, v.x, v.lane, "#fde68a", 16);
+}
+
+function enrageMark(s: GameState, virusId: number | undefined) {
+  const v = s.viruses.find((x) => x.id === virusId && living(x));
+  if (!v) return;
+  v.asked = true;
+  v.enraged = true;
+  v.maxHp *= 1.14;
+  v.hp = Math.min(v.maxHp, v.hp * 1.14);
+  floater(s, v.x, v.lane, "nổi giận", "#fb7185");
 }
 
 function onWrong(s: GameState, quiz: QuizState) {
@@ -515,6 +569,7 @@ function onWrong(s: GameState, quiz: QuizState) {
     const v = s.viruses.find((x) => x.id === quiz.virusId && living(x));
     if (v) breach(s, v);
   } else {
+    if (quiz.kind === "mark") enrageMark(s, quiz.virusId);
     bonusVirus(s);
   }
 }
@@ -632,6 +687,7 @@ function updateViruses(s: GameState, dt: number) {
     let speed = VIRUSES[v.type].speed * scale.speed;
     if (v.slow > 0) speed *= SLOW_FACTOR;
     if (hasteAura(s, v)) speed *= 1.22;
+    if (v.enraged) speed *= 1.15;
     if (s.bonds[v.lane] <= 0) speed *= 1.1;
     const block = blocker(s, v);
     if (block) {
@@ -679,6 +735,10 @@ function decayFx(s: GameState, dt: number) {
   s.firewall = Math.max(0, s.firewall - dt);
   s.clutchCd = Math.max(0, s.clutchCd - dt);
   s.laneShield = s.laneShield.map((n) => Math.max(0, n - dt));
+  if (s.teaser) {
+    s.teaser.life -= dt;
+    if (s.teaser.life <= 0) s.teaser = null;
+  }
   if (s.banner) {
     s.banner.life -= dt;
     if (s.banner.life <= 0) s.banner = null;
@@ -715,9 +775,21 @@ function simulate(s: GameState, dt: number) {
   const wave = WAVES[s.waveIndex];
   if (s.phase === "prep" && s.phaseT >= PREP_TIME) beginFight(s);
   else if (s.phase === "fight" && wave) {
+    const upcoming = wave.spawns[s.spawnCursor];
+    if (
+      upcoming?.mark &&
+      s.teaserShown !== s.spawnCursor &&
+      !s.teaser &&
+      !s.quiz &&
+      upcoming.t - s.phaseT <= 2.8 &&
+      upcoming.t >= s.phaseT
+    ) {
+      s.teaser = { type: upcoming.type, life: 5.2 };
+      s.teaserShown = s.spawnCursor;
+    }
     while (s.spawnCursor < wave.spawns.length && wave.spawns[s.spawnCursor].t <= s.phaseT) {
       const sp = wave.spawns[s.spawnCursor];
-      spawnVirus(s, sp.type, sp.lane);
+      spawnVirus(s, sp.type, sp.lane, COLS + 0.28, !!sp.mark);
       s.spawnCursor++;
     }
     if (s.phaseT >= wave.fight) {

@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { CLOSING, FOUR } from "../game/questions";
-import { formatClock, loadBest, saveBest, shareText, type Summary } from "../game/score";
+import { addBoardEntry, formatClock, loadBest, saveBest, shareText, type Summary } from "../game/score";
+import { Leaderboard } from "./Leaderboard";
 
 export function StartScreen({ onStart }: { onStart: (name: string) => void }) {
   const [name, setName] = useState("");
+  const [board, setBoard] = useState(false);
   const best = loadBest();
   return (
     <div className="grid h-full place-items-center p-4">
@@ -25,6 +27,7 @@ export function StartScreen({ onStart }: { onStart: (name: string) => void }) {
           <li className="rounded-xl border border-cyan-400/30 bg-cyan-400/5 p-3">Tuyệt kỹ đầy thì hỏi một câu — đúng mới có hiệu lực.</li>
           <li className="rounded-xl border border-amber-400/30 bg-amber-400/5 p-3">Virus sát cộng đồng: Cứu nguy khẩn cấp, khoảng 5 giây.</li>
           <li className="rounded-xl border border-rose-400/30 bg-rose-400/5 p-3">Sai: nhiễu thông tin, mất đoàn kết, dễ thủng hàng.</li>
+          <li className="rounded-xl border border-fuchsia-400/30 bg-fuchsia-400/5 p-3 sm:col-span-2">Virus huy hiệu Có bài mang một câu. Đúng thì máu nó tụt. Bỏ qua thì nó rất trâu.</li>
         </ul>
         <label className="mt-5 block text-sm text-slate-300">
           Tên trên bảng hạng
@@ -44,12 +47,16 @@ export function StartScreen({ onStart }: { onStart: (name: string) => void }) {
           >
             Vào phòng tuyến
           </button>
+          <button type="button" onClick={() => setBoard(true)} className="rounded-full border border-cyan-400/50 px-5 py-2.5 font-bold text-cyan-100">
+            Bảng xếp hạng
+          </button>
           {best && <p className="text-sm text-slate-400">Kỷ lục máy này: {best.score} · {best.rank}</p>}
         </div>
         <p className="mt-4 text-xs leading-relaxed text-slate-500">
           Bám Giáo trình Tư tưởng Hồ Chí Minh (2021), Chương V. Bốn câu tự kiểm là vận dụng của nhóm, không phải nguyên văn giáo trình.
         </p>
       </motion.div>
+      {board && <Leaderboard onClose={() => setBoard(false)} />}
     </div>
   );
 }
@@ -65,6 +72,9 @@ export function Results({ summary, onAgain }: { summary: Summary; onAgain: () =>
   const [copied, setCopied] = useState(false);
   const [bestScore, setBestScore] = useState<number | null>(null);
   const [isNew, setIsNew] = useState(false);
+  const [nick, setNick] = useState(summary.name);
+  const [listed, setListed] = useState<"ask" | "saved" | "later">("ask");
+  const [board, setBoard] = useState(false);
 
   useEffect(() => {
     const saved = saveBest(summary);
@@ -80,6 +90,19 @@ export function Results({ summary, onAgain }: { summary: Summary; onAgain: () =>
     } catch {
       setCopied(false);
     }
+  }
+
+  function saveNick() {
+    addBoardEntry({
+      name: nick.trim() || "Ẩn danh",
+      score: summary.score,
+      rankId: summary.rank.id,
+      rank: summary.rank.name,
+      accuracy: summary.accuracy,
+      avgSeconds: summary.avgSeconds,
+      at: new Date().toISOString(),
+    });
+    setListed("saved");
   }
 
   const pct = Math.round(summary.accuracy * 100);
@@ -116,6 +139,27 @@ export function Results({ summary, onAgain }: { summary: Summary; onAgain: () =>
             ))}
           </ol>
         </div>
+        {listed === "ask" && (
+          <div className="mt-4 rounded-2xl border border-amber-300/40 bg-amber-400/10 p-4">
+            <p className="text-sm font-bold text-amber-100">Ghi tên lên bảng lớp?</p>
+            <p className="mt-1 text-xs text-slate-300">Bảng ở trên máy này. Bạn khác gửi điểm bằng nút Chép kết quả.</p>
+            <input
+              value={nick}
+              maxLength={24}
+              onChange={(e) => setNick(e.target.value)}
+              className="mt-2 w-full rounded-xl border border-slate-600 bg-slate-950 px-3 py-2 text-slate-100 outline-none focus:border-amber-300"
+            />
+            <div className="mt-2 flex flex-wrap gap-2">
+              <button type="button" onClick={saveNick} className="rounded-full bg-amber-300 px-4 py-1.5 text-sm font-bold text-slate-950">
+                Lưu vào bảng
+              </button>
+              <button type="button" onClick={() => setListed("later")} className="rounded-full border border-slate-500 px-4 py-1.5 text-sm">
+                Để sau
+              </button>
+            </div>
+          </div>
+        )}
+        {listed === "saved" && <p className="mt-3 text-sm text-emerald-200">Đã có mặt trên bảng.</p>}
         <div className="mt-4 flex flex-wrap gap-2">
           <button type="button" onClick={onAgain} className="rounded-full bg-cyan-400 px-5 py-2 font-bold text-slate-950">
             Chơi lại
@@ -123,8 +167,12 @@ export function Results({ summary, onAgain }: { summary: Summary; onAgain: () =>
           <button type="button" onClick={copy} className="rounded-full border border-slate-500 px-5 py-2 font-semibold">
             {copied ? "Đã chép" : "Chép kết quả"}
           </button>
+          <button type="button" onClick={() => setBoard(true)} className="rounded-full border border-cyan-400/50 px-5 py-2 font-semibold text-cyan-100">
+            Bảng xếp hạng
+          </button>
         </div>
       </motion.div>
+      {board && <Leaderboard onClose={() => setBoard(false)} />}
     </div>
   );
 }
