@@ -35,6 +35,27 @@ import type { GameState, QuizState, RuntimeQuestion, Unit, Virus } from "./types
 const CAU_RATE = 0.74;
 const CAU_REGEN = 8;
 const SLOW_FACTOR = 0.5;
+const SPEED_KEY = "phong-tuyen-anh-chung-speed-v1";
+
+export function loadTimeScale(): 1 | 2 | 3 {
+  if (typeof localStorage === "undefined") return 1;
+  try {
+    const raw = localStorage.getItem(SPEED_KEY);
+    if (raw === "2" || raw === "3") return Number(raw) as 2 | 3;
+  } catch {
+    /* private mode */
+  }
+  return 1;
+}
+
+function rememberSpeed(scale: 1 | 2 | 3) {
+  if (typeof localStorage === "undefined") return;
+  try {
+    localStorage.setItem(SPEED_KEY, String(scale));
+  } catch {
+    /* private mode */
+  }
+}
 
 export function createGame(name: string, seed = Date.now(), opts?: { thu?: boolean }): GameState {
   const s: GameState = {
@@ -79,6 +100,7 @@ export function createGame(name: string, seed = Date.now(), opts?: { thu?: boole
     laneShield: Array.from({ length: ROWS }, () => 0),
     selection: null,
     manualPause: false,
+    timeScale: loadTimeScale(),
     thu: !!opts?.thu,
     stats: {
       correct: 0,
@@ -227,6 +249,13 @@ export function pickAnswer(s: GameState, index: number) {
 export function togglePause(s: GameState) {
   if (s.status !== "playing" || s.quiz) return;
   s.manualPause = !s.manualPause;
+}
+
+export function cycleSpeed(s: GameState) {
+  if (s.status !== "playing" || s.quiz) return;
+  const next: 1 | 2 | 3 = s.timeScale === 1 ? 2 : s.timeScale === 2 ? 3 : 1;
+  s.timeScale = next;
+  rememberSpeed(next);
 }
 
 export function setSelection(s: GameState, selection: GameState["selection"]) {
@@ -717,31 +746,43 @@ function simulate(s: GameState, dt: number) {
   reap(s);
 }
 
+function advanceQuiz(s: GameState, delta: number) {
+  // Question windows stay on wall-clock time so a 2x/3x run is not a shorter exam.
+  s.manualPause = false;
+  s.clock += delta;
+  if (!s.quiz) return;
+  if (s.quiz.reveal > 0) {
+    s.quiz.reveal -= delta;
+    if (s.quiz.reveal <= 0) resolveQuiz(s);
+  } else {
+    s.quiz.time -= delta;
+    if (s.quiz.time <= 0) {
+      s.quiz.picked = -1;
+      s.quiz.speed = 0;
+      s.quiz.reveal = 1.05;
+    }
+  }
+}
+
 export function step(s: GameState, dt: number) {
   if (s.status !== "playing") return;
-  const delta = Math.max(0, Math.min(0.05, dt));
-  if (!delta) return;
+  const frame = Math.max(0, Math.min(0.05, dt));
+  if (!frame) return;
   if (s.quiz) {
-    // A latched pause must not freeze an ulti, clutch, or lesson prompt.
-    s.manualPause = false;
-    s.clock += delta;
-    if (s.quiz.reveal > 0) {
-      s.quiz.reveal -= delta;
-      if (s.quiz.reveal <= 0) resolveQuiz(s);
-    } else {
-      s.quiz.time -= delta;
-      if (s.quiz.time <= 0) {
-        s.quiz.picked = -1;
-        s.quiz.speed = 0;
-        s.quiz.reveal = 1.05;
-      }
-    }
+    advanceQuiz(s, frame);
     return;
   }
   if (s.manualPause) return;
-  s.clock += delta;
-  simulate(s, delta);
-  decayFx(s, delta);
+  const scale = s.timeScale === 2 || s.timeScale === 3 ? s.timeScale : 1;
+  let left = frame * scale;
+  while (left > 1e-8) {
+    const slice = Math.min(0.05, left);
+    s.clock += slice;
+    simulate(s, slice);
+    decayFx(s, slice);
+    left -= slice;
+    if (s.status !== "playing" || s.quiz) return;
+  }
 }
 
 export function debugRush(s: GameState) {

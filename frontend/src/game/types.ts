@@ -167,6 +167,8 @@ export interface GameState {
   laneShield: number[];
   selection: Selection;
   manualPause: boolean;
+  /** 1, 2, or 3. Quiz prompts ignore this and stay on wall-clock time. */
+  timeScale: 1 | 2 | 3;
   stats: Stats;
   thu: boolean;
 }

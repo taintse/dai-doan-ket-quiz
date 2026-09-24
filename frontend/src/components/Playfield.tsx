@@ -1,7 +1,7 @@
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import { CELL, COLS, COMM, ROWS, ULTI_MAX, UNIT_LIST, UNITS, WAVES, type UnitId } from "../game/balance";
-import { castUlti, cellAction, debugLose, debugRush, debugThreat, debugWin, pickAnswer, setSelection, togglePause } from "../game/engine";
+import { castUlti, cellAction, cycleSpeed, debugLose, debugRush, debugThreat, debugWin, pickAnswer, setSelection, togglePause } from "../game/engine";
 import { formatClock } from "../game/score";
 import type { GameState } from "../game/types";
 import { CommunityPod } from "../art/community";
@@ -109,6 +109,25 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
                 <div className="h-full bg-emerald-400" style={{ width: `${Math.max(0, state.solidarity)}%` }} />
               </div>
             </div>
+            <button
+              type="button"
+              aria-label={`Tua nhanh, đang ${state.timeScale}x`}
+              title="Tua nhanh. Câu hỏi vẫn đếm theo giây thật."
+              disabled={!!state.quiz}
+              onClick={() => {
+                cycleSpeed(state);
+                bump();
+              }}
+              className={`pointer-events-auto relative z-50 rounded-full border px-3 py-2 text-sm font-black ${
+                state.quiz || state.timeScale === 1
+                  ? "border-slate-600 bg-slate-950 text-slate-200"
+                  : state.timeScale === 2
+                    ? "border-cyan-300 bg-cyan-400/15 text-cyan-100 shadow-neon"
+                    : "border-amber-300 bg-amber-400/15 text-amber-100 shadow-amber"
+              }`}
+            >
+              Tua {state.quiz ? 1 : state.timeScale}x
+            </button>
             <button
               type="button"
               aria-pressed={state.manualPause}

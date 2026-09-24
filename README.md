@@ -15,7 +15,7 @@ Chơi trên lớp: https://taintse.github.io/dai-doan-ket-quiz/
 5. Virus sắp chạm cộng đồng thì hiện **Cứu nguy khẩn cấp** (khoảng 5 giây). Đúng: đẩy lùi hàng đó. Sai hoặc hết giờ: virus chạm cộng đồng.
 6. Vài sóng có **Kiểm tra bài** bắt buộc, để ôn các mốc giáo trình.
 7. **Ba câu đúng liên tiếp** thắp **Ánh chung bừng sáng**: sân sáng, mặt trời nhận được nhân đôi, đạn rực hơn. Sai một câu là tắt.
-8. Hết đoàn kết là thua. Sống sót sóng 8 là thắng. **Thu hồi** trả lại một nửa mặt trời. **Tạm dừng** khi cần giảng; **Tiếp tục**, bấm lớp phủ, phím cách hoặc Esc để chơi lại. Câu hỏi tuyệt kỹ và cứu nguy không bị khóa bởi tạm dừng.
+8. Hết đoàn kết là thua. Sống sót sóng 8 là thắng. **Thu hồi** trả lại một nửa mặt trời. **Tạm dừng** khi cần giảng; **Tiếp tục**, bấm lớp phủ, phím cách hoặc Esc để chơi lại. Câu hỏi tuyệt kỹ và cứu nguy không bị khóa bởi tạm dừng. **Tua 1x / 2x / 3x** (cạnh tạm dừng) làm nhanh virus, đạn, mặt trời và sóng. Câu hỏi vẫn đếm theo giây thật. Máy nhớ mức tua đã chọn.
 
 Phím `1`–`5` chọn đơn vị, `0` thu hồi, `Q` / `E` tuyệt kỹ. Trong câu hỏi, phím `1`–`4`.
 
