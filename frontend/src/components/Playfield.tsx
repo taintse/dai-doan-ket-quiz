@@ -44,10 +44,17 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
         }
         return;
       }
-      if (e.code === "Space") {
+      if (e.repeat) return;
+      if (e.code === "Space" || e.code === "Escape") {
         e.preventDefault();
+        if (e.code === "Escape" && !state.manualPause && state.selection) {
+          state.selection = null;
+          bump();
+          return;
+        }
         togglePause(state);
         bump();
+        return;
       }
       const unitKeys: Record<string, UnitId> = { Digit1: "den", Digit2: "tuong", Digit3: "phan", Digit4: "cau", Digit5: "moc" };
       if (unitKeys[e.code]) {
@@ -60,10 +67,6 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
       }
       if (e.code === "KeyQ") castUlti(state, "sang");
       if (e.code === "KeyE") castUlti(state, "tuonglua");
-      if (e.code === "Escape") {
-        state.selection = null;
-        bump();
-      }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -81,7 +84,7 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
           className="relative flex h-[700px] w-[1100px] flex-col gap-2 p-3"
           style={state.glitch > 0 ? { boxShadow: "inset 0 0 0 6px #fb7185" } : undefined}
         >
-          <header className="flex items-center gap-3">
+          <header className="pointer-events-none relative z-50 flex items-center gap-3">
             <div className="rounded-2xl border border-amber-400/40 bg-slate-950/70 px-3 py-2 shadow-amber">
               <p className="text-[10px] uppercase tracking-wider text-amber-200/80">Mặt trời</p>
               <p className="text-2xl font-black text-amber-300">{Math.floor(state.sun)}</p>
@@ -107,11 +110,12 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
             </div>
             <button
               type="button"
+              aria-pressed={state.manualPause}
               onClick={() => {
                 togglePause(state);
                 bump();
               }}
-              className="rounded-full border border-slate-600 px-3 py-2 text-sm font-semibold"
+              className="pointer-events-auto relative z-50 rounded-full border border-slate-600 bg-slate-950 px-3 py-2 text-sm font-semibold"
             >
               {state.manualPause ? "Tiếp tục" : "Tạm dừng"}
             </button>
@@ -348,7 +352,7 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
                 initial={{ y: 24, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: 16, opacity: 0 }}
-                className="absolute bottom-28 left-1/2 z-20 w-[min(680px,92%)] -translate-x-1/2 rounded-2xl border border-cyan-500/40 bg-slate-900/80 p-4 shadow-neon backdrop-blur-md"
+                className="absolute bottom-28 left-1/2 z-40 w-[min(680px,92%)] -translate-x-1/2 rounded-2xl border border-cyan-500/40 bg-slate-900/80 p-4 shadow-neon backdrop-blur-md"
               >
                 <div className="mb-2 flex items-center justify-between gap-3">
                   <p className="text-xs font-bold uppercase tracking-wider text-cyan-300">
@@ -392,9 +396,21 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
           </AnimatePresence>
 
           {state.manualPause && !state.quiz && (
-            <div className="absolute inset-0 grid place-items-center bg-slate-950/50">
-              <p className="rounded-full border border-cyan-400/40 bg-slate-900 px-6 py-3 text-lg font-bold">Tạm dừng</p>
-            </div>
+            <button
+              type="button"
+              aria-label="Tiếp tục"
+              onClick={() => {
+                togglePause(state);
+                bump();
+              }}
+              className="absolute inset-0 z-30 grid place-items-center bg-slate-950/55"
+            >
+              <span className="pointer-events-none rounded-2xl border border-cyan-400/50 bg-slate-900 px-8 py-4 text-center shadow-neon">
+                <span className="block text-lg font-bold">Tạm dừng</span>
+                <span className="mt-1 block text-sm font-semibold text-cyan-200">Tiếp tục</span>
+                <span className="mt-1 block text-[11px] font-medium text-slate-400">Bấm lớp phủ, Tiếp tục, phím cách hoặc Esc</span>
+              </span>
+            </button>
           )}
 
           {state.thu && (

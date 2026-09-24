@@ -234,7 +234,7 @@ export function setSelection(s: GameState, selection: GameState["selection"]) {
 }
 
 export function cellAction(s: GameState, lane: number, col: number) {
-  if (s.status !== "playing" || s.quiz) return;
+  if (s.status !== "playing" || s.quiz || s.manualPause) return;
   if (lane < 0 || lane >= ROWS || col < 0 || col >= COLS) return;
   if (s.selection === "shovel") digAt(s, lane, col);
   else if (s.selection) placeAt(s, lane, col, s.selection);
@@ -721,9 +721,10 @@ export function step(s: GameState, dt: number) {
   if (s.status !== "playing") return;
   const delta = Math.max(0, Math.min(0.05, dt));
   if (!delta) return;
-  if (s.manualPause) return;
-  s.clock += delta;
   if (s.quiz) {
+    // A latched pause must not freeze an ulti, clutch, or lesson prompt.
+    s.manualPause = false;
+    s.clock += delta;
     if (s.quiz.reveal > 0) {
       s.quiz.reveal -= delta;
       if (s.quiz.reveal <= 0) resolveQuiz(s);
@@ -737,6 +738,8 @@ export function step(s: GameState, dt: number) {
     }
     return;
   }
+  if (s.manualPause) return;
+  s.clock += delta;
   simulate(s, delta);
   decayFx(s, delta);
 }
