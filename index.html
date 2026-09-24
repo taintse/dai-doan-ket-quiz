@@ -2,131 +2,299 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Đại đoàn kết trong không gian mạng — Ôn tập nhanh</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#071416">
+<meta name="description" content="Hành trình ôn tập: đại đoàn kết trong không gian mạng. Chọn cách ứng xử khi bất đồng — tìm điểm chung, tôn trọng khác biệt, phản biện có trách nhiệm.">
+<title>Đại đoàn kết trong không gian mạng</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect fill='%23071416' width='32' height='32'/%3E%3Cpath d='M4 22C10 22 10 10 16 10C22 10 22 22 28 22' fill='none' stroke='%23e0b85a' stroke-width='1.7' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='10' r='2.2' fill='%23e0b85a'/%3E%3C/svg%3E">
 <style>
   :root {
-    --bg: #0f2a2e;
-    --bg-soft: #163a40;
-    --card: #f7f3ea;
-    --card-dark: #efe8d8;
-    --ink: #1a2e32;
-    --ink-soft: #3d5559;
-    --teal: #1a7a72;
-    --teal-dark: #0f5a54;
-    --teal-light: #2a9d94;
-    --gold: #c9a227;
-    --gold-soft: #e8d48b;
-    --cream: #f7f3ea;
-    --red: #a63d3d;
-    --green: #2d7a4f;
-    --shadow: 0 12px 40px rgba(0,0,0,.28);
-    --radius: 18px;
+    --bg: #071416;
+    --cream: #f6f1e6;
+    --cream-2: #f3ecdf;
+    --paper: #fffdf8;
+    --ink: #172426;
+    --ink-soft: #3c5154;
+    --teal: #0f5c55;
+    --teal-2: #1f8a80;
+    --gold: #e0b85a;
+    --gold-deep: #7d5e12;
+    --line: #e0d6c4;
+    --good: #1f6b45;
+    --good-bg: #e7f4ec;
+    --bad: #9c3b3b;
+    --bad-bg: #f8eceb;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+    --sans: system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --radius: 24px;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html, body {
-    min-height: 100%;
-    font-family: "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
-    background: var(--bg);
-    color: var(--ink);
+  * { box-sizing: border-box; }
+  html { font-size: 16px; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--sans);
+    color: var(--cream);
+    background:
+      radial-gradient(1100px 640px at 8% -10%, rgba(31,138,128,.28), transparent 55%),
+      radial-gradient(900px 560px at 110% 0%, rgba(224,184,90,.16), transparent 48%),
+      radial-gradient(800px 480px at 50% 120%, rgba(15,92,85,.35), transparent 50%),
+      var(--bg);
     -webkit-font-smoothing: antialiased;
   }
+  button, input { font: inherit; color: inherit; }
+  button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  p { margin: 0 0 .75rem; }
+  h1, h2 { margin: 0; }
 
-  body {
-    background:
-      radial-gradient(ellipse at 15% 10%, rgba(42,157,148,.22), transparent 50%),
-      radial-gradient(ellipse at 85% 90%, rgba(201,162,39,.14), transparent 45%),
-      linear-gradient(160deg, #0c2226 0%, #14353b 50%, #0f2a2e 100%);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
+  .sky {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .sky .n { animation: glow 6.8s ease-in-out infinite; }
+  .sky .n2 { animation-delay: -2.2s; }
+  .sky .n3 { animation-delay: -4.1s; }
+  @keyframes glow {
+    0%, 100% { opacity: .35; }
+    50% { opacity: 1; }
   }
 
   .app {
-    width: 100%;
-    max-width: 560px;
+    position: relative;
+    z-index: 1;
+    width: min(1120px, calc(100% - 20px));
+    margin: 0 auto;
+    padding: 16px 0 28px;
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
   }
+  .column { min-width: 0; }
+
+  .map {
+    position: sticky;
+    top: 14px;
+    max-height: calc(100vh - 28px);
+    overflow: auto;
+    padding: 16px 16px 14px;
+    border-radius: 22px;
+    background: rgba(8, 26, 28, .9);
+    border: 1px solid rgba(224,184,90,.28);
+    scrollbar-width: thin;
+  }
+  .brand { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; }
+  .brand svg { width: 64px; height: 40px; flex: 0 0 auto; }
+  .brand-k {
+    margin: 0;
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .04em;
+    color: var(--gold);
+  }
+  .brand-t {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: 1.45rem;
+    line-height: 1.05;
+    color: var(--cream);
+  }
+  .map-lead {
+    margin: 0 0 6px;
+    font-size: .78rem;
+    font-weight: 800;
+    color: var(--gold);
+  }
+  .path { list-style: none; margin: 0; padding: 0; position: relative; }
+  .path::before {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: 10px;
+    bottom: 10px;
+    width: 2px;
+    background: linear-gradient(#1f8a80, #e0b85a);
+    opacity: .45;
+  }
+  .path li {
+    display: grid;
+    grid-template-columns: 16px 1fr;
+    gap: 10px;
+    align-items: start;
+    padding: 6px 0;
+    color: #b7c8c5;
+  }
+  .path li.done { color: #e7f3f1; }
+  .path li.on { color: #fffdf8; }
+  .node {
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    border-radius: 50%;
+    border: 2px solid rgba(224,184,90,.8);
+    background: #0c2426;
+    position: relative;
+    z-index: 1;
+  }
+  .path li.done .node { background: var(--gold); border-color: var(--gold); }
+  .path li.on .node {
+    background: #3dbaa8;
+    border-color: #f3fffc;
+    box-shadow: 0 0 0 4px rgba(61,186,168,.28);
+  }
+  .path-name { display: block; font-weight: 700; font-size: .94rem; line-height: 1.25; }
+  .path-sub { display: block; margin-top: 1px; font-size: .75rem; color: #a8c0bd; line-height: 1.35; }
+  .path li.on .path-sub { color: var(--gold); }
+
+  .meter { margin-top: 12px; }
+  .meter-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: .78rem;
+    font-weight: 700;
+    color: #e7f0ee;
+    margin-bottom: 6px;
+  }
+  .meter-track { height: 8px; border-radius: 99px; background: #163236; overflow: hidden; }
+  .meter-fill {
+    height: 100%;
+    width: 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--teal-2), var(--gold));
+  }
+  .map-quote {
+    margin: 14px 0 0;
+    font-family: var(--serif);
+    font-size: .92rem;
+    line-height: 1.45;
+    color: #e7f0ee;
+  }
+
+  .mobile-bar { display: none; }
 
   .card {
-    background: var(--card);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 28px 24px;
     position: relative;
-    overflow: hidden;
-    animation: fadeUp .45s ease;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,0) 92px),
+      var(--cream);
+    color: var(--ink);
+    border-radius: var(--radius);
+    padding: 26px 16px 18px;
+    border: 1px solid rgba(255,248,236,.4);
+    box-shadow: 0 1px 0 rgba(255,255,255,.55) inset, 0 22px 50px rgba(0,0,0,.32);
   }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(14px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
   .card::before {
     content: "";
     position: absolute;
     top: 0; left: 0; right: 0;
-    height: 5px;
-    background: linear-gradient(90deg, var(--teal), var(--gold), var(--teal-light));
+    height: 4px;
+    border-radius: var(--radius) var(--radius) 0 0;
+    background: linear-gradient(90deg, var(--teal), var(--gold) 55%, var(--teal-2));
+  }
+  .card.rise { animation: rise .42s ease; }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
   }
 
-  .badge {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-    color: var(--teal-dark);
-    background: rgba(26,122,114,.12);
-    padding: 5px 10px;
-    border-radius: 999px;
-    margin-bottom: 14px;
-  }
-
-  h1 {
-    font-size: clamp(1.35rem, 4.5vw, 1.7rem);
-    line-height: 1.3;
-    color: var(--ink);
-    margin-bottom: 10px;
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: .78rem;
     font-weight: 700;
-  }
-
-  .subtitle {
     color: var(--ink-soft);
-    font-size: .95rem;
-    line-height: 1.55;
-    margin-bottom: 22px;
   }
-
-  .field {
-    margin-bottom: 18px;
+  .pill-mini {
+    background: rgba(15,92,85,.1);
+    color: var(--teal);
+    border-radius: 999px;
+    padding: 4px 8px;
+    white-space: nowrap;
   }
-
-  .field label {
-    display: block;
-    font-size: .82rem;
-    font-weight: 600;
-    color: var(--ink-soft);
+  .kicker {
+    color: var(--teal);
+    font-size: .8rem;
+    font-weight: 800;
     margin-bottom: 6px;
   }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(1.7rem, 4.2vw, 2.35rem);
+    line-height: 1.18;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    color: #122224;
+  }
+  .rule {
+    width: 72px;
+    height: 3px;
+    border: 0;
+    border-radius: 99px;
+    margin: 0 0 14px;
+    background: linear-gradient(90deg, var(--teal), var(--gold));
+  }
+  .story p, .deck { font-size: 1.02rem; line-height: 1.65; color: var(--ink-soft); }
+  .who {
+    display: inline-block;
+    margin: 0 0 12px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(224,184,90,.28);
+    color: #6a4e0c;
+    font-size: .85rem;
+    font-weight: 800;
+  }
+  .hero-svg { width: min(100%, 280px); height: auto; display: block; margin: 2px auto 6px; }
 
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 4px 0 16px;
+    padding: 0;
+    list-style: none;
+  }
+  .facts li {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 10px 6px;
+    text-align: center;
+  }
+  .facts b {
+    display: block;
+    font-family: var(--serif);
+    font-size: 1.45rem;
+    font-weight: 600;
+    color: var(--teal);
+    line-height: 1.1;
+  }
+  .facts span { font-size: .75rem; font-weight: 700; color: var(--ink-soft); }
+
+  .field { margin: 4px 0 14px; }
+  .field label { display: block; font-weight: 800; margin-bottom: 6px; font-size: .92rem; }
   .field input {
     width: 100%;
-    padding: 14px 16px;
-    border: 2px solid #d9d0bc;
+    min-height: 52px;
+    padding: 12px 14px;
     border-radius: 12px;
-    font-size: 1rem;
+    border: 2px solid #ddd3bf;
     background: #fff;
     color: var(--ink);
-    outline: none;
-    transition: border-color .2s;
+    font-size: 16px;
   }
-
-  .field input:focus {
+  .field input:focus-visible {
+    outline: 3px solid var(--teal);
+    outline-offset: 2px;
     border-color: var(--teal);
   }
 
@@ -134,683 +302,1597 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
     width: 100%;
-    padding: 15px 20px;
-    border: none;
-    border-radius: 12px;
+    min-height: 52px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    border: 2px solid transparent;
+    font-weight: 800;
     font-size: 1.05rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform .15s, box-shadow .15s, background .15s;
-    -webkit-tap-highlight-color: transparent;
+    line-height: 1.3;
   }
-
-  .btn:active { transform: scale(.98); }
-
+  .btn:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+  .btn:active { transform: translateY(1px); }
   .btn-primary {
-    background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
-    color: #fff;
-    box-shadow: 0 6px 18px rgba(15,90,84,.35);
+    background: linear-gradient(180deg, #1b7a72 0%, #0e4e49 100%);
+    color: #f7f3ea;
+    box-shadow: 0 8px 20px rgba(8,40,38,.28);
   }
-
-  .btn-primary:hover { background: linear-gradient(135deg, var(--teal-light) 0%, var(--teal) 100%); }
-
+  .btn-primary:hover { filter: brightness(1.08); }
   .btn-ghost {
     background: transparent;
-    color: var(--teal-dark);
-    border: 2px solid rgba(26,122,114,.35);
-    margin-top: 10px;
+    color: var(--teal);
+    border-color: rgba(15,92,85,.35);
+    margin-top: 0;
   }
+  .btn-ghost:hover { background: rgba(15,92,85,.06); }
+  .actions { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+  .hint { margin: 10px 0 0; text-align: center; font-size: .8rem; color: var(--ink-soft); }
 
-  .btn-ghost:hover { background: rgba(26,122,114,.08); }
-
-  .btn:disabled {
-    opacity: .55;
-    cursor: not-allowed;
-    transform: none;
-  }
-
-  /* Progress */
-  .topbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 14px;
-  }
-
-  .progress-meta {
-    font-size: .82rem;
-    font-weight: 600;
-    color: var(--ink-soft);
-  }
-
-  .stats {
-    display: flex;
-    gap: 10px;
-    font-size: .78rem;
-    font-weight: 700;
-  }
-
-  .stat {
-    background: rgba(26,122,114,.1);
-    color: var(--teal-dark);
-    padding: 4px 9px;
-    border-radius: 8px;
-  }
-
-  .stat.streak { background: rgba(201,162,39,.18); color: #8a6b10; }
-
-  .progress-track {
-    height: 8px;
-    background: #e0d7c4;
-    border-radius: 999px;
-    overflow: hidden;
-    margin-bottom: 20px;
-  }
-
-  .progress-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, var(--teal), var(--gold));
-    border-radius: 999px;
-    transition: width .4s ease;
-  }
-
-  .q-type {
-    display: inline-block;
-    font-size: .72rem;
-    font-weight: 700;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    color: var(--gold);
-    background: rgba(201,162,39,.15);
-    padding: 4px 9px;
-    border-radius: 6px;
-    margin-bottom: 10px;
-  }
-
-  .question {
-    font-size: clamp(1.05rem, 3.8vw, 1.2rem);
-    font-weight: 700;
-    line-height: 1.45;
+  h2.question {
+    font-family: var(--sans);
+    font-size: clamp(1.12rem, 2.3vw, 1.45rem);
+    font-weight: 800;
+    line-height: 1.4;
     color: var(--ink);
-    margin-bottom: 18px;
+    margin: 14px 0 12px;
   }
-
-  .options {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
+  .options, .choices { display: flex; flex-direction: column; gap: 10px; }
   .option {
     display: flex;
     align-items: flex-start;
     gap: 12px;
     width: 100%;
     text-align: left;
-    padding: 14px 14px;
-    border: 2px solid #d9d0bc;
+    min-height: 56px;
+    padding: 13px 14px;
     border-radius: 14px;
+    border: 2px solid var(--line);
     background: #fff;
     color: var(--ink);
-    font-size: .95rem;
+    font-size: 1rem;
     line-height: 1.45;
-    cursor: pointer;
-    transition: border-color .15s, background .15s, transform .1s;
-    -webkit-tap-highlight-color: transparent;
-    font-family: inherit;
   }
-
-  .option:hover:not(:disabled) {
-    border-color: var(--teal);
-    background: rgba(26,122,114,.05);
-  }
-
-  .option:active:not(:disabled) { transform: scale(.99); }
-
-  .option .letter {
-    flex-shrink: 0;
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    background: rgba(26,122,114,.12);
-    color: var(--teal-dark);
-    font-weight: 800;
-    font-size: .85rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 1px;
-  }
-
-  .option .text { flex: 1; padding-top: 3px; }
-
-  .option.correct {
-    border-color: var(--green);
-    background: rgba(45,122,79,.12);
-  }
-
-  .option.correct .letter {
-    background: var(--green);
-    color: #fff;
-  }
-
-  .option.wrong {
-    border-color: var(--red);
-    background: rgba(166,61,61,.1);
-  }
-
-  .option.wrong .letter {
-    background: var(--red);
-    color: #fff;
-  }
-
+  .option:hover:not(:disabled) { border-color: var(--teal-2); background: #f3faf9; }
+  .option:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
   .option:disabled { cursor: default; }
-
-  .option.dim:not(.correct):not(.wrong) {
-    opacity: .55;
+  .option.dim { opacity: .55; }
+  .option.correct, .option.wrong { opacity: 1; }
+  .letter {
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    background: rgba(15,92,85,.1);
+    color: var(--teal);
+  }
+  .option .text { padding-top: 4px; }
+  .option.correct { border-color: var(--good); background: var(--good-bg); }
+  .option.correct .letter { background: var(--good); color: #fff; }
+  .option.wrong { border-color: var(--bad); background: var(--bad-bg); }
+  .option.wrong .letter { background: var(--bad); color: #fff; }
+  .choice-tag {
+    display: block;
+    font-size: .75rem;
+    font-weight: 800;
+    color: var(--gold-deep);
+    margin-bottom: 3px;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
   }
 
   .feedback {
-    margin-top: 16px;
-    padding: 14px 16px;
-    border-radius: 12px;
-    font-size: .9rem;
-    line-height: 1.55;
-    animation: fadeUp .3s ease;
+    margin-top: 14px;
+    padding: 14px 14px 12px;
+    border-radius: 14px;
+    line-height: 1.6;
+    font-size: .98rem;
   }
+  .feedback strong { display: block; font-size: 1.02rem; margin-bottom: 4px; }
+  .feedback .key { font-weight: 700; margin-bottom: .4rem; }
+  .feedback.ok { background: var(--good-bg); color: #143d28; border-left: 4px solid var(--good); }
+  .feedback.bad { background: var(--bad-bg); color: #5c2424; border-left: 4px solid var(--bad); }
+  .feedback .source { margin: 8px 0 0; font-size: .86rem; font-weight: 750; }
+  .feedback.ok .source { color: #0f4f4a; }
+  .feedback.bad .source { color: #6d3a1e; }
 
-  .feedback.ok {
-    background: rgba(45,122,79,.12);
-    color: #1e5535;
-    border-left: 4px solid var(--green);
+  .fingers {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+    height: 36px;
+    margin: 2px 0 8px;
   }
-
-  .feedback.bad {
-    background: rgba(166,61,61,.1);
-    color: #6b2a2a;
-    border-left: 4px solid var(--red);
+  .fingers span {
+    width: 10px;
+    display: block;
+    border-radius: 99px 99px 4px 4px;
+    background: linear-gradient(var(--gold), var(--teal));
   }
+  .fingers span:nth-child(1) { height: 16px; }
+  .fingers span:nth-child(2) { height: 26px; }
+  .fingers span:nth-child(3) { height: 36px; }
+  .fingers span:nth-child(4) { height: 24px; }
+  .fingers span:nth-child(5) { height: 14px; }
 
-  .feedback strong { display: block; margin-bottom: 4px; font-size: .95rem; }
-
-  .next-wrap {
-    margin-top: 16px;
+  .slip {
+    background: var(--paper);
+    border: 1px dashed rgba(125,94,18,.55);
+    border-radius: 14px;
+    padding: 12px 14px 10px;
+    margin: 8px 0 4px;
   }
+  .slip-title { font-weight: 800; color: var(--gold-deep); margin: 0 0 6px; font-size: .92rem; }
+  .slip ol { margin: 0; padding-left: 1.2rem; }
+  .slip li { margin: 6px 0; line-height: 1.45; }
 
-  /* End screen */
-  .score-circle {
-    width: 120px;
-    height: 120px;
-    margin: 8px auto 18px;
+  .room {
+    margin: 12px 0 8px;
+    font-size: .78rem;
+    font-weight: 800;
+    color: #6d5a32;
+  }
+  .thread { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+  .msg { display: flex; gap: 10px; align-items: flex-start; }
+  .msg.you { flex-direction: row-reverse; }
+  .av {
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    background: linear-gradient(145deg, var(--teal), var(--teal-dark));
+    display: grid;
+    place-items: center;
     color: #fff;
+    font-weight: 800;
+    flex: 0 0 36px;
+    font-size: .85rem;
+    background: #3e5560;
+  }
+  .av.khoa { background: #8c4e3c; }
+  .av.minh { background: #0f5c55; }
+  .av.ha { background: #8a6b2a; }
+  .av.an { background: #3e5560; }
+  .av.you { background: #1a6f68; }
+  .msg-body {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 10px 12px;
+    max-width: min(100%, 520px);
+  }
+  .msg.you .msg-body { background: #e5f3f1; border-color: rgba(15,92,85,.2); }
+  .msg-name { font-size: .75rem; font-weight: 800; color: var(--ink-soft); margin-bottom: 2px; }
+  .msg-text { margin: 0; line-height: 1.5; color: var(--ink); }
+  .narr { margin: 0; color: var(--ink-soft); font-style: italic; line-height: 1.5; }
+  .prompt { font-size: 1.05rem; font-weight: 800; margin: 4px 0 10px; color: var(--ink); }
+
+  .end-hero {
+    display: grid;
+    grid-template-columns: 116px 1fr;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .tier {
+    font-family: var(--serif);
+    font-size: clamp(1.45rem, 3vw, 1.9rem);
+    font-weight: 600;
+    line-height: 1.15;
+    margin-bottom: 4px;
+  }
+  .tier.strong { color: #7d5e12; }
+  .tier.ok { color: var(--teal); }
+  .tier.weak { color: #8a3e32; }
+  .role { color: var(--ink-soft); font-size: .92rem; margin: 0; }
+  .ring-wrap { position: relative; width: 116px; height: 116px; }
+  .ring-wrap svg { width: 100%; height: 100%; display: block; }
+  .ring-bg { fill: none; stroke: #e4dac6; stroke-width: 8; }
+  .ring-fg { fill: none; stroke-width: 8; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; }
+  .ring-num {
+    position: absolute;
+    inset: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 8px 24px rgba(15,90,84,.35);
   }
-
-  .score-circle .num {
-    font-size: 2.2rem;
-    font-weight: 800;
+  .ring-num strong {
+    font-family: var(--serif);
+    font-size: 2rem;
     line-height: 1;
-  }
-
-  .score-circle .den {
-    font-size: .85rem;
-    opacity: .85;
-    margin-top: 2px;
-  }
-
-  .tier-msg {
-    text-align: center;
-    font-size: 1.05rem;
-    font-weight: 700;
+    font-weight: 600;
     color: var(--ink);
-    margin-bottom: 8px;
   }
-
-  .closing {
-    text-align: center;
-    color: var(--ink-soft);
-    font-size: .9rem;
-    line-height: 1.55;
-    margin-bottom: 8px;
-    font-style: italic;
+  .ring-num span { color: var(--ink-soft); font-weight: 800; font-size: .95rem; }
+  .epilogue p { line-height: 1.65; color: var(--ink-soft); font-size: 1.02rem; }
+  .bridge-graphic svg { width: 100%; height: auto; display: block; }
+  .bridge-graphic path { fill: none; stroke: #ddd4c2; stroke-width: 3; stroke-linecap: round; }
+  .bridge-graphic path.on { stroke: var(--gold); }
+  .bridge-caption { text-align: center; color: var(--ink-soft); font-size: .92rem; margin: 2px 0 8px; }
+  .section-title {
+    font-family: var(--sans);
+    font-size: 1.02rem;
+    font-weight: 800;
+    color: var(--teal);
+    margin: 16px 0 8px;
   }
-
-  .principles {
-    background: var(--card-dark);
+  .note { font-size: .88rem; color: var(--ink-soft); margin: -4px 0 8px; }
+  .pills, .principles { list-style: none; margin: 0; padding: 0; }
+  .pills { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .pill, .principles li {
+    background: #fff;
+    border: 1px solid var(--line);
     border-radius: 12px;
-    padding: 14px 16px;
-    margin: 16px 0 20px;
-    font-size: .85rem;
-    line-height: 1.6;
-    color: var(--ink-soft);
+    padding: 8px 10px;
+    font-size: .9rem;
+    line-height: 1.4;
   }
-
-  .principles strong {
-    color: var(--teal-dark);
-    display: block;
-    margin-bottom: 4px;
+  .pill { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .pill .st { font-weight: 800; font-size: .75rem; white-space: nowrap; }
+  .pill.sang .st { color: var(--good); }
+  .pill.noi .st { color: var(--bad); }
+  .principles { display: grid; gap: 6px; }
+  blockquote.closing {
+    margin: 14px 0;
+    padding: 12px 14px;
+    border-left: 3px solid var(--gold);
+    background: var(--cream-2);
+    font-family: var(--serif);
+    font-size: 1.08rem;
+    line-height: 1.5;
+    color: #243433;
   }
-
-  .footer-note {
-    text-align: center;
-    margin-top: 14px;
-    font-size: .75rem;
-    color: rgba(247,243,234,.55);
+  .colophon {
+    color: #c5d4d1;
+    font-size: .78rem;
+    line-height: 1.5;
+    margin: 12px 2px 0;
   }
+  .skip {
+    position: absolute;
+    left: 8px;
+    top: -40px;
+    background: var(--cream);
+    color: var(--ink);
+    padding: 8px 12px;
+    z-index: 5;
+    border-radius: 8px;
+  }
+  .skip:focus { top: 8px; }
 
-  .hidden { display: none !important; }
-
-  @media (min-width: 480px) {
-    .card { padding: 36px 32px; }
+  @media (min-width: 720px) {
+    .card { padding: 32px 32px 26px; }
+  }
+  @media (min-width: 1100px) {
+    html { font-size: 17px; }
+    .app { width: min(1180px, calc(100% - 40px)); padding-top: 22px; }
+  }
+  @media (max-width: 860px) {
+    .app { grid-template-columns: 1fr; width: min(640px, calc(100% - 16px)); padding-top: 10px; gap: 10px; }
+    .map { display: none; }
+    .mobile-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      position: sticky;
+      top: 8px;
+      z-index: 4;
+      margin-bottom: 10px;
+      padding: 8px 10px;
+      border-radius: 14px;
+      background: rgba(7,20,22,.94);
+      border: 1px solid rgba(224,184,90,.25);
+    }
+    .mb-brand { font-family: var(--serif); font-size: 1.05rem; color: var(--cream); }
+    .dots { display: flex; gap: 6px; }
+    .dots i {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(224,184,90,.85);
+      display: block;
+      background: transparent;
+    }
+    .dots i.done { background: var(--gold); }
+    .dots i.on { background: #3dbaa8; box-shadow: 0 0 0 3px rgba(61,186,168,.28); }
+    .mini-score { font-size: .8rem; font-weight: 800; color: var(--cream); font-variant-numeric: tabular-nums; }
+  }
+  @media (max-width: 560px) {
+    .end-hero { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+    .pills { grid-template-columns: 1fr; }
+    h1 { font-size: 1.65rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation: none !important;
+      transition: none !important;
+    }
   }
 </style>
 </head>
 <body>
-  <div class="app">
-    <!-- START -->
-    <div id="screen-start" class="card">
-      <span class="badge">Ôn tập nhanh · Tư tưởng Hồ Chí Minh</span>
-      <h1>Đại đoàn kết trong không gian mạng</h1>
-      <p class="subtitle">
-        Trò chơi ôn tập sau bài thuyết trình 12 slide của nhóm.
-        Kiểm tra nhanh các ý chính: chiến lược đại đoàn kết, cầu đồng tồn dị,
-        và cách ứng xử khi bất đồng trên không gian mạng.
-      </p>
-      <div class="field">
-        <label for="player-name">Tên của bạn (không bắt buộc)</label>
-        <input id="player-name" type="text" maxlength="40" placeholder="Ví dụ: Minh Anh" autocomplete="off">
-      </div>
-      <button class="btn btn-primary" id="btn-start" type="button">Bắt đầu ôn tập</button>
-    </div>
+<a class="skip" href="#stage">Đến nội dung</a>
+<svg class="sky" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <circle cx="600" cy="360" r="150" fill="rgba(224,184,90,0.06)"/>
+  <g stroke="rgba(143,208,200,0.38)" stroke-width="1.2">
+    <line x1="120" y1="180" x2="200" y2="260"/>
+    <line x1="200" y1="260" x2="90" y2="340"/>
+    <line x1="90" y1="340" x2="230" y2="400"/>
+    <line x1="200" y1="260" x2="230" y2="400"/>
+    <line x1="230" y1="400" x2="150" y2="520"/>
+    <line x1="150" y1="520" x2="260" y2="600"/>
+    <line x1="230" y1="400" x2="260" y2="600"/>
+    <line x1="980" y1="200" x2="1080" y2="300"/>
+    <line x1="1080" y1="300" x2="940" y2="380"/>
+    <line x1="980" y1="200" x2="940" y2="380"/>
+    <line x1="940" y1="380" x2="1100" y2="470"/>
+    <line x1="1100" y1="470" x2="990" y2="560"/>
+    <line x1="990" y1="560" x2="1060" y2="660"/>
+    <line x1="940" y1="380" x2="990" y2="560"/>
+  </g>
+  <g stroke="rgba(224,184,90,0.6)" stroke-width="1.7">
+    <line x1="230" y1="400" x2="400" y2="420"/>
+    <line x1="400" y1="420" x2="520" y2="360"/>
+    <line x1="520" y1="360" x2="600" y2="330"/>
+    <line x1="600" y1="330" x2="680" y2="360"/>
+    <line x1="680" y1="360" x2="800" y2="420"/>
+    <line x1="800" y1="420" x2="940" y2="380"/>
+  </g>
+  <g fill="#9fd9d1">
+    <circle class="n" cx="120" cy="180" r="4.2"/>
+    <circle cx="200" cy="260" r="3.4"/>
+    <circle class="n n2" cx="90" cy="340" r="3.2"/>
+    <circle cx="230" cy="400" r="4.4"/>
+    <circle cx="150" cy="520" r="3"/>
+    <circle cx="260" cy="600" r="3.4"/>
+    <circle cx="980" cy="200" r="4"/>
+    <circle class="n n3" cx="1080" cy="300" r="3.5"/>
+    <circle cx="940" cy="380" r="4.4"/>
+    <circle cx="1100" cy="470" r="3.1"/>
+    <circle cx="990" cy="560" r="3.4"/>
+    <circle class="n" cx="1060" cy="660" r="3.2"/>
+    <circle cx="400" cy="420" r="3.4"/>
+    <circle cx="520" cy="360" r="3.3"/>
+    <circle cx="680" cy="360" r="3.3"/>
+    <circle cx="800" cy="420" r="3.4"/>
+  </g>
+  <circle cx="600" cy="330" r="7" fill="#e0b85a"/>
+  <circle cx="600" cy="330" r="16" fill="none" stroke="rgba(224,184,90,0.45)"/>
+</svg>
 
-    <!-- QUIZ -->
-    <div id="screen-quiz" class="card hidden">
-      <div class="topbar">
-        <div class="progress-meta" id="progress-label">Câu 1 / 12</div>
-        <div class="stats">
-          <span class="stat" id="score-label">Điểm: 0</span>
-          <span class="stat streak" id="streak-label">Chuỗi: 0</span>
-        </div>
-      </div>
-      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
-      <div class="q-type" id="q-type"></div>
-      <div class="question" id="q-text"></div>
-      <div class="options" id="options"></div>
-      <div id="feedback" class="feedback hidden"></div>
-      <div class="next-wrap hidden" id="next-wrap">
-        <button class="btn btn-primary" id="btn-next" type="button">Câu tiếp theo</button>
+<div class="app">
+  <aside class="map" id="map">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 64 40" aria-hidden="true">
+        <path d="M4 30C16 30 16 12 32 12C48 12 48 30 60 30" fill="none" stroke="#e0b85a" stroke-width="1.7" stroke-linecap="round"/>
+        <circle cx="4" cy="30" r="2.3" fill="#9fd9d1"/>
+        <circle cx="16" cy="20" r="1.8" fill="#9fd9d1"/>
+        <circle cx="32" cy="12" r="3.2" fill="#e0b85a"/>
+        <circle cx="48" cy="20" r="1.8" fill="#9fd9d1"/>
+        <circle cx="60" cy="30" r="2.3" fill="#9fd9d1"/>
+      </svg>
+      <div>
+        <p class="brand-k">Không gian mạng</p>
+        <p class="brand-t">Ánh chung</p>
       </div>
     </div>
-
-    <!-- END -->
-    <div id="screen-end" class="card hidden">
-      <span class="badge">Hoàn thành</span>
-      <h1 id="end-title">Kết quả ôn tập</h1>
-      <div class="score-circle">
-        <div class="num" id="end-score">0</div>
-        <div class="den" id="end-den">/ 12</div>
-      </div>
-      <p class="tier-msg" id="tier-msg"></p>
-      <p class="closing" id="closing-msg"></p>
-      <div class="principles">
-        <strong>Nguyên tắc mang theo:</strong>
-        Tìm điểm chung – tôn trọng khác biệt – phản biện vấn đề – không công kích con người – trách nhiệm với cộng đồng.
-      </div>
-      <button class="btn btn-primary" id="btn-restart" type="button">Chơi lại</button>
-      <button class="btn btn-ghost" id="btn-home" type="button">Về màn hình bắt đầu</button>
+    <p class="map-lead" id="map-lead">Hành trình</p>
+    <ol class="path" aria-label="Bảy chương">
+      <li data-chapter="1"><span class="node" aria-hidden="true"></span><span class="path-text"><span class="path-name">Đèn hải đăng</span><span class="path-sub">Tầm nhìn chiến lược</span></span></li>
+      <li data-chapter="2"><span class="node" aria-hidden="true"></span><span class="path-text"><span class="path-name">Vòng tròn mở</span><span class="path-sub">Chủ thể rộng mở</span></span></li>
+      <li data-chapter="3"><span class="node" aria-hidden="true"></span><span class="path-text"><span class="path-name">Ngọn lửa chung</span><span class="path-sub">Điểm quy tụ, lợi ích chung</span></span></li>
+      <li data-chapter="4"><span class="node" aria-hidden="true"></span><span class="path-text"><span class="path-name">Năm ngón tay</span><span class="path-sub">Khoan dung</span></span></li>
+      <li data-chapter="5"><span class="node" aria-hidden="true"></span><span class="path-text"><span class="path-name">Chiếc cầu</span><span class="path-sub">Cầu đồng tồn dị</span></span></li>
+      <li data-chapter="6"><span class="node" aria-hidden="true"></span><span class="path-text"><span class="path-name">Đường ranh</span><span class="path-sub">Thử thách và giới hạn</span></span></li>
+      <li data-chapter="7"><span class="node" aria-hidden="true"></span><span class="path-text"><span class="path-name">Dấu ấn</span><span class="path-sub">Văn hóa giao tiếp số</span></span></li>
+    </ol>
+    <div class="meter" aria-hidden="true">
+      <div class="meter-row"><span>Ánh chung</span><span id="meter-label">0/12</span></div>
+      <div class="meter-track"><div class="meter-fill" id="meter-fill"></div></div>
     </div>
+    <p class="map-quote">“Đoàn kết trên không gian mạng không bắt đầu từ việc nghĩ giống nhau, mà từ cách ứng xử khi không giống nhau.”</p>
+  </aside>
 
-    <p class="footer-note">Dựa trên Giáo trình Tư tưởng Hồ Chí Minh (2021), Chương V · Ứng dụng nhóm</p>
+  <div class="column">
+    <header class="mobile-bar" aria-label="Tiến trình">
+      <div class="mb-brand">Ánh chung</div>
+      <div class="dots" aria-hidden="true">
+        <i data-chapter="1"></i><i data-chapter="2"></i><i data-chapter="3"></i><i data-chapter="4"></i><i data-chapter="5"></i><i data-chapter="6"></i><i data-chapter="7"></i>
+      </div>
+      <div class="mini-score" id="mini-score">0/12</div>
+    </header>
+    <main id="stage" tabindex="-1">
+      <noscript>
+        <article class="card">
+          <h1>Cần bật JavaScript</h1>
+          <p>Hành trình chạy ngay trên trang này. Hãy bật JavaScript rồi tải lại.</p>
+        </article>
+      </noscript>
+    </main>
+    <p class="colophon">Nội dung bám Giáo trình Tư tưởng Hồ Chí Minh (2021), Chương V — I.1.a (tr.97–99), I.2.a (tr.100), I.3 (tr.101–103), I.4.b (tr.103–104), III.2 (tr.114–115) — và phần vận dụng của nhóm.</p>
   </div>
+</div>
+<div id="live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
 <script>
 (function () {
   "use strict";
 
-  var QUESTIONS = [
+  var FOUR = [
+    "Có điểm chung nào?",
+    "Khác biệt có thể cùng tồn tại?",
+    "Phản biện vấn đề hay công kích con người?",
+    "Diễn đạt giúp tiếp tục hay đẩy xa hơn?"
+  ];
+  var PRINCIPLES = [
+    "Tìm điểm chung",
+    "Tôn trọng khác biệt",
+    "Phản biện vấn đề",
+    "Không công kích con người",
+    "Trách nhiệm với cộng đồng"
+  ];
+  var CLOSING = "Đoàn kết trên không gian mạng không bắt đầu từ việc nghĩ giống nhau, mà từ cách ứng xử khi không giống nhau.";
+
+  var SCENES = [
     {
-      type: "Trắc nghiệm",
-      q: "Theo Tư tưởng Hồ Chí Minh, đại đoàn kết toàn dân tộc mang tính chất nào?",
-      choices: [
-        "Chỉ là giải pháp tạm thời khi có khó khăn lớn",
-        "Là chiến lược lâu dài, xuyên suốt quá trình cách mạng",
-        "Chỉ áp dụng trong thời kỳ kháng chiến",
-        "Là khẩu hiệu tuyên truyền, không phải nguyên tắc nền tảng"
-      ],
-      answer: 1,
-      explain: "Đại đoàn kết là chiến lược, không phải thủ đoạn tạm thời. Giáo trình TT HCM 2021, Chương V, mục I.1.a (tr.97–99) khẳng định tính chiến lược lâu dài của đại đoàn kết toàn dân tộc."
+      id: "prologue",
+      type: "story",
+      chapter: 0,
+      kicker: "Mở đầu",
+      title: "Cổng diễn đàn",
+      cta: "Bước qua cổng",
+      body: [
+        "Đêm trước buổi trình bày, diễn đàn lớp — Không gian Ánh chung — mất nhịp. Bình luận chồng lên bình luận. Vài mạch nói chuyện tách nhau, sáng một màu lạnh.",
+        "Bạn bước vào như một thành viên cộng đồng số, người kết nối. Việc của bạn không phải bắt mọi người nghĩ giống nhau. Việc của bạn là giữ đại đoàn kết: tìm điểm chung, để khác biệt chính đáng còn chỗ, và phản biện cho có trách nhiệm."
+      ]
     },
     {
-      type: "Đúng / Sai",
+      id: "strategy",
+      type: "quiz",
+      chapter: 1,
+      mode: "Trắc nghiệm",
+      kicker: "Chương 1 · Tầm nhìn chiến lược",
+      title: "Đèn hải đăng",
+      log: "Chiến lược lâu dài",
+      body: [
+        "Một dòng được nhiều người chia sẻ: “Đại đoàn kết là khẩu hiệu lúc bão. Bão tan thì thôi.” Có người thấy thế cho nhẹ. Trên sơ đồ mạng của diễn đàn, vài nút đang tắt — như thể đoàn kết chỉ là một công tắc."
+      ],
+      q: "Theo Tư tưởng Hồ Chí Minh, đại đoàn kết toàn dân tộc mang tính chất nào?",
+      choices: [
+        "Chỉ là giải pháp tạm thời khi gặp khó khăn lớn",
+        "Là chiến lược lâu dài, xuyên suốt quá trình cách mạng",
+        "Chỉ đúng trong thời kỳ kháng chiến, không còn ý nghĩa hôm nay",
+        "Là câu khẩu hiệu tuyên truyền, không phải nguyên tắc nền tảng"
+      ],
+      answer: 1,
+      okTitle: "Hải đăng không tắt theo cơn sóng",
+      badTitle: "Đó là công tắc, không phải hải đăng",
+      explain: "Đại đoàn kết toàn dân tộc là chiến lược lâu dài, xuyên suốt quá trình cách mạng — không phải sách lược nhất thời, cũng không phải khẩu hiệu lúc khó rồi bỏ. Diễn đàn có lúc căng, tinh thần ấy vẫn là hướng đi, không phải công tắc.",
+      source: "Giáo trình Tư tưởng Hồ Chí Minh (2021), Chương V, mục I.1.a (tr.97–99)."
+    },
+    {
+      id: "subject",
+      type: "quiz",
+      chapter: 2,
+      mode: "Đúng / Sai",
+      kicker: "Chương 2 · Chủ thể rộng mở",
+      title: "Vòng tròn mở",
+      log: "Chủ thể rộng",
+      body: [
+        "Khoa viết trong một nhóm nhỏ: “Muốn yên thì chỉ giữ người cùng chí hướng. Ai khác ý thì để ngoài vòng.” Vài người gật. Vòng tròn trên diễn đàn đang khép."
+      ],
       q: "Chủ thể của đại đoàn kết chỉ gồm những người có cùng tư tưởng, cùng quan điểm chính trị.",
       choices: ["Đúng", "Sai"],
       answer: 1,
-      explain: "Sai. Chủ thể đại đoàn kết rất rộng — toàn dân — không chỉ những người nghĩ giống nhau. Giáo trình TT HCM 2021, I.2.a (tr.100)."
+      okTitle: "Vòng tròn ấy phải mở",
+      badTitle: "Vòng tròn ấy quá hẹp",
+      explain: "Sai. Chủ thể đại đoàn kết rất rộng — toàn dân — không thu lại thành những người nghĩ giống mình. Khép vòng cho “cùng chí hướng” là làm nghèo chính khối đoàn kết.",
+      source: "Giáo trình Tư tưởng Hồ Chí Minh (2021), Chương V, mục I.2.a (tr.100)."
     },
     {
-      type: "Trắc nghiệm",
-      q: "Điểm tập hợp lực lượng trong đại đoàn kết được xây dựng dựa trên yếu tố nào?",
+      id: "interest",
+      type: "quiz",
+      chapter: 3,
+      mode: "Trắc nghiệm",
+      kicker: "Chương 3 · Điểm quy tụ",
+      title: "Ngọn lửa chung",
+      log: "Lợi ích chung",
+      body: [
+        "Cuộc nói tách nhiều hướng: điểm số, cách trình bày, thói quen từng nhóm. Có người bảo, muốn đoàn kết thì mỗi người phải bỏ hết phần khác mình. Ngọn lửa giữa diễn đàn nhỏ dần, vì chưa ai gọi tên điều mọi người đang cùng cần."
+      ],
+      q: "Điểm tập hợp lực lượng trong đại đoàn kết được xây dựng trên yếu tố nào?",
       choices: [
-        "Buộc mọi người từ bỏ khác biệt cá nhân",
+        "Buộc mọi người từ bỏ mọi khác biệt cá nhân",
         "Lợi ích chung, đồng thời tôn trọng những khác biệt chính đáng",
-        "Chỉ dựa vào lợi ích kinh tế trước mắt",
-        "Chỉ tập hợp những người không có bất kỳ khác biệt nào"
+        "Chỉ lợi ích trước mắt của nhóm đang mạnh hơn",
+        "Chỉ tập hợp những người vốn đã không khác gì nhau"
       ],
       answer: 1,
-      explain: "Lợi ích chung là điểm tập hợp; đồng thời phải tôn trọng những khác biệt chính đáng. Giáo trình TT HCM 2021, I.3 (tr.101–103)."
+      okTitle: "Lửa quy tụ, không lửa đồng hóa",
+      badTitle: "Chưa chạm điểm quy tụ",
+      explain: "Điểm quy tụ là lợi ích chung — điều mọi người cùng cần — và vẫn còn chỗ cho khác biệt chính đáng. Đoàn kết không đòi xóa người khác cho giống một khuôn.",
+      source: "Giáo trình Tư tưởng Hồ Chí Minh (2021), Chương V, mục I.3 (tr.101–103)."
     },
     {
-      type: "Trắc nghiệm",
-      q: "Hình ảnh “năm ngón tay” trong tư tưởng Hồ Chí Minh gợi ý điều gì về thái độ với con người?",
+      id: "fingers",
+      type: "quiz",
+      chapter: 4,
+      mode: "Trắc nghiệm",
+      ornament: "fingers",
+      kicker: "Chương 4 · Khoan dung",
+      title: "Năm ngón tay",
+      log: "Khoan dung",
+      body: [
+        "Một bình luận rời khỏi bài và chuyển sang gọi tên, mỉa mai cách ăn nói của một bạn. Có người biện hộ: “Thẳng mới mau.” Năm ngón không dài bằng nhau. Việc cần làm chưa bao giờ là bẻ ngón cho đều."
+      ],
+      q: "Hình ảnh “năm ngón tay” trong tư tưởng Hồ Chí Minh gợi điều gì về thái độ với con người?",
       choices: [
-        "Phải loại bỏ những ai khác biệt như loại ngón tay thừa",
-        "Cần khoan dung, tôn trọng con người; phân biệt phê phán ý kiến với công kích cá nhân",
-        "Chỉ đoàn kết với những người hoàn toàn giống mình",
-        "Khác biệt cá nhân không cần được tôn trọng"
+        "Phải loại người khác biệt, như loại một ngón tay thừa",
+        "Khoan dung, tôn trọng con người; phê phán việc làm, không công kích cá nhân",
+        "Chỉ đoàn kết với người giống mình từ đầu đến cuối",
+        "Khác biệt không cần được tôn trọng nếu mình đang vội"
       ],
       answer: 1,
-      explain: "Ẩn dụ năm ngón tay nhấn mạnh khoan dung, tôn trọng con người. Phê phán ý kiến khác với công kích cá nhân — đây là tinh thần I.3 trong Giáo trình."
+      okTitle: "Bàn tay còn đủ ngón",
+      badTitle: "Khoan dung không phải loại người",
+      explain: "Năm ngón có ngón vắn ngón dài, vẫn nằm trong một bàn tay. Ẩn dụ ấy nhấn khoan dung và tôn trọng con người: phản biện vấn đề, không công kích cá nhân, không phủ nhận người vì họ khác mình.",
+      source: "Cùng mạch Giáo trình Tư tưởng Hồ Chí Minh (2021), Chương V, mục I.3 (tr.101–103)."
     },
     {
-      type: "Trắc nghiệm",
-      q: "Nguyên tắc “cầu đồng tồn dị” có nghĩa là gì?",
+      id: "cau",
+      type: "quiz",
+      chapter: 5,
+      mode: "Trắc nghiệm",
+      kicker: "Chương 5 · Cầu đồng tồn dị",
+      title: "Hai bờ của một chữ",
+      log: "Cầu đồng tồn dị",
+      body: [
+        "Minh muốn bài nói rõ: đoàn kết không xóa khác biệt. Khoa trả lời ngay: “Khác biệt làm loãng thông điệp. Giữ một ý thôi.” Hai người đứng hai bờ. Câu hỏi là có nhịp cầu nào chịu được cả hai."
+      ],
+      q: "Nguyên tắc “cầu đồng tồn dị” nghĩa là gì?",
       choices: [
-        "Chỉ tìm điểm chung rồi buộc mọi người phải giống nhau",
-        "Bỏ qua mọi khác biệt, kể cả khi khác biệt gây hại cộng đồng",
-        "Tìm điểm chung, đồng thời cho phép tồn tại những khác biệt chính đáng",
+        "Tìm điểm chung rồi bắt mọi người phải giống nhau",
+        "Bỏ qua mọi khác biệt, kể cả khi khác biệt làm hại cộng đồng",
+        "Tìm điểm chung, đồng thời để những khác biệt chính đáng được tồn tại",
         "Tránh mọi tranh luận để giữ hòa khí bề ngoài"
       ],
       answer: 2,
-      explain: "“Cầu đồng tồn dị” = tìm điểm chung, cho phép khác biệt tồn tại. Giáo trình TT HCM 2021, I.4.b (tr.103–104)."
+      okTitle: "Cầu chịu được hai bờ",
+      badTitle: "Chưa phải cầu đồng tồn dị",
+      explain: "Cầu đồng tồn dị là chủ động tìm chỗ giống nhau, và chấp nhận sự khác biệt chính đáng cùng tồn tại. Không phải hòa cả làng, không phải đồng hóa, cũng không phải im để yên bề mặt.",
+      source: "Giáo trình Tư tưởng Hồ Chí Minh (2021), Chương V, mục I.4.b (tr.103–104)."
     },
     {
-      type: "Tình huống",
-      q: "Trong nhóm thảo luận online, một bạn bất đồng với ý kiến của bạn. Cách nào gần với “cầu đồng tồn dị” hơn?",
-      choices: [
-        "“Không đồng ý thì rời nhóm đi.”",
-        "Lặng im để tránh xung đột, không nói gì thêm.",
-        "Tìm điều cả hai cùng muốn giải quyết, rồi phản biện nội dung một cách tôn trọng.",
-        "Công kích cá nhân để “thắng” cuộc tranh luận."
+      id: "talk-bridge",
+      type: "talk",
+      chapter: 5,
+      mode: "Hội thoại",
+      kicker: "Chương 5 · Cầu đồng tồn dị",
+      title: "Nhóm soạn bài",
+      log: "Hội thoại: giữ người trong cuộc",
+      body: [
+        "Định nghĩa chưa đủ. Cuộc trao đổi tràn vào nhóm đang dựng bài, nơi một câu gửi đi có thể giữ người lại hoặc đẩy người ra."
       ],
-      answer: 2,
-      explain: "Cách C thể hiện cầu đồng tồn dị: tìm điểm chung và phản biện vấn đề, không đẩy người khác ra ngoài hay công kích cá nhân."
-    },
-    {
-      type: "Trắc nghiệm",
-      q: "Bốn câu tự kiểm trước khi bình luận trên mạng (Có điểm chung nào? Khác biệt có thể cùng tồn tại? Phản biện vấn đề hay công kích con người? Diễn đạt giúp tiếp tục hay đẩy xa hơn?) là gì?",
-      choices: [
-        "Nguyên văn trích dẫn từ Giáo trình Tư tưởng Hồ Chí Minh 2021",
-        "Ứng dụng của nhóm từ tinh thần đại đoàn kết — không phải nguyên văn giáo trình",
-        "Quy định pháp luật về bình luận mạng",
-        "Bốn nguyên tắc đã được Bác Hồ nêu đúng từng chữ như vậy"
+      room: "Nhóm soạn bài · tối nay",
+      thread: [
+        { who: "Khoa", tone: "khoa", text: "Ai không đồng ý hướng này thì thôi, khỏi góp. Mình chốt một mạch cho nhanh." },
+        { who: "Minh", tone: "minh", text: "Mình không đòi bài thành nhiều giọng loạn. Mình chỉ muốn phần khác biệt chính đáng còn được nói. Nếu không, đại đoàn kết trên bài chỉ là một câu cho giống nhau." }
       ],
-      answer: 1,
-      explain: "Đây là ứng dụng của nhóm dựa trên tinh thần đại đoàn kết và cầu đồng tồn dị, không phải nguyên văn trong giáo trình. Nhóm vận dụng để hướng dẫn ứng xử trên không gian mạng."
+      prompt: "Bạn gửi điều gì vào nhóm?",
+      choices: [
+        {
+          tag: "Đẩy ra",
+          text: "Không cùng hướng thì rời nhóm soạn. Ở lại chỉ làm chậm.",
+          ok: false,
+          flag: "exclude",
+          resultTitle: "Vòng khép lại một người",
+          after: [
+            { who: "Bạn", tone: "you", text: "Không cùng hướng thì rời nhóm soạn. Ở lại chỉ làm chậm." },
+            { who: "Khoa", tone: "khoa", text: "Đúng. Gọn thì xong việc." },
+            { who: "Minh", tone: "minh", text: "Mình hiểu. Mình im phần này." }
+          ],
+          reflect: "Nhóm gọn hơn một người, và hẹp hơn một cách nhìn. Cầu đồng tồn dị không bắt đầu bằng cách mời người khác bước ra. Hãy gọi tên điều cả hai cùng muốn — bài rõ, đứng được — rồi góp vào ý, không đẩy người.",
+          source: "Tinh thần cầu đồng tồn dị. Giáo trình TT HCM 2021, Chương V, mục I.4.b (tr.103–104)."
+        },
+        {
+          tag: "Im lặng",
+          text: "Không gửi gì. Chỉ thả một biểu tượng, rồi để Khoa chốt.",
+          ok: false,
+          flag: "silence",
+          resultTitle: "Bề mặt yên, cầu chưa có",
+          after: [
+            { who: "Diễn biến", tone: "narr", text: "Bạn không gõ. Một biểu tượng nhỏ trôi qua rồi chìm." },
+            { who: "Khoa", tone: "khoa", text: "Không ai phản đối thì mình chốt một mạch." },
+            { who: "Minh", tone: "minh", text: "…" }
+          ],
+          reflect: "Im lặng giữ bề mặt êm, không giữ cuộc nói. Cầu đồng tồn dị cần một câu tìm điểm chung và một câu giữ chỗ cho khác biệt chính đáng — không phải một dấu hiệu cho qua.",
+          source: "Tinh thần cầu đồng tồn dị. Giáo trình TT HCM 2021, Chương V, mục I.4.b (tr.103–104)."
+        },
+        {
+          tag: "Nối cầu",
+          text: "Mình thấy cả hai đều muốn bài rõ và đứng được. Giữ trục đại đoàn kết, đồng thời để khác biệt chính đáng có mặt. Mình góp ý vào ý — không đẩy ai ra khỏi nhóm.",
+          ok: true,
+          flag: "bridge",
+          resultTitle: "Cầu vừa chịu một nhịp",
+          after: [
+            { who: "Bạn", tone: "you", text: "Mình thấy cả hai đều muốn bài rõ và đứng được. Giữ trục đại đoàn kết, đồng thời để khác biệt chính đáng có mặt. Mình góp ý vào ý — không đẩy ai ra khỏi nhóm." },
+            { who: "Khoa", tone: "khoa", text: "Trục rõ thì mình theo được. Miễn là không thành năm bài trong một." },
+            { who: "Minh", tone: "minh", text: "Vậy mình viết phần khác biệt như một cách làm trục ấy dày thêm, không phải một hướng ngược." }
+          ],
+          reflect: "Đó là cầu đồng tồn dị trong một nhóm đang soạn bài: điểm chung được gọi tên, khác biệt chính đáng còn chỗ, người ở lại cuộc nói.",
+          source: "Giáo trình TT HCM 2021, Chương V, mục I.4.b (tr.103–104)."
+        }
+      ]
     },
     {
-      type: "Đúng / Sai",
+      id: "limit",
+      type: "quiz",
+      chapter: 6,
+      mode: "Đúng / Sai",
+      kicker: "Chương 6 · Thử thách và giới hạn",
+      title: "Tin không nguồn",
+      log: "Không bỏ qua chia rẽ",
+      body: [
+        "Sáng hôm sau, một bài đăng lan trong diễn đàn lớp. An chuyển một đoạn không rõ nguồn, kèm câu tách sinh viên theo vùng miền và gán cho một phía là gánh nặng của lớp. Vài người cười cho qua. Hà — người bị câu ấy chạm — tắt trạng thái hoạt động."
+      ],
       q: "Đại đoàn kết có nghĩa là bỏ qua mọi mâu thuẫn, không đấu tranh với hành vi chia rẽ cộng đồng.",
       choices: ["Đúng", "Sai"],
       answer: 1,
-      explain: "Sai. Đoàn kết không đồng nghĩa với bỏ qua xung đột. Cần đấu tranh với hành vi chia rẽ, phá hoại đoàn kết. Giáo trình TT HCM 2021, III.2 (tr.114–115)."
+      okTitle: "Đoàn kết không phải làm ngơ",
+      badTitle: "Im trước chia rẽ không phải đoàn kết",
+      explain: "Sai. Đoàn kết không có nghĩa là bỏ qua mọi xung đột. Với hành vi chia rẽ, phá hoại khối đại đoàn kết, cần thấy rõ và đấu tranh — không nhân nhượng sự chia rẽ. Khoan dung với con người không đồng nghĩa với làm ngơ trước lời hại cộng đồng.",
+      source: "Giáo trình Tư tưởng Hồ Chí Minh (2021), Chương V, mục III.2 (tr.114–115)."
     },
     {
-      type: "Tình huống",
-      q: "Trên diễn đàn lớp, một bạn lan truyền tin bịa nhằm chia rẽ nhóm sinh viên theo vùng miền. Theo tinh thần đại đoàn kết, bạn nên làm gì?",
-      choices: [
-        "Im lặng vì “đoàn kết là không tranh cãi”",
-        "Công kích cá nhân bạn đó trước cả lớp",
-        "Phản bác rõ ràng nội dung sai lệch, bảo vệ sự đoàn kết, vẫn tôn trọng nhân phẩm người khác",
-        "Rời diễn đàn để tránh liên lụy"
+      id: "four",
+      type: "quiz",
+      chapter: 6,
+      mode: "Trắc nghiệm",
+      kicker: "Chương 6 · Thử thách và giới hạn",
+      title: "Thẻ trước ô soạn",
+      log: "Bốn câu tự kiểm",
+      slipTitle: "Thẻ tự kiểm của nhóm",
+      slip: FOUR,
+      body: [
+        "Con trỏ đang nhấp trong ô trả lời. Nhóm bạn từng dán ở đây một thẻ nhỏ — bốn câu, để đọc trước khi gõ. Hà vẫn im. Tin kia vẫn nằm trên diễn đàn."
       ],
-      answer: 2,
-      explain: "Khi hành vi gây hại / chia rẽ cộng đồng, cần phản bác rõ ràng — đoàn kết không phải im lặng. Đồng thời vẫn phân biệt vấn đề với con người (III.2, tr.114–115)."
+      q: "Bốn câu tự kiểm ấy là gì?",
+      choices: [
+        "Nguyên văn trích từ Giáo trình Tư tưởng Hồ Chí Minh 2021",
+        "Vận dụng của nhóm từ tinh thần đại đoàn kết — không phải nguyên văn giáo trình",
+        "Bốn điều khoản trong quy định pháp luật về bình luận trên mạng",
+        "Bốn câu Bác Hồ đã viết đúng từng chữ như vậy cho không gian mạng"
+      ],
+      answer: 1,
+      okTitle: "Đây là vận dụng của nhóm",
+      badTitle: "Đừng gắn nhầm vào nguyên văn",
+      explain: "Bốn câu này là vận dụng của nhóm, rút từ tinh thần đại đoàn kết và cầu đồng tồn dị, để dùng trước khi bình luận. Không phải nguyên văn giáo trình, cũng không phải trích dẫn từng chữ của Bác, càng không phải điều khoản luật.",
+      source: "Vận dụng của nhóm — không phải nguyên văn giáo trình."
     },
     {
-      type: "Trắc nghiệm",
+      id: "talk-rumor",
+      type: "talk",
+      chapter: 6,
+      mode: "Hội thoại",
+      kicker: "Chương 6 · Thử thách và giới hạn",
+      title: "Khi Hà đang im",
+      log: "Hội thoại: tin chia rẽ",
+      body: [
+        "Thẻ đã đọc. Bài đăng đang được người khác chuyển tiếp. Đây là lúc đường ranh hiện ra: không làm ngơ, và cũng không biến cuộc đấu tranh thành công kích người."
+      ],
+      room: "Diễn đàn lớp · sáng",
+      thread: [
+        { who: "An", tone: "an", text: "Mình chỉ chuyển thôi. Trong bài có câu sinh viên một vùng thì kéo cả lớp xuống — thấy cũng hợp lý một phần. Nói thẳng cho lớp biết." },
+        { who: "Hà", tone: "ha", text: "Mình đọc được. Mình không muốn phải chứng minh mình thuộc về lớp này." }
+      ],
+      prompt: "Bạn ứng xử thế nào?",
+      choices: [
+        {
+          tag: "Im lặng",
+          text: "Không bình luận. Bạn nghĩ: đoàn kết là tránh tranh cãi.",
+          ok: false,
+          flag: "quietRumor",
+          resultTitle: "Tin sai vẫn nằm đó",
+          after: [
+            { who: "Diễn biến", tone: "narr", text: "Bạn không viết gì. Bài đăng tiếp tục được chuyển. Hà không nói thêm." }
+          ],
+          reflect: "Im lặng trước hành vi chia rẽ không phải khoan dung. Đại đoàn kết không có nghĩa là tránh mọi va chạm. Bốn câu tự kiểm — vận dụng của nhóm — không dùng để khỏi phải nói, mà để nói cho đúng.",
+          source: "Giáo trình TT HCM 2021, Chương V, mục III.2 (tr.114–115). Bốn câu tự kiểm là vận dụng của nhóm."
+        },
+        {
+          tag: "Công kích",
+          text: "An thật độc và hèn. Biến khỏi diễn đàn đi.",
+          ok: false,
+          flag: "attack",
+          resultTitle: "Cuộc nói đổi ngôi",
+          after: [
+            { who: "Bạn", tone: "you", text: "An thật độc và hèn. Biến khỏi diễn đàn đi." },
+            { who: "An", tone: "an", text: "Bạn mới độc. Mình chuyển một bài mà bị chửi thế này?" },
+            { who: "Diễn biến", tone: "narr", text: "Mạch chuyện thành cuộc công kích. Tin sai không còn là việc đang bàn. Hà vẫn chưa được gọi vào chuyện chung của lớp." }
+          ],
+          reflect: "Bạn đã không làm ngơ, nhưng nhằm vào người thay vì vào tin sai. Phản biện vấn đề khác với công kích con người. Cần bác nội dung chia rẽ, giữ nhân phẩm, và kéo cuộc nói về việc chung của cả lớp.",
+          source: "Mục III.2 (tr.114–115) cùng tinh thần khoan dung ở mục I.3. Bốn câu tự kiểm là vận dụng của nhóm."
+        },
+        {
+          tag: "Bác tin sai",
+          text: "Mình phản đối tin không nguồn đang tách lớp theo vùng miền. Khác biệt ấy không phải lỗi, cũng không phải lý do để hạ nhau. Mình góp ý việc chuyển tin — không phủ nhận An — và lớp mình vẫn có một việc chung phải làm cùng nhau.",
+          ok: true,
+          flag: "refute",
+          resultTitle: "Đường ranh được giữ",
+          after: [
+            { who: "Bạn", tone: "you", text: "Mình phản đối tin không nguồn đang tách lớp theo vùng miền. Khác biệt ấy không phải lỗi, cũng không phải lý do để hạ nhau. Mình góp ý việc chuyển tin — không phủ nhận An — và lớp mình vẫn có một việc chung phải làm cùng nhau." },
+            { who: "An", tone: "an", text: "Mình gỡ phần chuyển tiếp. Mình không kiểm tra nguồn." },
+            { who: "Hà", tone: "ha", text: "Cảm ơn. Câu ấy nói về tin sai, và mình vẫn ở trong chuyện chung của lớp." }
+          ],
+          reflect: "Đây là giới hạn của đại đoàn kết trên mạng: không bỏ qua hành vi chia rẽ, và không biến cuộc đấu tranh thành công kích người. Bốn câu tự kiểm — vận dụng của nhóm — vừa được dùng: có điểm chung, khác biệt vùng miền có thể cùng tồn tại, phản biện việc chứ không phủ nhận người, lời nói giữ cuộc chuyện tiếp tục.",
+          source: "Giáo trình TT HCM 2021, Chương V, mục III.2 (tr.114–115). Bốn câu tự kiểm là vận dụng của nhóm."
+        },
+        {
+          tag: "Rời đi",
+          text: "Thoát diễn đàn. Chuyện này đụng vào dễ bị liên lụy.",
+          ok: false,
+          flag: "leave",
+          resultTitle: "Diễn đàn thiếu một người ở lại",
+          after: [
+            { who: "Diễn biến", tone: "narr", text: "Bạn thoát. Mạch chuyện chạy tiếp không có bạn. Câu của Hà nằm đó, chưa có lời nào đứng về phía sự thật của tin." }
+          ],
+          reflect: "Rời đi tránh cho mình một rủi ro, và để cộng đồng một mình với tin sai. Trách nhiệm với cộng đồng là một nhịp trong văn hóa giao tiếp số mà nhóm muốn kết lại — không chỉ trách nhiệm với sự an toàn của riêng mình.",
+          source: "Giáo trình TT HCM 2021, Chương V, mục III.2 (tr.114–115), cùng nguyên tắc trách nhiệm với cộng đồng của nhóm."
+        }
+      ]
+    },
+    {
+      id: "principles",
+      type: "quiz",
+      chapter: 7,
+      mode: "Trắc nghiệm",
+      kicker: "Chương 7 · Văn hóa giao tiếp số",
+      title: "Năm nhịp mang theo",
+      log: "Nguyên tắc kết",
+      body: [
+        "Đến chiều, diễn đàn không trở thành một giọng. Nó bớt gãy. Trước khi khóa trang cuối, nhóm đọc lại nguyên tắc mình muốn cả lớp mang theo khi rời buổi nói."
+      ],
       q: "Nguyên tắc kết thúc bài thuyết trình của nhóm gồm những nội dung nào?",
       choices: [
         "Chỉ tìm điểm chung; bỏ qua mọi khác biệt",
-        "Tìm điểm chung – tôn trọng khác biệt – phản biện vấn đề – không công kích con người – trách nhiệm với cộng đồng",
+        PRINCIPLES.join(" – "),
         "Thắng mọi tranh luận bằng mọi giá",
         "Chỉ trách nhiệm với bản thân, không cần cộng đồng"
       ],
       answer: 1,
-      explain: "Đó là nguyên tắc đóng của nhóm: tìm điểm chung, tôn trọng khác biệt, phản biện vấn đề, không công kích con người, và giữ trách nhiệm với cộng đồng."
+      okTitle: "Đủ năm nhịp",
+      badTitle: "Nguyên tắc kết còn thiếu nhịp",
+      explain: "Nhóm khép bài bằng năm nhịp cùng đi với nhau: tìm điểm chung, tôn trọng khác biệt, phản biện vấn đề, không công kích con người, và giữ trách nhiệm với cộng đồng.",
+      source: "Nguyên tắc kết của nhóm trong bài thuyết trình — vận dụng, không phải một câu nguyên văn trong giáo trình."
     },
     {
-      type: "Trắc nghiệm",
-      q: "Thông điệp kết thúc nào phản ánh đúng tinh thần bài thuyết trình?",
+      id: "message",
+      type: "quiz",
+      chapter: 7,
+      mode: "Trắc nghiệm",
+      kicker: "Chương 7 · Văn hóa giao tiếp số",
+      title: "Dòng cuối",
+      log: "Thông điệp kết",
+      body: [
+        "Dòng cuối trên trang chiếu chưa chốt. Cả nhóm nhìn nhau: câu nào đáng để diễn đàn còn nhắc lại sau buổi nói, khi mọi người đã về và lại mở phần bình luận?"
+      ],
+      q: "Thông điệp kết nào phản ánh đúng tinh thần bài thuyết trình?",
       choices: [
         "Đoàn kết trên mạng bắt đầu từ việc mọi người phải nghĩ giống nhau.",
-        "Đoàn kết trên không gian mạng không bắt đầu từ việc nghĩ giống nhau, mà từ cách ứng xử khi không giống nhau.",
-        "Trên mạng không cần đoàn kết vì mỗi người một thế giới riêng.",
+        CLOSING,
+        "Trên mạng không cần đoàn kết, vì mỗi người một thế giới riêng.",
         "Chỉ đoàn kết với người cùng quan điểm; người khác thì loại trừ."
       ],
       answer: 1,
-      explain: "Thông điệp then chốt của nhóm: đoàn kết trên không gian mạng khởi đầu từ cách ứng xử khi bất đồng — không phải từ việc buộc mọi người nghĩ giống nhau."
+      okTitle: "Đúng dòng cuối của nhóm",
+      badTitle: "Thông điệp ấy lệch trục",
+      explain: "Đoàn kết trên không gian mạng không bắt đầu từ việc nghĩ giống nhau. Nó bắt đầu từ cách ứng xử lúc không giống nhau — khi vẫn còn điểm chung để tìm, và vẫn còn khác biệt chính đáng để tôn trọng.",
+      source: "Thông điệp kết của nhóm."
     },
     {
-      type: "Tình huống",
-      q: "Bạn thấy một bình luận chỉ trích gay gắt ý tưởng dự án nhóm, nhưng không xúc phạm cá nhân. Cách ứng xử phù hợp nhất?",
+      id: "critique",
+      type: "quiz",
+      chapter: 7,
+      mode: "Tình huống",
+      kicker: "Chương 7 · Văn hóa giao tiếp số",
+      title: "Góp ý gay, không nhằm người",
+      log: "Phân biệt ý và người",
+      body: [
+        "Ngay sau đó, một bạn để lại góp ý dài dưới bản nháp. Lời gay, chỉ thẳng một lỗ hổng lập luận. Không xúc phạm ai, không kéo vùng miền, không đụng chuyện đời tư."
+      ],
+      q: "Cách ứng xử phù hợp nhất với góp ý ấy là gì?",
       choices: [
         "Coi mọi chỉ trích là công kích cá nhân và đáp trả tương tự",
         "Phản hồi nội dung: làm rõ điểm chung, giải thích khác biệt, giữ thái độ tôn trọng",
-        "Xóa bình luận ngay vì “phá đoàn kết”",
-        "Bỏ dự án vì có người không đồng ý"
+        "Xóa góp ý ngay vì cho rằng góp ý gay là phá đoàn kết",
+        "Bỏ bài vì có người không đồng ý"
       ],
       answer: 1,
-      explain: "Phê phán ý tưởng khác với công kích con người. Hãy cầu đồng tồn dị: tìm điểm chung, tôn trọng khác biệt chính đáng, phản biện vấn đề — đúng tinh thần I.3 và I.4.b."
+      okTitle: "Phân biệt được ý và người",
+      badTitle: "Góp ý gay chưa phải công kích",
+      explain: "Phê phán ý tưởng khác với công kích con người. Hãy trả lời vào nội dung: điểm chung còn đó, khác biệt được giải thích, thái độ vẫn tôn trọng. Xóa hay đáp trả cá nhân là thu hẹp diễn đàn, không phải giữ đoàn kết.",
+      source: "Tinh thần mục I.3 và I.4.b, cùng nguyên tắc phản biện vấn đề của nhóm."
     }
   ];
 
-  var state = {
-    index: 0,
-    score: 0,
-    streak: 0,
-    answered: false,
-    name: ""
-  };
+  var LETTERS = ["A", "B", "C", "D"];
+  var TOTAL = 0;
+  var state = freshState();
 
-  var el = {
-    start: document.getElementById("screen-start"),
-    quiz: document.getElementById("screen-quiz"),
-    end: document.getElementById("screen-end"),
-    name: document.getElementById("player-name"),
-    btnStart: document.getElementById("btn-start"),
-    progressLabel: document.getElementById("progress-label"),
-    progressFill: document.getElementById("progress-fill"),
-    scoreLabel: document.getElementById("score-label"),
-    streakLabel: document.getElementById("streak-label"),
-    qType: document.getElementById("q-type"),
-    qText: document.getElementById("q-text"),
-    options: document.getElementById("options"),
-    feedback: document.getElementById("feedback"),
-    nextWrap: document.getElementById("next-wrap"),
-    btnNext: document.getElementById("btn-next"),
-    endTitle: document.getElementById("end-title"),
-    endScore: document.getElementById("end-score"),
-    endDen: document.getElementById("end-den"),
-    tierMsg: document.getElementById("tier-msg"),
-    closingMsg: document.getElementById("closing-msg"),
-    btnRestart: document.getElementById("btn-restart"),
-    btnHome: document.getElementById("btn-home")
-  };
+  function freshState() {
+    return { step: -1, name: "", score: 0, marks: {}, flags: {}, phase: "open", lastChoice: null };
+  }
 
-  function show(screen) {
-    el.start.classList.add("hidden");
-    el.quiz.classList.add("hidden");
-    el.end.classList.add("hidden");
-    screen.classList.remove("hidden");
-    // retrigger animation
-    screen.style.animation = "none";
-    void screen.offsetWidth;
-    screen.style.animation = "";
+  function el(tag, className) {
+    var node = document.createElement(tag);
+    if (className) node.className = className;
+    return node;
+  }
+
+  function isScored(scene) {
+    return scene.type === "quiz" || scene.type === "talk";
+  }
+
+  function displayName() {
+    return state.name || "Người kết nối";
+  }
+
+  function youName() {
+    return state.name || "Bạn";
+  }
+
+  function announce(msg) {
+    var live = document.getElementById("live");
+    live.textContent = "";
+    window.setTimeout(function () { live.textContent = msg; }, 30);
+  }
+
+  function currentChapter() {
+    if (state.step < 0) return -1;
+    if (state.step >= SCENES.length) return 99;
+    return SCENES[state.step].chapter;
+  }
+
+  function beatLabel(scene) {
+    if (!isScored(scene)) return "Mở đầu";
+    var i = 0;
+    var total = 0;
+    SCENES.forEach(function (s) {
+      if (!isScored(s)) return;
+      total += 1;
+      if (s.id === scene.id) i = total;
+    });
+    var label = "Nhịp " + i + " / " + total;
+    if (scene.mode) label += " · " + scene.mode;
+    return label;
+  }
+
+  function validate() {
+    var seen = {};
+    var n = 0;
+    var prev = 0;
+    SCENES.forEach(function (s) {
+      if (!s.id || seen[s.id]) throw new Error("Trùng mã cảnh: " + s.id);
+      seen[s.id] = true;
+      if (s.chapter < prev) throw new Error("Lệch thứ tự chương: " + s.id);
+      prev = s.chapter;
+      if (s.type === "quiz") {
+        n += 1;
+        if (typeof s.answer !== "number" || s.answer < 0 || s.answer >= s.choices.length) {
+          throw new Error("Đáp án lệch: " + s.id);
+        }
+      } else if (s.type === "talk") {
+        n += 1;
+        var oks = s.choices.filter(function (c) { return c.ok; });
+        if (oks.length !== 1) throw new Error("Cần đúng một lối ứng xử sáng: " + s.id);
+      } else if (s.type !== "story") {
+        throw new Error("Loại cảnh lạ: " + s.id);
+      }
+    });
+    if (n < 10 || n > 14) throw new Error("Số nhịp ngoài khoảng 10–14: " + n);
+  }
+
+  function renderChrome() {
+    var cur = currentChapter();
+    var ended = state.step >= SCENES.length;
+    document.querySelectorAll("[data-chapter]").forEach(function (node) {
+      var id = Number(node.getAttribute("data-chapter"));
+      var on = state.step >= 0 && !ended && id === cur;
+      var done = ended || (state.step >= 0 && cur > id);
+      node.classList.toggle("on", on);
+      node.classList.toggle("done", done);
+      if (node.tagName === "LI") {
+        if (on) node.setAttribute("aria-current", "step");
+        else node.removeAttribute("aria-current");
+      }
+    });
+    var label = state.score + "/" + TOTAL;
+    document.getElementById("meter-label").textContent = label;
+    document.getElementById("mini-score").textContent = label;
+    document.getElementById("meter-fill").style.width = (TOTAL ? (state.score / TOTAL) * 100 : 0) + "%";
+    var lead = document.getElementById("map-lead");
+    if (state.step < 0) lead.textContent = "Hành trình";
+    else if (ended) lead.textContent = "Đã khép chặng";
+    else if (cur === 0) lead.textContent = "Cổng diễn đàn";
+    else lead.textContent = "Đang ở chương " + cur;
+  }
+
+  function nextLabel() {
+    var scene = SCENES[state.step];
+    if (scene && scene.type === "story") return scene.cta || "Tiếp tục";
+    var next = SCENES[state.step + 1];
+    if (!next) return "Xem hồ sơ ứng xử số";
+    if (scene && next.chapter !== scene.chapter) return "Sang chương tiếp";
+    return "Tiếp tục";
+  }
+
+  function nextButton() {
+    var btn = el("button", "btn btn-primary");
+    btn.type = "button";
+    btn.id = "btn-next";
+    btn.setAttribute("data-act", "next");
+    btn.textContent = nextLabel();
+    var wrap = el("div", "actions");
+    wrap.appendChild(btn);
+    return wrap;
+  }
+
+  function cardTop(scene, label) {
+    var row = el("div", "card-top");
+    var beat = el("span");
+    beat.textContent = label || beatLabel(scene);
+    row.appendChild(beat);
+    if (state.score > 0) {
+      var pill = el("span", "pill-mini");
+      pill.textContent = state.score + " nhịp sáng";
+      row.appendChild(pill);
+    }
+    return row;
+  }
+
+  function storyBlock(scene) {
+    var box = el("div", "story");
+    (scene.body || []).forEach(function (para) {
+      var p = el("p");
+      p.textContent = para;
+      box.appendChild(p);
+    });
+    return box;
+  }
+
+  function fingers() {
+    var box = el("div", "fingers");
+    box.setAttribute("role", "img");
+    box.setAttribute("aria-label", "Năm ngón dài ngắn khác nhau, vẫn một bàn tay");
+    for (var i = 0; i < 5; i += 1) box.appendChild(el("span"));
+    return box;
+  }
+
+  function slip(scene) {
+    var box = el("div", "slip");
+    var title = el("p", "slip-title");
+    title.textContent = scene.slipTitle || "Thẻ tự kiểm của nhóm";
+    box.appendChild(title);
+    var list = el("ol");
+    scene.slip.forEach(function (item) {
+      var li = el("li");
+      li.textContent = item;
+      list.appendChild(li);
+    });
+    box.appendChild(list);
+    return box;
+  }
+
+  function feedbackBlock(kind, title, keyText, explain, source) {
+    var box = el("div", "feedback " + kind);
+    box.id = "feedback";
+    box.setAttribute("tabindex", "-1");
+    var strong = el("strong");
+    strong.textContent = title;
+    box.appendChild(strong);
+    if (keyText) {
+      var key = el("p", "key");
+      key.textContent = keyText;
+      box.appendChild(key);
+    }
+    var body = el("p");
+    body.textContent = explain;
+    box.appendChild(body);
+    if (source) {
+      var src = el("p", "source");
+      src.textContent = source;
+      box.appendChild(src);
+    }
+    return box;
+  }
+
+  function optionButton(index, label, extra) {
+    var btn = el("button", "option");
+    btn.type = "button";
+    btn.setAttribute("data-act", "choice");
+    btn.setAttribute("data-i", String(index));
+    var letter = el("span", "letter");
+    letter.textContent = LETTERS[index] || String(index + 1);
+    var text = el("span", "text");
+    if (extra) {
+      var tag = el("span", "choice-tag");
+      tag.textContent = extra;
+      text.appendChild(tag);
+    }
+    text.appendChild(document.createTextNode(label));
+    btn.appendChild(letter);
+    btn.appendChild(text);
+    return btn;
+  }
+
+  function quizBlock(scene) {
+    var wrap = el("div");
+    var q = el("h2", "question");
+    q.textContent = scene.q;
+    wrap.appendChild(q);
+    var list = el("div", "options");
+    var locked = state.phase === "locked";
+    scene.choices.forEach(function (choice, i) {
+      var btn = optionButton(i, choice);
+      if (locked) {
+        btn.disabled = true;
+        if (i === scene.answer) {
+          btn.classList.add("correct");
+          var ok = el("span", "sr-only");
+          ok.textContent = " Đáp án phù hợp.";
+          btn.appendChild(ok);
+        } else if (i === state.lastChoice) {
+          btn.classList.add("wrong");
+        } else {
+          btn.classList.add("dim");
+        }
+      }
+      list.appendChild(btn);
+    });
+    wrap.appendChild(list);
+    if (locked) {
+      var correct = state.lastChoice === scene.answer;
+      wrap.appendChild(feedbackBlock(
+        correct ? "ok" : "bad",
+        correct ? scene.okTitle : scene.badTitle,
+        correct ? "" : "Hợp lý hơn: " + scene.choices[scene.answer],
+        scene.explain,
+        scene.source
+      ));
+      wrap.appendChild(nextButton());
+    }
+    return wrap;
+  }
+
+  function initialOf(who) {
+    if (who === "Bạn") {
+      var name = state.name.trim();
+      return name ? name.charAt(0).toUpperCase() : "B";
+    }
+    return who.charAt(0);
+  }
+
+  function threadBlock(lines) {
+    var box = el("div", "thread");
+    lines.forEach(function (line) {
+      if (line.tone === "narr") {
+        var narr = el("p", "narr");
+        narr.textContent = line.text;
+        box.appendChild(narr);
+        return;
+      }
+      var row = el("div", "msg" + (line.who === "Bạn" ? " you" : ""));
+      var av = el("span", "av " + (line.who === "Bạn" ? "you" : (line.tone || "")));
+      av.textContent = initialOf(line.who);
+      av.setAttribute("aria-hidden", "true");
+      var body = el("div", "msg-body");
+      var name = el("div", "msg-name");
+      name.textContent = line.who === "Bạn" ? youName() : line.who;
+      var text = el("p", "msg-text");
+      text.textContent = line.text;
+      body.appendChild(name);
+      body.appendChild(text);
+      row.appendChild(av);
+      row.appendChild(body);
+      box.appendChild(row);
+    });
+    return box;
+  }
+
+  function talkBlock(scene) {
+    var wrap = el("div");
+    var room = el("p", "room");
+    room.textContent = scene.room;
+    wrap.appendChild(room);
+    var lines = scene.thread.slice();
+    var locked = state.phase === "locked";
+    var chosen = locked ? scene.choices[state.lastChoice] : null;
+    if (chosen) lines = lines.concat(chosen.after);
+    wrap.appendChild(threadBlock(lines));
+    if (!locked) {
+      var prompt = el("h2", "prompt");
+      prompt.textContent = scene.prompt;
+      wrap.appendChild(prompt);
+      var list = el("div", "choices");
+      scene.choices.forEach(function (choice, i) {
+        list.appendChild(optionButton(i, choice.text, choice.tag));
+      });
+      wrap.appendChild(list);
+    } else {
+      wrap.appendChild(feedbackBlock(
+        chosen.ok ? "ok" : "bad",
+        chosen.resultTitle,
+        "",
+        chosen.reflect,
+        chosen.source
+      ));
+      wrap.appendChild(nextButton());
+    }
+    return wrap;
+  }
+
+  function renderStart() {
+    document.body.dataset.screen = "start";
+    document.body.dataset.scene = "";
+    var stage = document.getElementById("stage");
+    stage.innerHTML = "";
+    var card = el("article", "card rise");
+    var mark = document.querySelector(".brand svg");
+    if (mark) {
+      var hero = mark.cloneNode(true);
+      hero.classList.add("hero-svg");
+      card.appendChild(hero);
+    }
+    var kicker = el("p", "kicker");
+    kicker.textContent = "Tư tưởng Hồ Chí Minh · Chương V";
+    card.appendChild(kicker);
+    var title = el("h1");
+    title.textContent = "Đại đoàn kết trong không gian mạng";
+    card.appendChild(title);
+    var rule = el("hr", "rule");
+    card.appendChild(rule);
+    var deck = el("p", "deck");
+    deck.textContent = "Diễn đàn lớp đang căng vì bất đồng. Bạn là người kết nối — không xóa khác biệt, mà chọn cách ứng xử để đại đoàn kết còn chỗ đứng trên không gian mạng.";
+    card.appendChild(deck);
+    var facts = el("ul", "facts");
+    [
+      [String(chapterTotal()), "chương"],
+      [String(TOTAL), "nhịp"],
+      [String(talkTotal()), "ngã rẽ"]
+    ].forEach(function (item) {
+      var li = el("li");
+      var b = el("b");
+      b.textContent = item[0];
+      var span = el("span");
+      span.textContent = item[1];
+      li.appendChild(b);
+      li.appendChild(span);
+      facts.appendChild(li);
+    });
+    card.appendChild(facts);
+    var cover = el("p", "deck");
+    cover.textContent = "Ôn lại bài thuyết trình: chiến lược đại đoàn kết, chủ thể rộng, lợi ích chung, khoan dung, cầu đồng tồn dị, và giới hạn trước hành vi chia rẽ.";
+    card.appendChild(cover);
+    var field = el("div", "field");
+    var label = el("label");
+    label.setAttribute("for", "player-name");
+    label.textContent = "Tên hiển thị trên diễn đàn (không bắt buộc)";
+    var input = el("input");
+    input.id = "player-name";
+    input.type = "text";
+    input.maxLength = 40;
+    input.placeholder = "Ví dụ: Minh Anh";
+    input.autocomplete = "off";
+    input.spellcheck = false;
+    input.setAttribute("autocapitalize", "words");
+    input.setAttribute("enterkeyhint", "go");
+    if (state.name) input.value = state.name;
+    field.appendChild(label);
+    field.appendChild(input);
+    card.appendChild(field);
+    var btn = el("button", "btn btn-primary");
+    btn.type = "button";
+    btn.setAttribute("data-act", "start");
+    btn.textContent = "Bước vào diễn đàn";
+    card.appendChild(btn);
+    var hint = el("p", "hint");
+    hint.textContent = "Khi chiếu: phím 1–4 hoặc A–D để chọn, Enter để đi tiếp.";
+    card.appendChild(hint);
+    stage.appendChild(card);
+  }
+
+  function chapterTotal() {
+    var map = {};
+    SCENES.forEach(function (s) { if (s.chapter > 0) map[s.chapter] = true; });
+    return Object.keys(map).length;
+  }
+
+  function talkTotal() {
+    return SCENES.filter(function (s) { return s.type === "talk"; }).length;
+  }
+
+  function renderScene() {
+    var scene = SCENES[state.step];
+    document.body.dataset.screen = "scene";
+    document.body.dataset.scene = scene.id;
+    var stage = document.getElementById("stage");
+    stage.innerHTML = "";
+    var card = el("article", "card" + (state.phase === "open" ? " rise" : ""));
+    card.appendChild(cardTop(scene));
+    var kicker = el("p", "kicker");
+    kicker.textContent = scene.kicker;
+    card.appendChild(kicker);
+    var title = el("h1");
+    title.id = "scene-title";
+    title.textContent = scene.title;
+    card.appendChild(title);
+    if (scene.id === "prologue") {
+      var who = el("p", "who");
+      who.textContent = "Vai của bạn · " + displayName();
+      card.appendChild(who);
+    }
+    card.appendChild(storyBlock(scene));
+    if (scene.ornament === "fingers") card.appendChild(fingers());
+    if (scene.slip) card.appendChild(slip(scene));
+    if (scene.type === "story") card.appendChild(nextButton());
+    else if (scene.type === "quiz") card.appendChild(quizBlock(scene));
+    else if (scene.type === "talk") card.appendChild(talkBlock(scene));
+    stage.appendChild(card);
+    if (state.phase === "open") {
+      announce(scene.kicker + ". " + scene.title);
+    } else {
+      var fb = document.getElementById("feedback");
+      if (fb) {
+        var heading = fb.querySelector("strong");
+        announce((heading ? heading.textContent + ". " : "") + (fb.querySelector("p") ? fb.querySelector("p").textContent : ""));
+        window.setTimeout(function () {
+          fb.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        }, 40);
+      }
+    }
+  }
+
+  function tierOf(score, total) {
+    var ratio = total ? score / total : 0;
+    if (ratio >= 0.8) return "strong";
+    if (ratio >= 0.5) return "ok";
+    return "weak";
+  }
+
+  function tierCopy(tier) {
+    if (tier === "strong") {
+      return {
+        name: "Đoàn kết vững",
+        note: "Hồ sơ nghiêng về ứng xử có trách nhiệm khi bất đồng.",
+        bridge: "Cầu đã nối hai bờ",
+        color: "#c4962a",
+        text: "Đến cuối chặng, Không gian Ánh chung không trở thành một màu. Các luồng ý vẫn còn — và chính vì thế chiếc cầu mới có việc. Ánh sáng giữ được nhờ cách ứng xử lúc mọi người không giống nhau: tìm điểm chung, để khác biệt chính đáng tồn tại, phản biện vấn đề, và không làm ngơ trước lời chia rẽ."
+      };
+    }
+    if (tier === "ok") {
+      return {
+        name: "Đang nối cầu",
+        note: "Hồ sơ đã chạm tinh thần đại đoàn kết, và còn vài nhịp cần nối.",
+        bridge: "Cầu đang thành",
+        color: "#1f8a80",
+        text: "Một vài nhịp, cầu đã chịu lực. Một vài nhịp, mạch nói còn hụt. Không gian mạng không ghi nhận bạn bằng cuộc cãi thắng. Nó để lại dấu ở cách bạn nói khi bất đồng — và phần ấy vẫn luyện lại được."
+      };
+    }
+    return {
+      name: "Ánh sáng còn mỏng",
+      note: "Hồ sơ còn nhẹ ánh. Phần nền có thể dựng lại trong lượt sau.",
+      bridge: "Cầu còn đứt đoạn",
+      color: "#b4632e",
+      text: "Diễn đàn vẫn mở, nhưng ánh chung còn mỏng. Đại đoàn kết không tự trở lại chỉ vì ta muốn yên, cũng không vững lên bằng cách đẩy người khác ra ngoài. Hãy mang bốn câu tự kiểm của nhóm theo, rồi đi lại chặng này như người đang nối cầu."
+    };
+  }
+
+  function branchLines() {
+    var lines = [];
+    if (state.flags.bridge) lines.push("Trong nhóm soạn bài, Minh ở lại. Khác biệt chính đáng được viết như phần làm dày trục chung, không phải một hướng để loại.");
+    if (state.flags.exclude) lines.push("Minh im phần của mình. Nhóm soạn gọn hơn một người — và chiếc cầu khuyết một nhịp.");
+    if (state.flags.silence) lines.push("Cuộc tranh luận trong nhóm bị gác dưới một lớp im lặng. Việc chưa được nói, chỉ được hoãn.");
+    if (state.flags.refute) lines.push("Tin chia rẽ theo vùng miền bị gọi đúng tên. Hà thấy diễn đàn còn một chỗ đứng, vì câu trả lời nhắm vào tin sai và giữ nhân phẩm.");
+    if (state.flags.attack) lines.push("Mạch chuyện đổi thành cuộc công kích. Tin sai không được bác; nó chỉ bị át bởi một lời nặng hơn.");
+    if (state.flags.quietRumor) lines.push("Hà đọc đến cuối mạch và không thấy ai đứng ra. Im lặng giữ cho bạn khỏi va chạm, không giữ khối đoàn kết.");
+    if (state.flags.leave) lines.push("Bạn rời diễn đàn khi tin sai còn đó. Ánh chung không tự giữ lấy mình.");
+    return lines;
+  }
+
+  function ring(score, total, color) {
+    var wrap = el("div", "ring-wrap");
+    var circ = 2 * Math.PI * 46;
+    var ratio = total ? score / total : 0;
+    wrap.innerHTML =
+      '<svg viewBox="0 0 120 120" aria-hidden="true">' +
+      '<circle class="ring-bg" cx="60" cy="60" r="46"></circle>' +
+      '<circle class="ring-fg" cx="60" cy="60" r="46" stroke="' + color + '" stroke-dasharray="' +
+      circ.toFixed(2) + '" stroke-dashoffset="' + ((1 - ratio) * circ).toFixed(2) + '"></circle>' +
+      "</svg>";
+    var num = el("div", "ring-num");
+    var strong = el("strong");
+    strong.textContent = String(score);
+    var span = el("span");
+    span.textContent = "/" + total;
+    num.appendChild(strong);
+    num.appendChild(span);
+    wrap.appendChild(num);
+    return wrap;
+  }
+
+  function bridgeGraphic(level) {
+    var wrap = el("div", "bridge-graphic");
+    wrap.innerHTML =
+      '<svg viewBox="0 0 320 88" aria-hidden="true">' +
+      '<path d="M18 66 H88"></path>' +
+      '<path d="M88 66 C 118 66, 124 34, 160 34"></path>' +
+      '<path d="M160 34 C 196 34, 202 66, 232 66"></path>' +
+      '<path d="M232 66 H302"></path>' +
+      '<circle cx="18" cy="66" r="5"></circle>' +
+      '<circle cx="88" cy="66" r="4"></circle>' +
+      '<circle cx="160" cy="34" r="6.5"></circle>' +
+      '<circle cx="232" cy="66" r="4"></circle>' +
+      '<circle cx="302" cy="66" r="5"></circle>' +
+      "</svg>";
+    var maxOn = level === 0 ? 0 : level === 1 ? 2 : 3;
+    var paths = wrap.querySelectorAll("path");
+    for (var i = 0; i < paths.length; i += 1) {
+      if (i <= maxOn) paths[i].classList.add("on");
+    }
+    var dots = wrap.querySelectorAll("circle");
+    var maxDot = level === 0 ? 1 : level === 1 ? 3 : 4;
+    for (var j = 0; j < dots.length; j += 1) {
+      if (j <= maxDot) dots[j].setAttribute("fill", j === 2 ? "#e0b85a" : "#1f8a80");
+      else dots[j].setAttribute("fill", "#d9d0bc");
+    }
+    return wrap;
+  }
+
+  function renderEnd() {
+    document.body.dataset.screen = "end";
+    document.body.dataset.scene = "end";
+    var tierKey = tierOf(state.score, TOTAL);
+    var tier = tierCopy(tierKey);
+    var stage = document.getElementById("stage");
+    stage.innerHTML = "";
+    var card = el("article", "card rise");
+    card.appendChild(cardTop({ type: "story", id: "end" }, "Khép chặng"));
+    var kicker = el("p", "kicker");
+    kicker.textContent = "Hồ sơ ứng xử số";
+    card.appendChild(kicker);
+
+    var hero = el("div", "end-hero");
+    hero.appendChild(ring(state.score, TOTAL, tier.color));
+    var ident = el("div");
+    var who = el("p", "who");
+    who.textContent = displayName();
+    var tierName = el("h1", "tier " + tierKey);
+    tierName.textContent = tier.name;
+    var role = el("p", "role");
+    role.textContent = tier.note;
+    ident.appendChild(who);
+    ident.appendChild(tierName);
+    ident.appendChild(role);
+    hero.appendChild(ident);
+    card.appendChild(hero);
+
+    var epi = el("div", "epilogue");
+    [tier.text].concat(branchLines()).forEach(function (para) {
+      var p = el("p");
+      p.textContent = para;
+      epi.appendChild(p);
+    });
+    card.appendChild(epi);
+
+    var level = tierKey === "strong" ? 2 : tierKey === "ok" ? 1 : 0;
+    card.appendChild(bridgeGraphic(level));
+    var cap = el("p", "bridge-caption");
+    cap.textContent = tier.bridge;
+    card.appendChild(cap);
+
+    var quote = el("blockquote", "closing");
+    quote.textContent = "“" + CLOSING + "”";
+    card.appendChild(quote);
+
+    var logTitle = el("h2", "section-title");
+    logTitle.textContent = "Các nhịp đã đi";
+    card.appendChild(logTitle);
+    var pills = el("ul", "pills");
+    SCENES.forEach(function (scene) {
+      if (!isScored(scene)) return;
+      var ok = !!state.marks[scene.id];
+      var li = el("li", "pill " + (ok ? "sang" : "noi"));
+      var name = el("span");
+      name.textContent = scene.log;
+      var st = el("span", "st");
+      st.textContent = ok ? "Sáng" : "Cần nối";
+      li.appendChild(name);
+      li.appendChild(st);
+      pills.appendChild(li);
+    });
+    card.appendChild(pills);
+
+    var fourTitle = el("h2", "section-title");
+    fourTitle.textContent = "Bốn câu trước khi gõ";
+    card.appendChild(fourTitle);
+    var fourNote = el("p", "note");
+    fourNote.textContent = "Vận dụng của nhóm — không phải nguyên văn giáo trình.";
+    card.appendChild(fourNote);
+    card.appendChild(slip({ slip: FOUR, slipTitle: "Mang theo" }));
+
+    var prinTitle = el("h2", "section-title");
+    prinTitle.textContent = "Nguyên tắc mang theo";
+    card.appendChild(prinTitle);
+    var principles = el("ul", "principles");
+    PRINCIPLES.forEach(function (item) {
+      var li = el("li");
+      li.textContent = item;
+      principles.appendChild(li);
+    });
+    card.appendChild(principles);
+
+    var actions = el("div", "actions");
+    var again = el("button", "btn btn-primary");
+    again.type = "button";
+    again.setAttribute("data-act", "home");
+    again.textContent = "Về cổng diễn đàn";
+    var same = el("button", "btn btn-ghost");
+    same.type = "button";
+    same.setAttribute("data-act", "same");
+    same.textContent = "Đi lại với cùng tên";
+    actions.appendChild(again);
+    actions.appendChild(same);
+    card.appendChild(actions);
+    stage.appendChild(card);
+    announce("Hồ sơ ứng xử số. " + displayName() + ". " + tier.name + ". " + state.score + " trên " + TOTAL + ".");
+    window.scrollTo(0, 0);
   }
 
   function startGame() {
-    state.index = 0;
+    var input = document.getElementById("player-name");
+    var raw = input ? input.value : state.name;
+    state.name = String(raw || "").replace(/\s+/g, " ").trim().slice(0, 40);
+    state.step = 0;
     state.score = 0;
-    state.streak = 0;
-    state.answered = false;
-    state.name = (el.name.value || "").trim();
-    show(el.quiz);
-    renderQuestion();
+    state.marks = {};
+    state.flags = {};
+    state.phase = "open";
+    state.lastChoice = null;
+    renderScene();
+    renderChrome();
+    window.scrollTo(0, 0);
   }
 
-  function renderQuestion() {
-    var q = QUESTIONS[state.index];
-    var total = QUESTIONS.length;
-    state.answered = false;
-
-    el.progressLabel.textContent = "Câu " + (state.index + 1) + " / " + total;
-    el.progressFill.style.width = ((state.index / total) * 100) + "%";
-    el.scoreLabel.textContent = "Điểm: " + state.score;
-    el.streakLabel.textContent = "Chuỗi: " + state.streak;
-    el.qType.textContent = q.type;
-    el.qText.textContent = q.q;
-
-    el.feedback.classList.add("hidden");
-    el.feedback.className = "feedback hidden";
-    el.nextWrap.classList.add("hidden");
-    el.btnNext.textContent = state.index === total - 1 ? "Xem kết quả" : "Câu tiếp theo";
-
-    el.options.innerHTML = "";
-    var letters = ["A", "B", "C", "D"];
-    q.choices.forEach(function (text, i) {
-      var btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "option";
-      btn.setAttribute("data-index", String(i));
-      btn.innerHTML = '<span class="letter">' + letters[i] + '</span><span class="text"></span>';
-      btn.querySelector(".text").textContent = text;
-      btn.addEventListener("click", function () { selectAnswer(i); });
-      el.options.appendChild(btn);
-    });
-  }
-
-  function selectAnswer(choice) {
-    if (state.answered) return;
-    state.answered = true;
-
-    var q = QUESTIONS[state.index];
-    var correct = choice === q.answer;
-    var buttons = el.options.querySelectorAll(".option");
-
-    buttons.forEach(function (btn, i) {
-      btn.disabled = true;
-      btn.classList.add("dim");
-      if (i === q.answer) btn.classList.add("correct");
-      if (i === choice && !correct) btn.classList.add("wrong");
-    });
-
-    if (correct) {
-      state.score += 1;
-      state.streak += 1;
-      el.feedback.className = "feedback ok";
-      el.feedback.innerHTML = "<strong>Chính xác!</strong>" + escapeHtml(q.explain);
+  function choose(index) {
+    if (state.phase !== "open") return;
+    var scene = SCENES[state.step];
+    if (!scene || !isScored(scene)) return;
+    if (index < 0 || index >= scene.choices.length) return;
+    state.phase = "locked";
+    state.lastChoice = index;
+    if (scene.type === "quiz") {
+      var ok = index === scene.answer;
+      state.marks[scene.id] = ok;
+      if (ok) state.score += 1;
     } else {
-      state.streak = 0;
-      var letters = ["A", "B", "C", "D"];
-      el.feedback.className = "feedback bad";
-      el.feedback.innerHTML =
-        "<strong>Chưa đúng.</strong>Đáp án đúng: <b>" +
-        letters[q.answer] + ". " + escapeHtml(q.choices[q.answer]) +
-        "</b><br>" + escapeHtml(q.explain);
+      var choice = scene.choices[index];
+      state.marks[scene.id] = !!choice.ok;
+      state.flags[choice.flag] = true;
+      if (choice.ok) state.score += 1;
     }
-
-    el.scoreLabel.textContent = "Điểm: " + state.score;
-    el.streakLabel.textContent = "Chuỗi: " + state.streak;
-    el.progressFill.style.width = (((state.index + 1) / QUESTIONS.length) * 100) + "%";
-    el.nextWrap.classList.remove("hidden");
+    renderScene();
+    renderChrome();
   }
 
-  function escapeHtml(s) {
-    return String(s)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-  }
-
-  function nextQuestion() {
-    if (state.index < QUESTIONS.length - 1) {
-      state.index += 1;
-      renderQuestion();
+  function advance() {
+    var scene = SCENES[state.step];
+    if (!scene) return;
+    if (scene.type !== "story" && state.phase !== "locked") return;
+    if (state.phase === "advancing") return;
+    state.phase = "advancing";
+    state.step += 1;
+    state.lastChoice = null;
+    if (state.step >= SCENES.length) {
+      state.phase = "end";
+      renderEnd();
     } else {
-      showEnd();
+      state.phase = "open";
+      renderScene();
+      window.scrollTo(0, 0);
+    }
+    renderChrome();
+  }
+
+  function goHome(keepName) {
+    var name = keepName ? state.name : "";
+    state = freshState();
+    state.name = name;
+    renderStart();
+    renderChrome();
+    window.scrollTo(0, 0);
+    if (keepName) {
+      var input = document.getElementById("player-name");
+      if (input) input.value = name;
     }
   }
 
-  function showEnd() {
-    var total = QUESTIONS.length;
-    var score = state.score;
-    var pct = score / total;
-    var greet = state.name ? (state.name + " ơi, ") : "";
-
-    el.endScore.textContent = String(score);
-    el.endDen.textContent = "/ " + total;
-    el.endTitle.textContent = state.name
-      ? "Kết quả của " + state.name
-      : "Kết quả ôn tập";
-
-    var tier;
-    if (pct >= 0.9) {
-      tier = greet + "bạn nắm rất vững tinh thần đại đoàn kết!";
-    } else if (pct >= 0.7) {
-      tier = greet + "bạn nắm khá tốt các ý chính của bài.";
-    } else if (pct >= 0.5) {
-      tier = greet + "bạn đã nắm được phần nền tảng — chơi lại để củng cố nhé.";
-    } else {
-      tier = greet + "hãy xem lại slide và thử thêm một lượt nữa.";
-    }
-    // Capitalize if no name prefix
-    if (!state.name) {
-      tier = tier.charAt(0).toUpperCase() + tier.slice(1);
-    }
-
-    el.tierMsg.textContent = tier;
-    el.closingMsg.textContent =
-      "“Đoàn kết trên không gian mạng không bắt đầu từ việc nghĩ giống nhau, mà từ cách ứng xử khi không giống nhau.”";
-
-    show(el.end);
+  function onStageClick(event) {
+    var node = event.target;
+    if (!node || node.nodeType !== 1) node = node.parentElement;
+    if (!node) return;
+    var target = node.closest("[data-act]");
+    if (!target) return;
+    var act = target.getAttribute("data-act");
+    if (act === "start") startGame();
+    else if (act === "choice") choose(Number(target.getAttribute("data-i")));
+    else if (act === "next") advance();
+    else if (act === "home") goHome(false);
+    else if (act === "same") goHome(true);
   }
 
-  // Keyboard: 1-4 / A-D to answer; Enter/ArrowRight for next
-  document.addEventListener("keydown", function (e) {
-    if (el.quiz.classList.contains("hidden")) {
-      if (e.key === "Enter" && !el.start.classList.contains("hidden")) {
+  function onKey(event) {
+    var active = document.activeElement;
+    var act = active && active.getAttribute && active.getAttribute("data-act");
+    if (event.key === "Enter") {
+      if (act) return;
+      if (document.body.dataset.screen === "start") {
+        event.preventDefault();
         startGame();
+      } else if (document.body.dataset.screen === "scene") {
+        var scene = SCENES[state.step];
+        if (scene && (scene.type === "story" || state.phase === "locked")) {
+          event.preventDefault();
+          advance();
+        }
       }
       return;
     }
-    if (!state.answered) {
-      var map = { "1": 0, "2": 1, "3": 2, "4": 3, a: 0, b: 1, c: 2, d: 3, A: 0, B: 1, C: 2, D: 3 };
-      if (map[e.key] !== undefined) {
-        var btns = el.options.querySelectorAll(".option");
-        if (map[e.key] < btns.length) selectAnswer(map[e.key]);
-      }
-    } else if (e.key === "Enter" || e.key === "ArrowRight") {
-      nextQuestion();
-    }
-  });
+    if (document.body.dataset.screen !== "scene" || state.phase !== "open") return;
+    var map = { "1": 0, "2": 1, "3": 2, "4": 3, a: 0, b: 1, c: 2, d: 3, A: 0, B: 1, C: 2, D: 3 };
+    if (map[event.key] === undefined) return;
+    var scene = SCENES[state.step];
+    if (!scene || !isScored(scene)) return;
+    if (map[event.key] >= scene.choices.length) return;
+    event.preventDefault();
+    choose(map[event.key]);
+  }
 
-  el.btnStart.addEventListener("click", startGame);
-  el.btnNext.addEventListener("click", nextQuestion);
-  el.btnRestart.addEventListener("click", startGame);
-  el.btnHome.addEventListener("click", function () {
-    show(el.start);
-  });
+  function init() {
+    try {
+      validate();
+      TOTAL = SCENES.filter(isScored).length;
+    } catch (err) {
+      var stage = document.getElementById("stage");
+      stage.innerHTML = "";
+      var card = el("article", "card");
+      var title = el("h1");
+      title.textContent = "Không mở được hành trình";
+      var note = el("p");
+      note.textContent = err && err.message ? err.message : "Lỗi dữ liệu.";
+      card.appendChild(title);
+      card.appendChild(note);
+      stage.appendChild(card);
+      return;
+    }
+    document.getElementById("stage").addEventListener("click", onStageClick);
+    document.addEventListener("keydown", onKey);
+    renderStart();
+    renderChrome();
+  }
+
+  init();
 })();
 </script>
 </body>
