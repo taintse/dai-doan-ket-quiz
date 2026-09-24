@@ -1,7 +1,9 @@
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import { CELL, COLS, COMM, ROWS, ULTI_MAX, UNIT_LIST, UNITS, WAVES, type UnitId } from "../game/balance";
-import { castUlti, cellAction, debugLose, debugRush, debugThreat, debugWin, pickAnswer, setSelection, togglePause } from "../game/engine";
+import { castUlti, cellAction, cycleSpeed, debugLose, debugRush, debugThreat, debugWin, dismissTeaser, openMarkQuiz, pickAnswer, setSelection, togglePause } from "../game/engine";
+import { TEASERS } from "../game/marks";
+import { Leaderboard } from "./Leaderboard";
 import { formatClock } from "../game/score";
 import type { GameState } from "../game/types";
 import { CommunityPod } from "../art/community";
@@ -20,6 +22,7 @@ function yOf(lane: number) {
 
 export function Playfield({ state, frame, bump }: { state: GameState; frame: number; bump: () => void }) {
   const [hover, setHover] = useState<{ lane: number; col: number } | null>(null);
+  const [board, setBoard] = useState(false);
   const shake = useAnimation();
   const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
@@ -36,6 +39,7 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
     function onKey(e: KeyboardEvent) {
       if (e.target instanceof HTMLInputElement) return;
       const quiz = state.quiz;
+      if (e.code === "Space" || e.code === "Escape") e.preventDefault();
       if (quiz && quiz.reveal <= 0) {
         const map: Record<string, number> = { Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3, KeyA: 0, KeyB: 1, KeyC: 2, KeyD: 3 };
         if (map[e.code] !== undefined && map[e.code] < quiz.question.choices.length) {
@@ -44,10 +48,17 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
         }
         return;
       }
-      if (e.code === "Space") {
+      if (e.repeat) return;
+      if (e.code === "Space" || e.code === "Escape") {
         e.preventDefault();
+        if (e.code === "Escape" && !state.manualPause && state.selection) {
+          state.selection = null;
+          bump();
+          return;
+        }
         togglePause(state);
         bump();
+        return;
       }
       const unitKeys: Record<string, UnitId> = { Digit1: "den", Digit2: "tuong", Digit3: "phan", Digit4: "cau", Digit5: "moc" };
       if (unitKeys[e.code]) {
@@ -60,10 +71,6 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
       }
       if (e.code === "KeyQ") castUlti(state, "sang");
       if (e.code === "KeyE") castUlti(state, "tuonglua");
-      if (e.code === "Escape") {
-        state.selection = null;
-        bump();
-      }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -81,7 +88,7 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
           className="relative flex h-[700px] w-[1100px] flex-col gap-2 p-3"
           style={state.glitch > 0 ? { boxShadow: "inset 0 0 0 6px #fb7185" } : undefined}
         >
-          <header className="flex items-center gap-3">
+          <header className="pointer-events-none relative z-50 flex items-center gap-3">
             <div className="rounded-2xl border border-amber-400/40 bg-slate-950/70 px-3 py-2 shadow-amber">
               <p className="text-[10px] uppercase tracking-wider text-amber-200/80">Mặt trời</p>
               <p className="text-2xl font-black text-amber-300">{Math.floor(state.sun)}</p>
@@ -107,11 +114,43 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
             </div>
             <button
               type="button"
+              disabled={!!state.quiz}
+              onClick={() => {
+                if (!state.quiz && !state.manualPause) togglePause(state);
+                setBoard(true);
+                bump();
+              }}
+              className="pointer-events-auto relative z-50 rounded-full border border-slate-600 bg-slate-950 px-3 py-2 text-sm font-semibold disabled:opacity-40"
+            >
+              Bảng
+            </button>
+            <button
+              type="button"
+              aria-label={`Tua nhanh, đang ${state.timeScale}x`}
+              title="Tua nhanh. Câu hỏi vẫn đếm theo giây thật."
+              disabled={!!state.quiz}
+              onClick={() => {
+                cycleSpeed(state);
+                bump();
+              }}
+              className={`pointer-events-auto relative z-50 rounded-full border px-3 py-2 text-sm font-black ${
+                state.quiz || state.timeScale === 1
+                  ? "border-slate-600 bg-slate-950 text-slate-200"
+                  : state.timeScale === 2
+                    ? "border-cyan-300 bg-cyan-400/15 text-cyan-100 shadow-neon"
+                    : "border-amber-300 bg-amber-400/15 text-amber-100 shadow-amber"
+              }`}
+            >
+              Tua {state.quiz ? 1 : state.timeScale}x
+            </button>
+            <button
+              type="button"
+              aria-pressed={state.manualPause}
               onClick={() => {
                 togglePause(state);
                 bump();
               }}
-              className="rounded-full border border-slate-600 px-3 py-2 text-sm font-semibold"
+              className="pointer-events-auto relative z-50 rounded-full border border-slate-600 bg-slate-950 px-3 py-2 text-sm font-semibold"
             >
               {state.manualPause ? "Tiếp tục" : "Tạm dừng"}
             </button>
@@ -200,15 +239,42 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
             ))}
             {state.viruses.map((v) => {
               const scale = v.dead ? Math.max(0, v.dying / 0.46) : 1;
+              const open = v.marked && !v.dead && !v.lit && !v.asked;
+              const badge = v.lit ? "Đã chiếu sáng" : v.enraged ? "Nổi giận" : "Có bài";
               return (
                 <div
                   key={v.id}
                   className="pointer-events-none absolute"
                   style={{ ...spriteStyle(v.x, v.lane), opacity: scale, transform: `translate(-50%, -50%) scale(${scale})` }}
                 >
-                  <div className={reduce || v.dead ? "" : "virus-bob"} style={{ animationDelay: `${v.bob}s`, filter: v.flash > 0 ? "brightness(2.6)" : undefined }}>
-                    <VirusArt type={v.type} uid={`v${v.id}`} />
-                  </div>
+                  {v.marked && !v.dead && !v.lit && (
+                    <span className={`absolute -inset-2 rounded-full border-2 border-amber-300/80 shadow-amber ${reduce ? "" : "animate-pulse"}`} />
+                  )}
+                  {open ? (
+                    <button
+                      type="button"
+                      aria-label={`${v.type} có bài`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openMarkQuiz(state, v.id);
+                        bump();
+                      }}
+                      className="pointer-events-auto relative z-20 block w-full cursor-pointer"
+                    >
+                      <div className={reduce || v.dead ? "" : "virus-bob"} style={{ animationDelay: `${v.bob}s`, filter: v.flash > 0 ? "brightness(2.6)" : undefined }}>
+                        <VirusArt type={v.type} uid={`v${v.id}`} />
+                      </div>
+                    </button>
+                  ) : (
+                    <div className={reduce || v.dead ? "" : "virus-bob"} style={{ animationDelay: `${v.bob}s`, filter: v.flash > 0 ? "brightness(2.6)" : undefined }}>
+                      <VirusArt type={v.type} uid={`v${v.id}`} />
+                    </div>
+                  )}
+                  {v.marked && !v.dead && (
+                    <span className={`pointer-events-none absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full px-1.5 py-0.5 text-[9px] font-black ${v.lit ? "bg-amber-300 text-slate-950" : v.enraged ? "bg-rose-500 text-white" : "bg-fuchsia-400 text-slate-950"}`}>
+                      {badge}
+                    </span>
+                  )}
                   {!v.dead && <Bar pct={v.hp / v.maxHp} bad />}
                 </div>
               );
@@ -305,6 +371,18 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
                 </button>
               );
             })}
+            {state.viruses.some((v) => v.marked && !v.dead && !v.lit && !v.asked) && (
+              <button
+                type="button"
+                onClick={() => {
+                  openMarkQuiz(state);
+                  bump();
+                }}
+                className="w-24 animate-pulse rounded-2xl border border-amber-300 text-sm font-black text-amber-100 shadow-amber"
+              >
+                Câu hỏi
+              </button>
+            )}
             <button
               type="button"
               onClick={() => {
@@ -348,11 +426,11 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
                 initial={{ y: 24, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: 16, opacity: 0 }}
-                className="absolute bottom-28 left-1/2 z-20 w-[min(680px,92%)] -translate-x-1/2 rounded-2xl border border-cyan-500/40 bg-slate-900/80 p-4 shadow-neon backdrop-blur-md"
+                className="absolute bottom-28 left-1/2 z-40 w-[min(680px,92%)] -translate-x-1/2 rounded-2xl border border-cyan-500/40 bg-slate-900/80 p-4 shadow-neon backdrop-blur-md"
               >
                 <div className="mb-2 flex items-center justify-between gap-3">
                   <p className="text-xs font-bold uppercase tracking-wider text-cyan-300">
-                    {state.quiz.kind === "ulti" ? (state.quiz.ulti === "sang" ? "Chiếu sáng sự thật" : "Tường lửa đoàn kết") : state.quiz.kind === "clutch" ? "Cứu nguy khẩn cấp" : "Kiểm tra bài"}
+                    {state.quiz.kind === "ulti" ? (state.quiz.ulti === "sang" ? "Chiếu sáng sự thật" : "Tường lửa đoàn kết") : state.quiz.kind === "clutch" ? "Cứu nguy khẩn cấp" : state.quiz.kind === "mark" ? "Câu của virus" : "Kiểm tra bài"}
                   </p>
                   <p className="font-mono text-sm text-amber-200">{Math.max(0, state.quiz.time).toFixed(1)}s</p>
                 </div>
@@ -377,6 +455,7 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
                           pickAnswer(state, i);
                           bump();
                         }}
+                        data-correct={state.thu && correct ? "1" : undefined}
                         className={`rounded-xl border px-3 py-1.5 text-left text-sm ${tone}`}
                       >
                         <span className="mr-2 font-black text-cyan-200">{i + 1}</span>
@@ -391,10 +470,47 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
             )}
           </AnimatePresence>
 
-          {state.manualPause && !state.quiz && (
-            <div className="absolute inset-0 grid place-items-center bg-slate-950/50">
-              <p className="rounded-full border border-cyan-400/40 bg-slate-900 px-6 py-3 text-lg font-bold">Tạm dừng</p>
+          {state.teaser && !state.quiz && (
+            <div className="absolute left-1/2 top-16 z-30 w-[min(460px,88%)] -translate-x-1/2 rounded-2xl border border-fuchsia-400/50 bg-slate-900/90 p-4 shadow-neon backdrop-blur-md">
+              <div className="flex gap-3">
+                <div className="h-24 w-24 shrink-0">
+                  <VirusArt type={state.teaser.type} uid="teaser" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-fuchsia-300">Sắp vào hàng</p>
+                  <p className="text-base font-extrabold text-amber-100">{TEASERS[state.teaser.type].title}</p>
+                  <p className="mt-1 text-sm leading-snug text-slate-200">{TEASERS[state.teaser.type].text}</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  dismissTeaser(state);
+                  bump();
+                }}
+                className="mt-3 rounded-full border border-slate-500 px-3 py-1 text-xs font-semibold"
+              >
+                Đã rõ
+              </button>
             </div>
+          )}
+
+          {state.manualPause && !state.quiz && (
+            <button
+              type="button"
+              aria-label="Tiếp tục"
+              onClick={() => {
+                togglePause(state);
+                bump();
+              }}
+              className="absolute inset-0 z-30 grid place-items-center bg-slate-950/55"
+            >
+              <span className="pointer-events-none rounded-2xl border border-cyan-400/50 bg-slate-900 px-8 py-4 text-center shadow-neon">
+                <span className="block text-lg font-bold">Tạm dừng</span>
+                <span className="mt-1 block text-sm font-semibold text-cyan-200">Tiếp tục</span>
+                <span className="mt-1 block text-[11px] font-medium text-slate-400">Bấm lớp phủ, Tiếp tục, phím cách hoặc Esc</span>
+              </span>
+            </button>
           )}
 
           {state.thu && (
@@ -407,6 +523,7 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
           )}
         </motion.div>
       </Fit>
+      {board && <Leaderboard onClose={() => setBoard(false)} />}
     </div>
   );
 }

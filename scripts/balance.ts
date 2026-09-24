@@ -1,5 +1,5 @@
 import { UNITS, WAVES, type UnitId } from "../frontend/src/game/balance";
-import { cellAction, createGame, pickAnswer, step, castUlti } from "../frontend/src/game/engine";
+import { cellAction, createGame, openMarkQuiz, pickAnswer, step, castUlti } from "../frontend/src/game/engine";
 import { summarize } from "../frontend/src/game/score";
 import type { GameState } from "../frontend/src/game/types";
 
@@ -74,6 +74,13 @@ function maybeAnswer(s: GameState, profile: Profile, rand: () => number) {
   pickAnswer(s, idx < 0 ? 0 : idx);
 }
 
+function maybeMark(s: GameState, profile: Profile) {
+  if (!profile.answer || s.quiz || s.manualPause) return;
+  const v = s.viruses.find((x) => !x.dead && x.marked && !x.asked && !x.lit && x.x < 8);
+  if (!v) return;
+  openMarkQuiz(s, v.id);
+}
+
 function maybeUlti(s: GameState, profile: Profile, flip: { n: number }) {
   if (!profile.ulti || s.quiz || s.ulti < 100) return;
   if (s.phase === "prep") return;
@@ -101,6 +108,7 @@ function run(profile: Profile, seed: number) {
         buy(s);
       }
       maybeUlti(s, profile, flip);
+      maybeMark(s, profile);
     }
     maybeAnswer(s, profile, rnd);
     step(s, dt);

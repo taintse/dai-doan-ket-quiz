@@ -121,6 +121,7 @@ export interface Spawn {
   t: number;
   type: VirusId;
   lane: number;
+  mark?: boolean;
 }
 
 export interface WaveDef {
@@ -136,8 +137,8 @@ function pack(t: number, type: VirusId, lane: number, n: number, gap = 0.42): Sp
   return Array.from({ length: n }, (_, i) => ({ t: +(t + i * gap).toFixed(2), type, lane }));
 }
 
-function row(entries: Array<[number, VirusId, number]>): Spawn[] {
-  return entries.map(([t, type, lane]) => ({ t, type, lane }));
+function row(entries: Array<[number, VirusId, number, boolean?]>): Spawn[] {
+  return entries.map(([t, type, lane, mark]) => ({ t, type, lane, mark: !!mark }));
 }
 
 export const WAVES: WaveDef[] = [
@@ -150,7 +151,7 @@ export const WAVES: WaveDef[] = [
     spawns: row([
       [3, "tin", 2],
       [9, "tin", 2],
-      [15, "tin", 2],
+      [15, "tin", 2, true],
       [22, "congkich", 2],
       [28, "tin", 2],
       [34, "tin", 2],
@@ -166,7 +167,7 @@ export const WAVES: WaveDef[] = [
     spawns: row([
       [2, "tin", 2],
       [8, "tin", 2],
-      [14, "congkich", 2],
+      [14, "congkich", 2, true],
       [20, "tin", 1],
       [24, "tin", 3],
       [30, "tin", 2],
@@ -186,7 +187,7 @@ export const WAVES: WaveDef[] = [
       ...row([
         [2, "tin", 1],
         [6, "tin", 3],
-        [10, "echo", 2],
+        [10, "echo", 2, true],
         [16, "congkich", 1],
         [20, "tin", 3],
         [26, "congkich", 2],
@@ -195,7 +196,8 @@ export const WAVES: WaveDef[] = [
         [46, "congkich", 2],
         [52, "echo", 3],
       ]),
-      ...pack(28, "spam", 2, 3),
+      ...pack(28, "spam", 2, 2),
+      { t: 28.9, type: "spam", lane: 2, mark: true },
     ],
   },
   {
@@ -209,7 +211,7 @@ export const WAVES: WaveDef[] = [
         [4, "tin", 2],
         [10, "echo", 2],
         [16, "tin", 1],
-        [22, "congkich", 3],
+        [22, "congkich", 3, true],
         [28, "tin", 2],
         [34, "congkich", 1],
         [42, "echo", 3],
@@ -228,7 +230,7 @@ export const WAVES: WaveDef[] = [
     spawns: [
       ...row([
         [4, "tin", 0],
-        [8, "kichdong", 2],
+        [8, "kichdong", 2, true],
         [14, "echo", 1],
         [20, "tin", 4],
         [26, "congkich", 3],
@@ -253,7 +255,7 @@ export const WAVES: WaveDef[] = [
         [8, "echo", 0],
         [12, "echo", 4],
         [18, "congkich", 3],
-        [26, "kichdong", 2],
+        [26, "kichdong", 2, true],
         [34, "echo", 0],
         [42, "kichdong", 4],
         [50, "echo", 1],
@@ -278,7 +280,7 @@ export const WAVES: WaveDef[] = [
         [2, "kichdong", 2],
         [6, "echo", 0],
         [10, "echo", 4],
-        [16, "kichdong", 1],
+        [16, "kichdong", 1, true],
         [22, "congkich", 3],
         [30, "kichdong", 0],
         [36, "echo", 2],
@@ -308,7 +310,7 @@ export const WAVES: WaveDef[] = [
         [10, "echo", 4],
         [14, "kichdong", 1],
         [20, "kichdong", 3],
-        [28, "echo", 2],
+        [28, "echo", 2, true],
         [34, "congkich", 0],
         [40, "kichdong", 4],
         [48, "echo", 1],
