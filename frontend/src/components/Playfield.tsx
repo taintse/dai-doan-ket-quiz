@@ -36,6 +36,7 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
     function onKey(e: KeyboardEvent) {
       if (e.target instanceof HTMLInputElement) return;
       const quiz = state.quiz;
+      if (e.code === "Space" || e.code === "Escape") e.preventDefault();
       if (quiz && quiz.reveal <= 0) {
         const map: Record<string, number> = { Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3, KeyA: 0, KeyB: 1, KeyC: 2, KeyD: 3 };
         if (map[e.code] !== undefined && map[e.code] < quiz.question.choices.length) {
