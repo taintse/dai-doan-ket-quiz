@@ -4,13 +4,13 @@
  * Để trống thì bảng thời gian thực tắt; bảng trên máy này vẫn dùng được.
  */
 const pasted = {
-  apiKey: "",
-  authDomain: "",
-  databaseURL: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: "",
+  apiKey: "AIzaSyCSztlvpSMVaMYMveW6RZQplm6FBBxFfIw",
+  authDomain: "dai-doan-ket-quiz.firebaseapp.com",
+  databaseURL: "https://dai-doan-ket-quiz-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "dai-doan-ket-quiz",
+  storageBucket: "dai-doan-ket-quiz.firebasestorage.app",
+  messagingSenderId: "881305264085",
+  appId: "1:881305264085:web:c85b0d5a63ea102667a75c",
 };
 
 function pick(envValue: string | undefined, fallback: string): string {
