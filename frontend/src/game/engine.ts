@@ -472,7 +472,7 @@ function breach(s: GameState, v: Virus) {
   if (s.bonds[v.lane] > 0) s.bonds[v.lane] -= 1;
   const spec = VIRUSES[v.type];
   const late = Math.max(0, s.waveIndex - 2);
-  const dmg = spec.leak + late * 1.5 + (broken ? 9 : 0);
+  const dmg = spec.leak + late * 1.8 + (broken ? 10 : 0);
   v.dead = true;
   v.dying = 0.2;
   v.hp = 0;
@@ -529,7 +529,7 @@ function onCorrect(s: GameState, quiz: QuizState) {
     s.laneShield[quiz.lane] = Math.max(s.laneShield[quiz.lane], 5.6);
     burst(s, 0.4, quiz.lane, "#22d3ee", 16);
   } else if (quiz.kind === "lesson") {
-    for (const v of s.viruses) if (living(v)) v.stun = Math.max(v.stun, 1.5);
+    for (const v of s.viruses) if (living(v)) v.stun = Math.max(v.stun, 2.6);
   } else if (quiz.kind === "mark") {
     const v = s.viruses.find((x) => x.id === quiz.virusId && living(x));
     if (v) illuminate(s, v);
@@ -541,8 +541,8 @@ function illuminate(s: GameState, v: Virus) {
   v.asked = true;
   v.enraged = false;
   v.echoUp = false;
-  v.hp = Math.max(1, v.hp * 0.38);
-  v.slow = Math.max(v.slow, 3.6);
+  v.hp = Math.max(1, v.hp * 0.28);
+  v.slow = Math.max(v.slow, 4.2);
   v.flash = 0.25;
   if (v.hp <= 8) {
     killVirus(s, v);
@@ -587,9 +587,9 @@ function onWrong(s: GameState, quiz: QuizState) {
 function castSang(s: GameState) {
   for (const v of s.viruses) {
     if (!living(v)) continue;
-    v.stun = Math.max(v.stun, 3.5);
+    v.stun = Math.max(v.stun, 4.4);
     v.echoUp = false;
-    applyHit(s, v, 26 + v.maxHp * 0.11, 0);
+    applyHit(s, v, 40 + v.maxHp * 0.18, 0);
   }
   s.banner = { title: "Chiếu sáng sự thật", text: "Virus khựng lại, buồng vọng mất lớp vọng.", life: 2.3 };
   burst(s, 4, 2, "#fef3c7", 20);
@@ -599,12 +599,12 @@ function castFirewall(s: GameState) {
   s.firewall = Math.max(s.firewall, 6.6);
   for (const v of s.viruses) {
     if (!living(v)) continue;
-    v.x = Math.min(COLS - 0.15, v.x + 1.5);
+    v.x = Math.min(COLS - 0.15, v.x + 2.2);
   }
   for (const u of s.units) {
     if (u.hp <= 0) continue;
-    u.hp = Math.min(u.maxHp, u.hp + u.maxHp * 0.22);
-    if (u.type === "tuong") u.shield += 170;
+    u.hp = Math.min(u.maxHp, u.hp + u.maxHp * 0.34);
+    if (u.type === "tuong") u.shield += 320;
   }
   s.banner = { title: "Tường lửa đoàn kết", text: "Đẩy lùi, hồi đơn vị, chắn cộng đồng một lúc.", life: 2.3 };
 }

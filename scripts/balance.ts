@@ -10,11 +10,15 @@ interface Profile {
   accuracy: number;
   speed: number;
   answer: boolean;
+  /** hold: wall + phản biện only on lanes already in play. Never opens optional mark quizzes. */
+  style?: "default" | "hold";
 }
 
 const PROFILES: Profile[] = [
   { name: "afk", place: false, ulti: false, accuracy: 0, speed: 0, answer: false },
   { name: "passive", place: true, ulti: false, accuracy: 0, speed: 0, answer: false },
+  { name: "hold", place: true, ulti: false, accuracy: 0, speed: 0, answer: false, style: "hold" },
+  { name: "noUlti", place: true, ulti: false, accuracy: 0.9, speed: 0.72, answer: true },
   { name: "poor", place: true, ulti: true, accuracy: 0.42, speed: 0.22, answer: true },
   { name: "shaky", place: true, ulti: true, accuracy: 0.7, speed: 0.4, answer: true },
   { name: "strong", place: true, ulti: true, accuracy: 0.9, speed: 0.72, answer: true },
@@ -44,7 +48,39 @@ function priority(): Array<{ lane: number; col: number; type: UnitId }> {
 
 const PRI = priority();
 
-function buy(s: GameState) {
+function holdSlots(s: GameState): Array<{ lane: number; col: number; type: UnitId }> {
+  const lanes = [2, 1, 3, 0, 4];
+  const seen = new Set<number>([2]);
+  const wave = WAVES[Math.min(s.waveIndex, WAVES.length - 1)];
+  for (const sp of wave.spawns) seen.add(sp.lane);
+  if (s.phase === "calm" || s.phase === "clear") {
+    const next = WAVES[s.waveIndex + 1];
+    if (next) for (const sp of next.spawns) seen.add(sp.lane);
+  }
+  for (const v of s.viruses) if (!v.dead) seen.add(v.lane);
+  const open: Array<{ lane: number; col: number; type: UnitId }> = [];
+  for (const lane of lanes) {
+    if (!seen.has(lane)) continue;
+    const alive = s.units.filter((u) => u.hp > 0 && u.lane === lane);
+    const hasWall = alive.some((u) => u.type === "tuong");
+    const shots = alive.filter((u) => u.type === "phan" || u.type === "moc").length;
+    if (!hasWall) open.push({ lane, col: 7, type: "tuong" });
+    if (shots < 1) open.push({ lane, col: 5, type: "phan" });
+    else if (shots < 2 && hasWall) open.push({ lane, col: 4, type: "phan" });
+  }
+  return open;
+}
+
+function buy(s: GameState, profile: Profile) {
+  if (profile.style === "hold") {
+    for (const slot of holdSlots(s)) {
+      if (s.sun < UNITS[slot.type].cost) continue;
+      s.selection = slot.type;
+      cellAction(s, slot.lane, slot.col);
+      return;
+    }
+    return;
+  }
   const open = PRI.filter((slot) => !s.units.some((u) => u.hp > 0 && u.lane === slot.lane && u.col === slot.col));
   const ranked = open
     .map((slot, index) => {
@@ -85,7 +121,7 @@ function maybeAnswer(s: GameState, profile: Profile, rand: () => number) {
 }
 
 function maybeMark(s: GameState, profile: Profile) {
-  if (!profile.answer || s.quiz || s.manualPause) return;
+  if (profile.style === "hold" || !profile.answer || s.quiz || s.manualPause) return;
   const v = s.viruses.find((x) => !x.dead && x.marked && !x.asked && !x.lit && x.x < 8);
   if (!v) return;
   openMarkQuiz(s, v.id);
@@ -115,7 +151,7 @@ function run(profile: Profile, seed: number) {
       buyT += dt;
       if (buyT >= 0.35) {
         buyT = 0;
-        buy(s);
+        buy(s, profile);
       }
       maybeUlti(s, profile, flip);
       maybeMark(s, profile);
@@ -153,7 +189,7 @@ function run(profile: Profile, seed: number) {
   };
 }
 
-const seeds = [11, 29, 47];
+const seeds = [3, 7, 11, 13, 19, 23, 29, 31, 37, 41, 47, 53];
 for (const profile of PROFILES) {
   for (const seed of seeds) {
     const r = run(profile, seed);

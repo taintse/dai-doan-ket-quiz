@@ -38,7 +38,7 @@ Tin giả, công kích, buồng vọng, spam thù, kích động. Buồng vọng
 Điểm trên thanh **Điểm** cộng ngay khi chơi:
 
 - **Hạ virus** theo sức: yếu khoảng 50–100, giữa (buồng vọng) khoảng 180–250, kích động và virus có bài dày máu khoảng 480–800.
-- **Câu đúng** cộng thêm theo độ khó: dễ 50, vừa 120, khó 220. Kèm mặt trời (dễ 52, vừa 72, khó 100; Ánh chung bừng sáng thì nhân đôi). Mỗi lượt chỉ có 20 câu, nên mức này đủ nuôi phòng tuyến nếu trả lời đúng.
+- **Câu đúng** cộng thêm theo độ khó: dễ 50, vừa 120, khó 220. Kèm mặt trời (dễ 58, vừa 82, khó 110; Ánh chung bừng sáng thì nhân đôi). Mỗi lượt chỉ có 20 câu, nên mức này đủ nuôi phòng tuyến nếu trả lời đúng. Mặt trời tự rơi và đèn kiến thức không đủ để sống sót sóng cuối nếu không trả lời đúng hoặc dùng tuyệt kỹ.
 - **Câu sai** không cộng điểm và không trừ điểm. Hệ quả trong trận (đoàn kết, nhiễu, virus nổi giận) vẫn còn.
 
 Hạng:
