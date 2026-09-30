@@ -168,7 +168,13 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
             </button>
           </header>
 
-          <div className="relative mx-auto" style={{ width: BOARD_W, height: BOARD_H }}>
+          <div className="relative">
+            {!state.quiz && (
+              <div className="absolute bottom-0 left-0 top-0 z-20 w-[7.25rem]">
+                <LiveDock />
+              </div>
+            )}
+            <div className="relative mx-auto" style={{ width: BOARD_W, height: BOARD_H }}>
             <div className="absolute inset-y-0 left-0" style={{ width: COMM }}>
               <p className="absolute left-2 top-1 text-[10px] font-bold uppercase tracking-wider text-cyan-200/80">Cộng đồng</p>
               {state.bonds.map((bonds, lane) => (
@@ -343,6 +349,7 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
                 </motion.div>
               ))}
             </AnimatePresence>
+            </div>
           </div>
 
           <div className="min-h-7 text-center text-sm text-slate-300">
@@ -487,7 +494,6 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
         </motion.div>
       </Fit>
       {state.quiz && <QuizModal state={state} bump={bump} />}
-      {!state.quiz && <LiveDock />}
       {board && <Leaderboard onClose={() => setBoard(false)} />}
     </div>
   );
