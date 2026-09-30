@@ -2,7 +2,6 @@ import type { VirusId } from "./balance";
 
 /** Extra HP while a marked virus has not been chiếu sáng. */
 export const MARK_HP = 1.7;
-export const MARK_BUDGET = 6.5;
 
 export const TEASERS: Record<VirusId, { title: string; text: string }> = {
   tin: {
@@ -27,11 +26,3 @@ export const TEASERS: Record<VirusId, { title: string; text: string }> = {
   },
 };
 
-/** Ids đã có trong ngân hàng câu — không bịa mệnh đề giáo trình mới. */
-export const MARK_POOL: Record<VirusId, string[]> = {
-  tin: ["rumor", "subject", "strategy"],
-  congkich: ["fingers", "critique", "bridge"],
-  echo: ["cau", "four", "principles"],
-  spam: ["limit", "rumor", "interest"],
-  kichdong: ["limit", "message", "interest"],
-};

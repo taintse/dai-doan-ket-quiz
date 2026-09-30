@@ -1,5 +1,5 @@
 import { UNITS, WAVES, type UnitId } from "../frontend/src/game/balance";
-import { cellAction, createGame, openMarkQuiz, pickAnswer, step, castUlti } from "../frontend/src/game/engine";
+import { cellAction, continueQuiz, createGame, openMarkQuiz, pickAnswer, step, castUlti } from "../frontend/src/game/engine";
 import { summarize } from "../frontend/src/game/score";
 import type { GameState } from "../frontend/src/game/types";
 
@@ -66,9 +66,19 @@ function buy(s: GameState) {
 
 function maybeAnswer(s: GameState, profile: Profile, rand: () => number) {
   const q = s.quiz;
-  if (!q || q.reveal > 0) return;
-  if (!profile.answer) return;
-  if (q.time > q.budget * profile.speed) return;
+  if (!q) return;
+  if (q.outcome === "wrong") {
+    continueQuiz(s);
+    return;
+  }
+  if (q.outcome === "correct") return;
+  if (!profile.answer) {
+    const idx = q.question.choices.findIndex((_, i) => i !== q.question.answer);
+    pickAnswer(s, idx < 0 ? 0 : idx);
+    continueQuiz(s);
+    return;
+  }
+  if (q.wait < 0.35 + (1 - profile.speed) * 1.1) return;
   const correct = rand() < profile.accuracy;
   const idx = correct ? q.question.answer : q.question.choices.findIndex((_, i) => i !== q.question.answer);
   pickAnswer(s, idx < 0 ? 0 : idx);

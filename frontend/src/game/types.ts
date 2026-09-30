@@ -1,5 +1,5 @@
 import type { UltiId, UnitId, VirusId } from "./balance";
-import type { Question } from "./questions";
+import type { Difficulty, Question } from "./questions";
 
 export interface RuntimeQuestion {
   id: string;
@@ -7,7 +7,7 @@ export interface RuntimeQuestion {
   choices: string[];
   answer: number;
   explain: string;
-  source: string;
+  difficulty: Difficulty;
   base: Question;
 }
 
@@ -113,13 +113,17 @@ export interface QuizState {
   kind: "ulti" | "clutch" | "lesson" | "mark";
   ulti?: UltiId;
   question: RuntimeQuestion;
-  time: number;
-  budget: number;
+  /** Giây người chơi đã đọc trước khi chọn. Không phải đồng hồ đếm ngược. */
+  wait: number;
+  outcome: null | "correct" | "wrong";
+  /** Giây phản hồi đúng còn lại trước khi chơi tiếp. 0 khi đang chờ hoặc khi chờ nút Tiếp tục. */
   reveal: number;
   picked: number | null;
   speed: number;
   lane?: number;
   virusId?: number;
+  scoreGain: number;
+  sunGain: number;
 }
 
 export interface Stats {
@@ -132,6 +136,8 @@ export interface Stats {
   breaches: number;
   wavesCleared: number;
   kills: number;
+  killPoints: number;
+  quizPoints: number;
 }
 
 export type Phase = "prep" | "fight" | "calm" | "clear";
@@ -161,6 +167,9 @@ export interface GameState {
   teaser: TeaserState | null;
   teaserShown: number;
   recent: string[];
+  /** Câu còn lại của lượt — rút một lần 20 câu, không lặp. */
+  deck: Question[];
+  score: number;
   forcedCursor: number;
   waveIndex: number;
   phase: Phase;
@@ -178,7 +187,7 @@ export interface GameState {
   laneShield: number[];
   selection: Selection;
   manualPause: boolean;
-  /** 1, 2, or 3. Quiz prompts ignore this and stay on wall-clock time. */
+  /** 1, 2, or 3. Câu hỏi đang mở thì cả trận đứng im, tua không chạy. */
   timeScale: 1 | 2 | 3;
   stats: Stats;
   thu: boolean;

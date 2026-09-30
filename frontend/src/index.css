@@ -30,6 +30,14 @@ body {
   transform-origin: center bottom;
 }
 
+.is-frozen .bob,
+.is-frozen .virus-bob,
+.is-frozen .floater,
+.is-frozen .fever-label,
+.is-frozen .animate-pulse {
+  animation-play-state: paused;
+}
+
 .virus-bob {
   animation: bob 1.8s ease-in-out infinite, glitch-nudge 2.8s steps(2) infinite;
 }

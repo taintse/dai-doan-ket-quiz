@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLiveRows } from "./LiveBoard";
 import { clearBoard, importBoardText, loadBoard, type BoardEntry } from "../game/score";
 
 const RANK_STYLE: Record<string, string> = {
@@ -19,7 +20,9 @@ export function Leaderboard({ onClose }: { onClose: () => void }) {
   const [paste, setPaste] = useState("");
   const [note, setNote] = useState("");
   const [armed, setArmed] = useState(false);
+  const live = useLiveRows();
   const top = rows.slice(0, 10);
+  const liveTop = live.rows.slice(0, 10);
 
   function bringIn() {
     const result = importBoardText(paste);
@@ -48,14 +51,34 @@ export function Leaderboard({ onClose }: { onClose: () => void }) {
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-300">Bảng của lớp</p>
             <h2 className="text-2xl font-extrabold text-amber-200">Bảng xếp hạng</h2>
             <p className="mt-1 text-xs leading-relaxed text-slate-400">
-              Mười người điểm cao trên máy này. Muốn ghép cả lớp, bạn chép kết quả rồi dán vào đây.
+              {live.enabled
+                ? "Phần trên là điểm trực tiếp của cả lớp. Phần dưới vẫn là bảng trên máy này."
+                : "Mười người điểm cao trên máy này. Muốn ghép cả lớp, bạn chép kết quả rồi dán vào đây."}
             </p>
+            {live.note && <p className="mt-2 text-xs leading-relaxed text-amber-100">{live.note}</p>}
           </div>
           <button type="button" onClick={onClose} className="rounded-full border border-slate-600 px-3 py-1 text-sm">
             Đóng
           </button>
         </div>
-        <ol className="mt-4 min-h-0 flex-1 space-y-2 overflow-auto">
+        {live.enabled && (
+          <ol className="mt-4 max-h-64 space-y-2 overflow-auto">
+            <li className="text-xs font-bold uppercase tracking-wide text-emerald-300">Trực tiếp</li>
+            {liveTop.length === 0 && <li className="rounded-2xl border border-slate-700 px-3 py-3 text-sm text-slate-400">Chưa có điểm trực tiếp.</li>}
+            {liveTop.map((row, i) => (
+              <li key={row.id} className="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-2xl border border-emerald-400/30 bg-slate-950/70 px-3 py-2">
+                <span className="w-6 text-center font-black text-slate-500">{i + 1}</span>
+                <p className="truncate font-bold">{row.name}</p>
+                <div className="text-right">
+                  <p className="text-sm font-black text-cyan-200">{row.rank}</p>
+                  <p className="font-bold text-amber-200">{row.score}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        )}
+        <p className="mt-4 text-xs font-bold uppercase tracking-wide text-slate-400">Máy này</p>
+        <ol className="mt-2 min-h-0 flex-1 space-y-2 overflow-auto">
           {top.length === 0 && <li className="rounded-2xl border border-slate-700 px-3 py-4 text-sm text-slate-400">Chưa có ai trên bảng. Chơi một lượt và lưu tên, hoặc nhập điểm bạn.</li>}
           {top.map((row, i) => (
             <li key={row.id} className="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-2xl border border-slate-700 bg-slate-950/70 px-3 py-2">
