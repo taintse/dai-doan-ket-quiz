@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { subscribeLive, type LiveRow } from "../game/liveboard";
-import { loadBoard, type BoardEntry } from "../game/score";
+import { useState, useEffect } from "react";
+import { deleteLiveScore, subscribeLive, type LiveRow } from "../game/liveboard";
+import { loadBoard, removeBoardEntry, type BoardEntry } from "../game/score";
 
 export function useLiveRows() {
   const [rows, setRows] = useState<LiveRow[]>([]);
@@ -16,6 +16,44 @@ export function useLiveRows() {
     [],
   );
   return { rows, note, enabled };
+}
+
+export function DeleteScoreButton({ name, onDelete }: { name: string; onDelete: () => void | Promise<void> }) {
+  const [armed, setArmed] = useState(false);
+  const [busy, setBusy] = useState(false);
+  if (armed) {
+    return (
+      <span className="flex flex-wrap items-center justify-end gap-1">
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => {
+            setBusy(true);
+            void Promise.resolve(onDelete()).finally(() => {
+              setBusy(false);
+              setArmed(false);
+            });
+          }}
+          className="max-w-[16rem] rounded-full border border-rose-300 bg-rose-400/10 px-2 py-1 text-left text-xs font-bold leading-snug text-rose-100"
+        >
+          Xóa điểm của {name}?
+        </button>
+        <button type="button" onClick={() => setArmed(false)} className="rounded-full border border-slate-500 px-2 py-1 text-xs text-slate-300">
+          Không
+        </button>
+      </span>
+    );
+  }
+  return (
+    <button
+      type="button"
+      aria-label={`Xóa điểm của ${name}`}
+      onClick={() => setArmed(true)}
+      className="rounded-full border border-rose-400/50 px-2 py-0.5 text-xs font-semibold text-rose-200"
+    >
+      Xóa
+    </button>
+  );
 }
 
 function statusLabel(status: string) {
@@ -51,6 +89,7 @@ export function LiveDock() {
 export function ProjectorBoard({ onBack }: { onBack: () => void }) {
   const { rows, note, enabled } = useLiveRows();
   const [local, setLocal] = useState<BoardEntry[]>(() => loadBoard());
+  const [deleteNote, setDeleteNote] = useState("");
   useEffect(() => {
     const id = window.setInterval(() => setLocal(loadBoard()), 2000);
     return () => window.clearInterval(id);
@@ -69,6 +108,7 @@ export function ProjectorBoard({ onBack }: { onBack: () => void }) {
           Về trò chơi
         </button>
       </div>
+      {deleteNote && <p className="mt-3 text-base text-rose-200">{deleteNote}</p>}
       {showingLive && !note ? (
         <p className="mt-3 text-lg text-emerald-200">Đang cập nhật trực tiếp.</p>
       ) : (
@@ -85,6 +125,19 @@ export function ProjectorBoard({ onBack }: { onBack: () => void }) {
                 <span className="block text-sm font-bold text-cyan-200">{row.rank}</span>
                 <span className="text-4xl font-black tabular-nums text-amber-200">{row.score}</span>
                 <span className="mt-1 block text-xs text-slate-400">{statusLabel(row.status)}</span>
+                <span className="mt-2 inline-block">
+                  <DeleteScoreButton
+                    name={row.name}
+                    onDelete={async () => {
+                      try {
+                        await deleteLiveScore(row.id);
+                        setDeleteNote("");
+                      } catch {
+                        setDeleteNote(`Chưa xóa được điểm của ${row.name}.`);
+                      }
+                    }}
+                  />
+                </span>
               </span>
             </li>
           ))}
@@ -96,6 +149,14 @@ export function ProjectorBoard({ onBack }: { onBack: () => void }) {
               <span className="text-right">
                 <span className="block text-sm font-bold text-cyan-200">{row.rank}</span>
                 <span className="text-4xl font-black tabular-nums text-amber-200">{row.score}</span>
+                <span className="mt-2 inline-block">
+                  <DeleteScoreButton
+                    name={row.name}
+                    onDelete={() => {
+                      setLocal(removeBoardEntry(row.id));
+                    }}
+                  />
+                </span>
               </span>
             </li>
           ))}

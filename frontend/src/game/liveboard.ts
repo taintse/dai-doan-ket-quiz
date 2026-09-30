@@ -22,6 +22,7 @@ let sdkCancelled = false;
 let sdkReady = false;
 let restTimer: number | null = null;
 let rows: LiveRow[] = [];
+const pendingDeletes = new Set<string>();
 let note: string | null = isFirebaseConfigured() ? null : OFF_NOTE;
 const listeners = new Set<Listener>();
 let lastPush = 0;
@@ -62,7 +63,7 @@ function onPages() {
 }
 
 function applyRows(next: LiveRow[]) {
-  rows = next;
+  rows = next.filter((row) => !pendingDeletes.has(row.id));
   note = null;
   emit();
 }
@@ -224,6 +225,29 @@ export async function pushLiveScore(
       emit();
     }
   }
+}
+
+export async function deleteLiveScore(id: string): Promise<void> {
+  const key = id.trim();
+  if (!/^[A-Za-z0-9_-]{1,64}$/.test(key)) throw new Error("id");
+  if (!isFirebaseConfigured()) throw new Error("off");
+  pendingDeletes.add(key);
+  rows = rows.filter((row) => row.id !== key);
+  emit();
+  try {
+    if (db && sdkReady && !sdkCancelled && !onPages()) {
+      const { ref, remove } = await import("firebase/database");
+      await remove(ref(db, `scores/${key}`));
+    } else {
+      const res = await fetch(`${databaseUrl()}/scores/${key}.json`, { method: "DELETE" });
+      if (!res.ok) throw new Error(String(res.status));
+    }
+  } catch (err) {
+    pendingDeletes.delete(key);
+    void pullRest().catch(() => undefined);
+    throw err;
+  }
+  window.setTimeout(() => pendingDeletes.delete(key), 4000);
 }
 
 export function pushFromGame(s: { name: string; score: number; status: string }, force = false) {

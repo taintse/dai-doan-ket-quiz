@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useLiveRows } from "./LiveBoard";
-import { clearBoard, importBoardText, loadBoard, type BoardEntry } from "../game/score";
+import { deleteLiveScore } from "../game/liveboard";
+import { DeleteScoreButton, useLiveRows } from "./LiveBoard";
+import { clearBoard, importBoardText, loadBoard, removeBoardEntry, type BoardEntry } from "../game/score";
 
 const RANK_STYLE: Record<string, string> = {
   dong: "text-orange-300",
@@ -69,9 +70,22 @@ export function Leaderboard({ onClose }: { onClose: () => void }) {
               <li key={row.id} className="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-2xl border border-emerald-400/30 bg-slate-950/70 px-3 py-2">
                 <span className="w-6 text-center font-black text-slate-500">{i + 1}</span>
                 <p className="truncate font-bold">{row.name}</p>
-                <div className="text-right">
-                  <p className="text-sm font-black text-cyan-200">{row.rank}</p>
-                  <p className="font-bold text-amber-200">{row.score}</p>
+                <div className="flex items-center justify-end gap-2 text-right">
+                  <div>
+                    <p className="text-sm font-black text-cyan-200">{row.rank}</p>
+                    <p className="font-bold text-amber-200">{row.score}</p>
+                  </div>
+                  <DeleteScoreButton
+                    name={row.name}
+                    onDelete={async () => {
+                      try {
+                        await deleteLiveScore(row.id);
+                        setNote(`Đã xóa điểm của ${row.name}.`);
+                      } catch {
+                        setNote(`Chưa xóa được điểm của ${row.name}.`);
+                      }
+                    }}
+                  />
                 </div>
               </li>
             ))}
@@ -89,9 +103,18 @@ export function Leaderboard({ onClose }: { onClose: () => void }) {
                   {Math.round(row.accuracy * 100)}% đúng · TB {row.avgSeconds ? `${row.avgSeconds.toFixed(1)}s` : "–"} · {when(row.at)}
                 </p>
               </div>
-              <div className="text-right">
-                <p className={`text-sm font-black ${RANK_STYLE[row.rankId] ?? ""}`}>{row.rank}</p>
-                <p className="font-bold text-amber-200">{row.score}</p>
+              <div className="flex items-center justify-end gap-2 text-right">
+                <div>
+                  <p className={`text-sm font-black ${RANK_STYLE[row.rankId] ?? ""}`}>{row.rank}</p>
+                  <p className="font-bold text-amber-200">{row.score}</p>
+                </div>
+                <DeleteScoreButton
+                  name={row.name}
+                  onDelete={() => {
+                    setRows(removeBoardEntry(row.id));
+                    setNote(`Đã xóa điểm của ${row.name} trên máy này.`);
+                  }}
+                />
               </div>
             </li>
           ))}

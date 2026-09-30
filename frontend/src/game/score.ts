@@ -186,6 +186,10 @@ export function clearBoard() {
   localStorage.removeItem(BOARD_KEY);
 }
 
+export function removeBoardEntry(id: string): BoardEntry[] {
+  return writeBoard(loadBoard().filter((e) => e.id !== id));
+}
+
 function entryFromToken(line: string): BoardEntry | null {
   const m = line.trim().match(/^#ptac1\|([^|]*)\|(\d+)\|([a-z]+)\|(\d+(?:\.\d+)?)\|(\d+(?:\.\d+)*)\|(.+)$/);
   if (!m) return null;
