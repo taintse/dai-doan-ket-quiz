@@ -4,9 +4,9 @@ export const CELL = 86;
 export const COMM = 104;
 
 export const PREP_TIME = 16;
-export const START_SUN = 200;
+export const START_SUN = 180;
 export const PASSIVE_EVERY = 12;
-export const PASSIVE_AMOUNT = 4;
+export const PASSIVE_AMOUNT = 3;
 export const SOLIDARITY_MAX = 100;
 export const BONDS = 3;
 export const GLITCH_TIME = 4.4;
@@ -14,8 +14,8 @@ export const FEVER_TIME = 16;
 export const FEVER_SUN = 2;
 export const FEVER_DMG = 1.32;
 export const ULTI_MAX = 100;
-export const ULTI_PER_KILL = 6;
-export const ULTI_PER_SEC = 0.48;
+export const ULTI_PER_KILL = 8;
+export const ULTI_PER_SEC = 0.7;
 export const ULTI_BUDGET = 5;
 export const CLUTCH_BUDGET = 5;
 export const LESSON_BUDGET = 7.2;
@@ -24,11 +24,11 @@ export const SUN_BASE = 18;
 export const SUN_SPEED = 40;
 export const WRONG_SOLIDARITY = 4;
 
-/** Mặt trời khi trả lời đúng, theo độ khó — cùng tầm với mức trả lời vừa phải trước đây. */
+/** Mặt trời khi trả lời đúng. Không có khoản này thì phòng tuyến cuối không đủ đơn vị. */
 export const QUIZ_SUN: Record<"easy" | "medium" | "hard", number> = {
-  easy: 52,
-  medium: 72,
-  hard: 100,
+  easy: 58,
+  medium: 82,
+  hard: 110,
 };
 
 /** Điểm cộng khi trả lời đúng. Sai không cộng, không trừ. */
@@ -63,14 +63,14 @@ export const UNIT_LIST: UnitSpec[] = [
     cost: 40,
     hp: 110,
     sunEvery: 16,
-    sunAmount: 4,
+    sunAmount: 3,
     blurb: "Ánh nhỏ giọt, không đủ nuôi cả phòng tuyến. Đặt phía sau.",
   },
   {
     id: "tuong",
     name: "Tường chung",
     cost: 40,
-    hp: 1280,
+    hp: 1560,
     blurb: "Chắn một hàng, máu dày. Đặt về phía virus — bên phải đơn vị bắn.",
   },
   {
@@ -78,8 +78,8 @@ export const UNIT_LIST: UnitSpec[] = [
     name: "Phản biện",
     cost: 90,
     hp: 240,
-    rate: 0.55,
-    dmg: 30,
+    rate: 0.52,
+    dmg: 32,
     pierce: 1,
     blurb: "Bắn cùng hàng. Giữ tường phía trước để đạn còn kịp.",
   },
@@ -119,11 +119,11 @@ export interface VirusSpec {
 }
 
 export const VIRUS_LIST: VirusSpec[] = [
-  { id: "tin", name: "Tin giả", hp: 84, speed: 0.34, dps: 12, leak: 6, blurb: "Tin không nguồn, đi đều." },
-  { id: "congkich", name: "Công kích", hp: 58, speed: 0.6, dps: 22, leak: 7, blurb: "Nhắm vào người, đi nhanh." },
-  { id: "echo", name: "Buồng vọng", hp: 300, speed: 0.2, dps: 10, leak: 8, blurb: "Máu dày. Đứng gần virus khác thì đỡ đòn." },
-  { id: "spam", name: "Spam thù", hp: 30, speed: 0.72, dps: 7, leak: 4, blurb: "Bầy nhỏ, rất nhanh." },
-  { id: "kichdong", name: "Kích động", hp: 420, speed: 0.3, dps: 26, leak: 14, blurb: "Kéo virus cùng hàng đi nhanh hơn. Chạm cộng đồng rất đau." },
+  { id: "tin", name: "Tin giả", hp: 96, speed: 0.36, dps: 14, leak: 7, blurb: "Tin không nguồn, đi đều." },
+  { id: "congkich", name: "Công kích", hp: 68, speed: 0.64, dps: 26, leak: 8, blurb: "Nhắm vào người, đi nhanh." },
+  { id: "echo", name: "Buồng vọng", hp: 340, speed: 0.21, dps: 11, leak: 9, blurb: "Máu dày. Đứng gần virus khác thì đỡ đòn." },
+  { id: "spam", name: "Spam thù", hp: 34, speed: 0.78, dps: 8, leak: 5, blurb: "Bầy nhỏ, rất nhanh." },
+  { id: "kichdong", name: "Kích động", hp: 460, speed: 0.32, dps: 26, leak: 16, blurb: "Kéo virus cùng hàng đi nhanh hơn. Chạm cộng đồng rất đau." },
 ];
 
 export const VIRUSES: Record<VirusId, VirusSpec> = Object.fromEntries(VIRUS_LIST.map((v) => [v.id, v])) as Record<
@@ -362,10 +362,10 @@ export function killPoints(type: VirusId, waveIndex: number, marked = false): nu
 }
 
 export function waveScale(waveIndex: number) {
-  const late = waveIndex >= 5 ? 1 + (waveIndex - 4) * 0.14 : 1;
+  const late = waveIndex >= 5 ? 1 + (waveIndex - 4) * 0.16 : 1;
   return {
-    hp: (1 + waveIndex * 0.15) * late,
-    speed: 1 + waveIndex * 0.038,
-    dps: (1 + waveIndex * 0.09) * (waveIndex >= 6 ? 1.12 : 1),
+    hp: (1 + waveIndex * 0.16) * late,
+    speed: 1 + waveIndex * 0.044,
+    dps: (1 + waveIndex * 0.1) * (waveIndex >= 6 ? 1.12 : 1),
   };
 }

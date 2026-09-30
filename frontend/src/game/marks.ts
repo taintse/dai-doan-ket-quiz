@@ -1,7 +1,7 @@
 import type { VirusId } from "./balance";
 
-/** Extra HP while a marked virus has not been chiếu sáng. */
-export const MARK_HP = 1.7;
+/** Extra HP while a marked virus has not been lit. Skipping the question leaves it thicker. */
+export const MARK_HP = 1.9;
 
 export const TEASERS: Record<VirusId, { title: string; text: string }> = {
   tin: {
