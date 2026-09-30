@@ -60,6 +60,19 @@ export function rankFor(score: number): Rank {
   return { id: "dong", name: "Đồng" };
 }
 
+/** Higher score first. Same score: earlier time first. Missing or invalid time sorts last. */
+export function compareLeaderboard(a: { score: number; time: number }, b: { score: number; time: number }): number {
+  if (b.score !== a.score) return b.score - a.score;
+  const ta = a.time > 0 ? a.time : Number.POSITIVE_INFINITY;
+  const tb = b.time > 0 ? b.time : Number.POSITIVE_INFINITY;
+  return ta - tb;
+}
+
+function entryTime(at: string | undefined): number {
+  const n = typeof at === "string" ? Date.parse(at) : Number.NaN;
+  return Number.isFinite(n) ? n : 0;
+}
+
 export function summarize(s: GameState): Summary {
   const correct = s.stats.correct;
   const wrong = s.stats.wrong;
@@ -160,7 +173,7 @@ export function loadBoard(): BoardEntry[] {
     if (!Array.isArray(data)) return [];
     return data
       .filter((e) => e && typeof e.score === "number" && typeof e.name === "string")
-      .sort((a, b) => b.score - a.score || a.at.localeCompare(b.at));
+      .sort((a, b) => compareLeaderboard({ score: a.score, time: entryTime(a.at) }, { score: b.score, time: entryTime(b.at) }));
   } catch {
     return [];
   }
@@ -168,7 +181,7 @@ export function loadBoard(): BoardEntry[] {
 
 function writeBoard(entries: BoardEntry[]) {
   const next = entries
-    .sort((a, b) => b.score - a.score || a.at.localeCompare(b.at))
+    .sort((a, b) => compareLeaderboard({ score: a.score, time: entryTime(a.at) }, { score: b.score, time: entryTime(b.at) }))
     .slice(0, 40);
   if (typeof localStorage !== "undefined") localStorage.setItem(BOARD_KEY, JSON.stringify(next));
   return next;

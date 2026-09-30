@@ -1,5 +1,5 @@
 import { firebaseConfig, isFirebaseConfigured } from "./firebaseConfig";
-import { rankFor } from "./score";
+import { compareLeaderboard, rankFor } from "./score";
 
 export interface LiveRow {
   id: string;
@@ -27,6 +27,16 @@ let note: string | null = isFirebaseConfigured() ? null : OFF_NOTE;
 const listeners = new Set<Listener>();
 let lastPush = 0;
 let lastSig = "";
+let stampedScore = Number.NaN;
+let stampedAt = 0;
+
+function reachedAt(score: number, now: number) {
+  if (score !== stampedScore) {
+    stampedScore = score;
+    stampedAt = now;
+  }
+  return stampedAt;
+}
 
 function emit() {
   const enabled = isFirebaseConfigured();
@@ -50,7 +60,7 @@ export function scoresToRows(val: unknown): LiveRow[] {
         },
       ];
     })
-    .sort((a, b) => b.score - a.score || b.updatedAt - a.updatedAt);
+    .sort((a, b) => compareLeaderboard({ score: a.score, time: a.updatedAt }, { score: b.score, time: b.updatedAt }));
 }
 
 function databaseUrl() {
@@ -198,12 +208,13 @@ export async function pushLiveScore(
   const now = Date.now();
   const name = (entry.name || "Người kết nối").slice(0, 24);
   const score = Math.max(0, Math.round(entry.score));
+  const at = reachedAt(score, now);
   const sig = `${entry.status}|${score}|${name}`;
   if (!force && sig === lastSig) return;
   if (!force && now - lastPush < 2500) return;
   lastSig = sig;
   lastPush = now;
-  const payload = { name, score, rank: entry.rank, status: entry.status, updatedAt: now };
+  const payload = { name, score, rank: entry.rank, status: entry.status, updatedAt: at };
   try {
     if (!sdkCancelled) void ensureListen();
     if (onPages() || sdkCancelled || !sdkReady || !db) {
