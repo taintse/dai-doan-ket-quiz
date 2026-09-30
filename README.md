@@ -17,7 +17,7 @@ Chơi trên lớp: https://taintse.github.io/dai-doan-ket-quiz/
 7. **Ba câu đúng liên tiếp** thắp **Ánh chung bừng sáng**: sân sáng, mặt trời nhận được nhân đôi, đạn rực hơn. Sai một câu là tắt.
 8. Hết đoàn kết là thua. Sống sót sóng 8 là thắng. **Thu hồi** trả lại một nửa mặt trời. **Tạm dừng** khi cần giảng và **không** có câu hỏi trên màn hình; **Tiếp tục**, bấm lớp phủ, phím cách hoặc Esc để chơi lại. **Tua 1x / 2x / 3x** chỉ chạy khi không có câu hỏi. Máy nhớ mức tua đã chọn.
 9. Mỗi sóng có một virus huy hiệu **Có bài**. Thẻ giới thiệu hiện trước khi nó vào. Bấm virus hoặc **Câu hỏi**. Câu lấy từ phần còn lại của 20 câu trong lượt. Đúng thì máu tụt mạnh và nó chậm lại. Bỏ qua hoặc sai: nó vẫn rất trâu, sai còn làm nó nổi giận.
-10. **Bảng xếp hạng** mở khi đang chơi (nút **Bảng**) và ở màn kết. Trang vào chỉ có **Vào phòng tuyến** và **Màn hình lớp**. Hết lượt có thể lưu biệt danh. **Chép kết quả** rồi **Nhập điểm bạn** để ghép điểm cả lớp trên một máy. **Kỷ lục máy này** vẫn giữ riêng. Mỗi dòng có **Xóa**: bấm một lần để hỏi «Xóa điểm của …?», bấm lần nữa để xóa đúng người đó (bảng trực tiếp hoặc bảng máy này). Màn **#bang** cũng xóa được từng dòng.
+10. **Bảng xếp hạng** mở khi đang chơi (nút **Bảng**) và ở màn kết. Trang vào chỉ có **Vào phòng tuyến** và **Màn hình lớp**. Hết lượt có thể lưu biệt danh. **Chép kết quả** rồi **Nhập điểm bạn** để ghép điểm cả lớp trên một máy. **Kỷ lục máy này** vẫn giữ riêng. Trên **#bang**, **Reset data** hỏi mật khẩu `0801`, rồi xác nhận, rồi xóa hết điểm Firebase của lớp.
 
 Phím `1`–`5` chọn đơn vị, `0` thu hồi, `Q` / `E` tuyệt kỹ. Trong câu hỏi, phím `1`–`4`.
 

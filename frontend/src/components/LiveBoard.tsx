@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { deleteLiveScore, subscribeLive, type LiveRow } from "../game/liveboard";
-import { loadBoard, removeBoardEntry, type BoardEntry } from "../game/score";
+import { resetLiveScores, subscribeLive, type LiveRow } from "../game/liveboard";
+import { loadBoard, type BoardEntry } from "../game/score";
 
 export function useLiveRows() {
   const [rows, setRows] = useState<LiveRow[]>([]);
@@ -18,41 +18,100 @@ export function useLiveRows() {
   return { rows, note, enabled };
 }
 
-export function DeleteScoreButton({ name, onDelete }: { name: string; onDelete: () => void | Promise<void> }) {
-  const [armed, setArmed] = useState(false);
+const RESET_PASSWORD = "0801";
+
+function ResetClassScores() {
+  const [phase, setPhase] = useState<"idle" | "ask" | "confirm">("idle");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
-  if (armed) {
-    return (
-      <span className="flex flex-wrap items-center justify-end gap-1">
+
+  function cancel() {
+    setPhase("idle");
+    setPassword("");
+    setMessage("");
+    setBusy(false);
+  }
+
+  return (
+    <div className="flex flex-col items-end gap-2">
+      {phase === "idle" && (
         <button
           type="button"
-          disabled={busy}
           onClick={() => {
-            setBusy(true);
-            void Promise.resolve(onDelete()).finally(() => {
-              setBusy(false);
-              setArmed(false);
-            });
+            setPhase("ask");
+            setPassword("");
+            setMessage("");
           }}
-          className="max-w-[16rem] rounded-full border border-rose-300 bg-rose-400/10 px-2 py-1 text-left text-xs font-bold leading-snug text-rose-100"
+          className="rounded-full border border-rose-300/70 px-4 py-2 text-sm font-semibold text-rose-100"
         >
-          Xóa điểm của {name}?
+          Reset data
         </button>
-        <button type="button" onClick={() => setArmed(false)} className="rounded-full border border-slate-500 px-2 py-1 text-xs text-slate-300">
-          Không
-        </button>
-      </span>
-    );
-  }
-  return (
-    <button
-      type="button"
-      aria-label={`Xóa điểm của ${name}`}
-      onClick={() => setArmed(true)}
-      className="rounded-full border border-rose-400/50 px-2 py-0.5 text-xs font-semibold text-rose-200"
-    >
-      Xóa
-    </button>
+      )}
+      {phase === "ask" && (
+        <form
+          className="flex flex-wrap items-center justify-end gap-2"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (password !== RESET_PASSWORD) {
+              setMessage("Sai mật khẩu.");
+              setPassword("");
+              return;
+            }
+            setMessage("");
+            setPhase("confirm");
+          }}
+        >
+          <label className="text-sm text-slate-200">
+            Mật khẩu
+            <input
+              type="password"
+              value={password}
+              autoFocus
+              autoComplete="off"
+              onChange={(e) => setPassword(e.target.value)}
+              className="ml-2 w-28 rounded-full border border-slate-500 bg-slate-950 px-3 py-2 text-slate-100 outline-none focus:border-rose-300"
+            />
+          </label>
+          <button type="submit" className="rounded-full bg-rose-300 px-4 py-2 text-sm font-bold text-slate-950">
+            Tiếp
+          </button>
+          <button type="button" onClick={cancel} className="rounded-full border border-slate-500 px-4 py-2 text-sm">
+            Không
+          </button>
+        </form>
+      )}
+      {phase === "confirm" && (
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          <p className="text-sm font-semibold text-rose-100">Xóa hết điểm của lớp?</p>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => {
+              setBusy(true);
+              void resetLiveScores()
+                .then(() => {
+                  setMessage("Đã xóa hết điểm lớp.");
+                  setPhase("idle");
+                  setPassword("");
+                })
+                .catch(() => {
+                  setMessage("Chưa xóa được điểm lớp.");
+                  setPhase("idle");
+                })
+                .finally(() => setBusy(false));
+            }}
+            className="rounded-full bg-rose-300 px-4 py-2 text-sm font-bold text-slate-950 disabled:opacity-50"
+          >
+            Xóa hết
+          </button>
+          <button type="button" onClick={cancel} className="rounded-full border border-slate-500 px-4 py-2 text-sm">
+            Không
+          </button>
+        </div>
+      )}
+      {message && <p className="text-sm text-rose-100">{message}</p>}
+    </div>
   );
 }
 
@@ -66,7 +125,6 @@ function statusLabel(status: string) {
 export function ProjectorBoard({ onBack }: { onBack: () => void }) {
   const { rows, note, enabled } = useLiveRows();
   const [local, setLocal] = useState<BoardEntry[]>(() => loadBoard());
-  const [deleteNote, setDeleteNote] = useState("");
   useEffect(() => {
     const id = window.setInterval(() => setLocal(loadBoard()), 2000);
     return () => window.clearInterval(id);
@@ -81,11 +139,13 @@ export function ProjectorBoard({ onBack }: { onBack: () => void }) {
           <p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-200">Phòng tuyến Ánh chung</p>
           <h1 className="text-4xl font-black text-amber-200 sm:text-6xl">Bảng xếp hạng lớp</h1>
         </div>
-        <button type="button" onClick={onBack} className="rounded-full border border-slate-500 px-4 py-2 text-sm font-semibold">
-          Về trò chơi
-        </button>
+        <div className="flex flex-wrap items-start justify-end gap-2">
+          <ResetClassScores />
+          <button type="button" onClick={onBack} className="rounded-full border border-slate-500 px-4 py-2 text-sm font-semibold">
+            Về trò chơi
+          </button>
+        </div>
       </div>
-      {deleteNote && <p className="mt-3 text-base text-rose-200">{deleteNote}</p>}
       {showingLive && !note ? (
         <p className="mt-3 text-lg text-emerald-200">Đang cập nhật trực tiếp.</p>
       ) : (
@@ -102,19 +162,6 @@ export function ProjectorBoard({ onBack }: { onBack: () => void }) {
                 <span className="block text-sm font-bold text-cyan-200">{row.rank}</span>
                 <span className="text-4xl font-black tabular-nums text-amber-200">{row.score}</span>
                 <span className="mt-1 block text-xs text-slate-400">{statusLabel(row.status)}</span>
-                <span className="mt-2 inline-block">
-                  <DeleteScoreButton
-                    name={row.name}
-                    onDelete={async () => {
-                      try {
-                        await deleteLiveScore(row.id);
-                        setDeleteNote("");
-                      } catch {
-                        setDeleteNote(`Chưa xóa được điểm của ${row.name}.`);
-                      }
-                    }}
-                  />
-                </span>
               </span>
             </li>
           ))}
@@ -126,14 +173,6 @@ export function ProjectorBoard({ onBack }: { onBack: () => void }) {
               <span className="text-right">
                 <span className="block text-sm font-bold text-cyan-200">{row.rank}</span>
                 <span className="text-4xl font-black tabular-nums text-amber-200">{row.score}</span>
-                <span className="mt-2 inline-block">
-                  <DeleteScoreButton
-                    name={row.name}
-                    onDelete={() => {
-                      setLocal(removeBoardEntry(row.id));
-                    }}
-                  />
-                </span>
               </span>
             </li>
           ))}
