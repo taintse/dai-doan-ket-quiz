@@ -1,7 +1,9 @@
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import { CELL, COLS, COMM, ROWS, ULTI_MAX, UNIT_LIST, UNITS, WAVES, type UnitId } from "../game/balance";
-import { castUlti, cellAction, cycleSpeed, debugLose, debugRush, debugThreat, debugWin, dismissTeaser, openMarkQuiz, pickAnswer, setSelection, togglePause } from "../game/engine";
+import { castUlti, cellAction, continueQuiz, cycleSpeed, debugLose, debugRush, debugThreat, debugWin, dismissTeaser, openMarkQuiz, pickAnswer, setSelection, togglePause } from "../game/engine";
+import { difficultyLabel } from "../game/questions";
+import { LiveDock } from "./LiveBoard";
 import { TEASERS } from "../game/marks";
 import { Leaderboard } from "./Leaderboard";
 import { formatClock } from "../game/score";
@@ -40,11 +42,16 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
       if (e.target instanceof HTMLInputElement) return;
       const quiz = state.quiz;
       if (e.code === "Space" || e.code === "Escape") e.preventDefault();
-      if (quiz && quiz.reveal <= 0) {
-        const map: Record<string, number> = { Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3, KeyA: 0, KeyB: 1, KeyC: 2, KeyD: 3 };
-        if (map[e.code] !== undefined && map[e.code] < quiz.question.choices.length) {
-          pickAnswer(state, map[e.code]);
+      if (quiz) {
+        if (quiz.outcome === "wrong" && (e.code === "Enter" || e.code === "Space")) {
+          continueQuiz(state);
           bump();
+        } else if (!quiz.outcome) {
+          const map: Record<string, number> = { Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3, KeyA: 0, KeyB: 1, KeyC: 2, KeyD: 3 };
+          if (map[e.code] !== undefined && map[e.code] < quiz.question.choices.length) {
+            pickAnswer(state, map[e.code]);
+            bump();
+          }
         }
         return;
       }
@@ -85,13 +92,17 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
         <motion.div
           animate={shake}
           data-frame={frame}
-          className="relative flex h-[700px] w-[1100px] flex-col gap-2 p-3"
+          className={`relative flex h-[700px] w-[1100px] flex-col gap-2 p-3 ${state.quiz ? "is-frozen" : ""}`}
           style={state.glitch > 0 ? { boxShadow: "inset 0 0 0 6px #fb7185" } : undefined}
         >
           <header className="pointer-events-none relative z-50 flex items-center gap-3">
             <div className="rounded-2xl border border-amber-400/40 bg-slate-950/70 px-3 py-2 shadow-amber">
               <p className="text-[10px] uppercase tracking-wider text-amber-200/80">Mặt trời</p>
               <p className="text-2xl font-black text-amber-300">{Math.floor(state.sun)}</p>
+            </div>
+            <div className="rounded-2xl border border-amber-200/50 bg-slate-950/80 px-3 py-2">
+              <p className="text-[10px] uppercase tracking-wider text-amber-100/80">Điểm · hạ virus {state.stats.killPoints}</p>
+              <p className="text-2xl font-black tabular-nums text-amber-50">{state.score}</p>
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between text-sm">
@@ -127,7 +138,7 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
             <button
               type="button"
               aria-label={`Tua nhanh, đang ${state.timeScale}x`}
-              title="Tua nhanh. Câu hỏi vẫn đếm theo giây thật."
+              title="Tua nhanh khi không có câu hỏi. Câu hỏi mở thì cả trận đứng im."
               disabled={!!state.quiz}
               onClick={() => {
                 cycleSpeed(state);
@@ -146,11 +157,12 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
             <button
               type="button"
               aria-pressed={state.manualPause}
+              disabled={!!state.quiz}
               onClick={() => {
                 togglePause(state);
                 bump();
               }}
-              className="pointer-events-auto relative z-50 rounded-full border border-slate-600 bg-slate-950 px-3 py-2 text-sm font-semibold"
+              className="pointer-events-auto relative z-50 rounded-full border border-slate-600 bg-slate-950 px-3 py-2 text-sm font-semibold disabled:opacity-40"
             >
               {state.manualPause ? "Tiếp tục" : "Tạm dừng"}
             </button>
@@ -420,55 +432,6 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
             </div>
           </div>
 
-          <AnimatePresence>
-            {state.quiz && (
-              <motion.div
-                initial={{ y: 24, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: 16, opacity: 0 }}
-                className="absolute bottom-28 left-1/2 z-40 w-[min(680px,92%)] -translate-x-1/2 rounded-2xl border border-cyan-500/40 bg-slate-900/80 p-4 shadow-neon backdrop-blur-md"
-              >
-                <div className="mb-2 flex items-center justify-between gap-3">
-                  <p className="text-xs font-bold uppercase tracking-wider text-cyan-300">
-                    {state.quiz.kind === "ulti" ? (state.quiz.ulti === "sang" ? "Chiếu sáng sự thật" : "Tường lửa đoàn kết") : state.quiz.kind === "clutch" ? "Cứu nguy khẩn cấp" : state.quiz.kind === "mark" ? "Câu của virus" : "Kiểm tra bài"}
-                  </p>
-                  <p className="font-mono text-sm text-amber-200">{Math.max(0, state.quiz.time).toFixed(1)}s</p>
-                </div>
-                <div className="mb-2 h-1 overflow-hidden rounded-full bg-slate-800">
-                  <div className="h-full bg-cyan-300" style={{ width: `${(state.quiz.time / state.quiz.budget) * 100}%` }} />
-                </div>
-                <p className="text-sm font-semibold leading-snug">{state.quiz.question.q}</p>
-                <div className="mt-2 grid gap-1.5">
-                  {state.quiz.question.choices.map((choice, i) => {
-                    const reveal = state.quiz!.reveal > 0;
-                    const correct = i === state.quiz!.question.answer;
-                    const picked = state.quiz!.picked === i;
-                    let tone = "border-slate-600 hover:border-cyan-300";
-                    if (reveal && correct) tone = "border-emerald-300 bg-emerald-400/15";
-                    else if (reveal && picked) tone = "border-rose-400 bg-rose-400/10";
-                    return (
-                      <button
-                        key={choice}
-                        type="button"
-                        disabled={reveal}
-                        onClick={() => {
-                          pickAnswer(state, i);
-                          bump();
-                        }}
-                        data-correct={state.thu && correct ? "1" : undefined}
-                        className={`rounded-xl border px-3 py-1.5 text-left text-sm ${tone}`}
-                      >
-                        <span className="mr-2 font-black text-cyan-200">{i + 1}</span>
-                        {choice}
-                      </button>
-                    );
-                  })}
-                </div>
-                {state.quiz.reveal > 0 && <p className="mt-2 text-xs text-slate-300">{state.quiz.question.explain}</p>}
-                <p className="mt-1 text-[10px] text-slate-500">{state.quiz.question.source}</p>
-              </motion.div>
-            )}
-          </AnimatePresence>
 
           {state.teaser && !state.quiz && (
             <div className="absolute left-1/2 top-16 z-30 w-[min(460px,88%)] -translate-x-1/2 rounded-2xl border border-fuchsia-400/50 bg-slate-900/90 p-4 shadow-neon backdrop-blur-md">
@@ -523,7 +486,91 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
           )}
         </motion.div>
       </Fit>
+      {state.quiz && <QuizModal state={state} bump={bump} />}
+      {!state.quiz && <LiveDock />}
       {board && <Leaderboard onClose={() => setBoard(false)} />}
+    </div>
+  );
+}
+
+const LETTERS = ["A", "B", "C", "D"];
+
+function quizTitle(state: GameState) {
+  const quiz = state.quiz;
+  if (!quiz) return "Câu hỏi";
+  if (quiz.kind === "ulti") return quiz.ulti === "sang" ? "Chiếu sáng sự thật" : "Tường lửa đoàn kết";
+  if (quiz.kind === "clutch") return "Cứu nguy khẩn cấp";
+  if (quiz.kind === "mark") return "Câu của virus";
+  return "Kiểm tra bài";
+}
+
+function QuizModal({ state, bump }: { state: GameState; bump: () => void }) {
+  const quiz = state.quiz;
+  if (!quiz) return null;
+  const showResult = quiz.outcome !== null;
+  const answer = quiz.question.answer;
+  return (
+    <div className="fixed inset-0 z-[90] grid place-items-center bg-slate-950/80 p-4 backdrop-blur-md" role="dialog" aria-modal="true" aria-label="Câu hỏi">
+      <div data-quiz={quiz.outcome ?? "ask"} className="max-h-[92vh] w-full max-w-3xl overflow-auto rounded-3xl border-2 border-cyan-200/80 bg-slate-950 p-6 text-slate-50 shadow-neon sm:p-8">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm font-bold uppercase tracking-[0.16em] text-cyan-200">{quizTitle(state)}</p>
+          <p className="rounded-full bg-amber-300 px-3 py-1 text-sm font-black text-slate-950">{difficultyLabel(quiz.question.difficulty)}</p>
+        </div>
+        <p className="mt-2 text-sm font-semibold text-amber-100">Phòng tuyến đang dừng — đọc kỹ rồi chọn đáp án. Còn {state.deck.length} câu trong lượt.</p>
+        <h2 className="mt-4 text-xl font-extrabold leading-snug text-white sm:text-2xl">{quiz.question.q}</h2>
+        <div className="mt-5 grid gap-3">
+          {quiz.question.choices.map((choice, i) => {
+            const correct = i === answer;
+            const picked = quiz.picked === i;
+            let tone = "border-slate-500 bg-slate-900 text-white hover:border-cyan-200 hover:bg-slate-800";
+            if (showResult && correct) tone = "border-emerald-300 bg-emerald-400/20 text-emerald-50";
+            else if (showResult && picked) tone = "border-rose-300 bg-rose-500/20 text-rose-50";
+            else if (showResult) tone = "border-slate-700 bg-slate-900/80 text-slate-300";
+            return (
+              <button
+                key={`${i}-${choice}`}
+                type="button"
+                disabled={showResult}
+                onClick={() => {
+                  pickAnswer(state, i);
+                  bump();
+                }}
+                data-correct={state.thu && correct ? "1" : undefined}
+                className={`rounded-2xl border-2 px-4 py-3 text-left text-base font-semibold leading-snug sm:text-lg ${tone}`}
+              >
+                <span className="mr-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-950 font-black text-cyan-200">{LETTERS[i]}</span>
+                {choice}
+              </button>
+            );
+          })}
+        </div>
+        {quiz.outcome === "correct" && (
+          <div className="mt-5 rounded-2xl border-2 border-emerald-300 bg-emerald-400/15 p-4">
+            <p className="text-xl font-black text-emerald-200">Chính xác!</p>
+            <p className="mt-1 text-lg font-semibold text-amber-100">+{quiz.sunGain} mặt trời · +{quiz.scoreGain} điểm</p>
+          </div>
+        )}
+        {quiz.outcome === "wrong" && (
+          <div className="mt-5 rounded-2xl border-2 border-amber-200 bg-amber-300/10 p-4">
+            <p className="text-lg font-black text-rose-200">Chưa đúng</p>
+            <p className="mt-2 text-base font-bold leading-snug text-white sm:text-lg">
+              Đáp án đúng: {LETTERS[answer]}. {quiz.question.choices[answer]}
+            </p>
+            {quiz.question.explain && <p className="mt-2 text-base leading-relaxed text-amber-50">{quiz.question.explain}</p>}
+            <button
+              type="button"
+              autoFocus
+              onClick={() => {
+                continueQuiz(state);
+                bump();
+              }}
+              className="mt-4 rounded-full bg-amber-300 px-6 py-2.5 text-base font-black text-slate-950"
+            >
+              Tiếp tục
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

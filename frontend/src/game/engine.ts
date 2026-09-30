@@ -1,22 +1,19 @@
 import {
   BONDS,
-  CLUTCH_BUDGET,
   CLUTCH_CD,
   COLS,
   FEVER_DMG,
   FEVER_SUN,
   FEVER_TIME,
   GLITCH_TIME,
-  LESSON_BUDGET,
   PASSIVE_AMOUNT,
   PASSIVE_EVERY,
   PREP_TIME,
+  QUIZ_POINTS,
+  QUIZ_SUN,
   ROWS,
   SOLIDARITY_MAX,
   START_SUN,
-  SUN_BASE,
-  SUN_SPEED,
-  ULTI_BUDGET,
   ULTI_MAX,
   ULTI_PER_KILL,
   ULTI_PER_SEC,
@@ -24,13 +21,14 @@ import {
   VIRUSES,
   WAVES,
   WRONG_SOLIDARITY,
+  killPoints,
   waveScale,
   type UltiId,
   type UnitId,
   type VirusId,
 } from "./balance";
-import { MARK_BUDGET, MARK_HP, MARK_POOL } from "./marks";
-import { FORCED_IDS, QUESTIONS, type Question, type QuestionTag } from "./questions";
+import { MARK_HP } from "./marks";
+import { buildMatchDeck, type Question } from "./questions";
 import type { GameState, QuizState, RuntimeQuestion, Unit, Virus } from "./types";
 
 const CAU_RATE = 0.74;
@@ -86,6 +84,8 @@ export function createGame(name: string, seed = Date.now(), opts?: { thu?: boole
     teaser: null,
     teaserShown: -1,
     recent: [],
+    deck: [],
+    score: 0,
     forcedCursor: 0,
     waveIndex: 0,
     phase: "prep",
@@ -115,8 +115,11 @@ export function createGame(name: string, seed = Date.now(), opts?: { thu?: boole
       breaches: 0,
       wavesCleared: 0,
       kills: 0,
+      killPoints: 0,
+      quizPoints: 0,
     },
   };
+  s.deck = buildMatchDeck(() => rand(s));
   return s;
 }
 
@@ -173,63 +176,43 @@ function living(v: Virus): boolean {
   return !v.dead && v.hp > 0;
 }
 
-function shuffleQuestion(s: GameState, q: Question): RuntimeQuestion {
-  const order = q.choices.map((_, i) => i);
-  for (let i = order.length - 1; i > 0; i--) {
-    const j = Math.floor(rand(s) * (i + 1));
-    const tmp = order[i];
-    order[i] = order[j];
-    order[j] = tmp;
-  }
+function toRuntime(q: Question): RuntimeQuestion {
   return {
     id: q.id,
     q: q.q,
-    choices: order.map((i) => q.choices[i]),
-    answer: order.indexOf(q.answer),
+    choices: q.choices,
+    answer: q.answer,
     explain: q.explain,
-    source: q.source,
+    difficulty: q.difficulty,
     base: q,
   };
 }
 
-function drawQuestion(s: GameState, pred: (q: Question) => boolean, preferId?: string): RuntimeQuestion {
-  if (preferId) {
-    const found = QUESTIONS.find((q) => q.id === preferId);
-    if (found) {
-      s.recent.push(found.id);
-      if (s.recent.length > 6) s.recent.shift();
-      return shuffleQuestion(s, found);
-    }
-  }
-  let pool = QUESTIONS.filter(pred).filter((q) => !s.recent.includes(q.id));
-  if (!pool.length) pool = QUESTIONS.filter(pred);
-  if (!pool.length) pool = [...QUESTIONS];
-  const q = pool[Math.floor(rand(s) * pool.length)];
+function drawQuestion(s: GameState): RuntimeQuestion | null {
+  const q = s.deck.pop();
+  if (!q) return null;
   s.recent.push(q.id);
-  if (s.recent.length > 6) s.recent.shift();
-  return shuffleQuestion(s, q);
+  if (s.recent.length > 20) s.recent.shift();
+  return toRuntime(q);
 }
 
-function openQuiz(
-  s: GameState,
-  kind: QuizState["kind"],
-  budget: number,
-  tag: QuestionTag | "any",
-  extra: Partial<QuizState> = {},
-  preferId?: string,
-) {
-  if (s.quiz || s.status !== "playing") return;
-  const question = drawQuestion(s, tag === "any" ? () => true : (q) => q.tags.includes(tag), preferId);
+function openQuiz(s: GameState, kind: QuizState["kind"], extra: Partial<QuizState> = {}): boolean {
+  if (s.quiz || s.status !== "playing") return false;
+  const question = drawQuestion(s);
+  if (!question) return false;
   s.quiz = {
     kind,
     question,
-    time: budget,
-    budget,
+    wait: 0,
+    outcome: null,
     reveal: 0,
     picked: null,
     speed: 0,
+    scoreGain: 0,
+    sunGain: 0,
     ...extra,
   };
+  return true;
 }
 
 export function castUlti(s: GameState, ulti: UltiId) {
@@ -238,15 +221,34 @@ export function castUlti(s: GameState, ulti: UltiId) {
     toast(s, "Tuyệt kỹ chưa đầy");
     return;
   }
-  openQuiz(s, "ulti", ULTI_BUDGET, "skill", { ulti });
+  if (!openQuiz(s, "ulti", { ulti })) toast(s, "Hết câu của lượt này");
 }
 
 export function pickAnswer(s: GameState, index: number) {
-  if (!s.quiz || s.quiz.reveal > 0 || s.status !== "playing") return;
+  if (!s.quiz || s.quiz.outcome || s.status !== "playing") return;
   if (index < 0 || index >= s.quiz.question.choices.length) return;
-  s.quiz.picked = index;
-  s.quiz.speed = clamp(s.quiz.time / s.quiz.budget, 0, 1);
-  s.quiz.reveal = 1.05;
+  const quiz = s.quiz;
+  quiz.picked = index;
+  const ok = index === quiz.question.answer;
+  if (ok) {
+    const mult = (s.fever > 0 ? FEVER_SUN : 1) * (quiz.kind === "clutch" ? 0.85 : 1);
+    quiz.outcome = "correct";
+    quiz.speed = 1;
+    quiz.sunGain = Math.max(1, Math.round(QUIZ_SUN[quiz.question.difficulty] * mult));
+    quiz.scoreGain = QUIZ_POINTS[quiz.question.difficulty];
+    quiz.reveal = 1.45;
+  } else {
+    quiz.outcome = "wrong";
+    quiz.speed = 0;
+    quiz.sunGain = 0;
+    quiz.scoreGain = 0;
+    quiz.reveal = 0;
+  }
+}
+
+export function continueQuiz(s: GameState) {
+  if (!s.quiz || s.quiz.outcome !== "wrong" || s.status !== "playing") return;
+  resolveQuiz(s);
 }
 
 export function togglePause(s: GameState) {
@@ -271,9 +273,8 @@ export function openMarkQuiz(s: GameState, virusId?: number) {
     (x) => living(x) && x.marked && !x.asked && !x.lit && (virusId === undefined || x.id === virusId),
   );
   if (!v) return;
-  const prefer = MARK_POOL[v.type].find((id) => !s.recent.includes(id)) ?? MARK_POOL[v.type][0];
   s.teaser = null;
-  openQuiz(s, "mark", MARK_BUDGET, "lesson", { virusId: v.id, lane: v.lane }, prefer);
+  if (!openQuiz(s, "mark", { virusId: v.id, lane: v.lane })) toast(s, "Hết câu của lượt này");
 }
 
 export function setSelection(s: GameState, selection: GameState["selection"]) {
@@ -386,9 +387,7 @@ function beginFight(s: GameState) {
   s.banner = { title: wave.name, text: wave.hint, life: 3.4 };
   if (wave.lesson && !s.lessonDone) {
     s.lessonDone = true;
-    const id = FORCED_IDS[Math.min(s.forcedCursor, FORCED_IDS.length - 1)];
-    s.forcedCursor++;
-    openQuiz(s, "lesson", LESSON_BUDGET, "lesson", {}, id);
+    openQuiz(s, "lesson");
   }
 }
 
@@ -403,12 +402,23 @@ function applyHit(s: GameState, v: Virus, dmg: number, slow: number) {
   if (v.hp <= 0) killVirus(s, v);
 }
 
+function addScore(s: GameState, kind: "kill" | "quiz", pts: number) {
+  const n = Math.max(0, Math.round(pts));
+  if (!n) return;
+  s.score += n;
+  if (kind === "kill") s.stats.killPoints += n;
+  else s.stats.quizPoints += n;
+}
+
 function killVirus(s: GameState, v: Virus) {
   if (v.dead) return;
   v.dead = true;
   v.hp = 0;
   v.dying = 0.46;
   s.stats.kills++;
+  const pts = killPoints(v.type, s.waveIndex, v.marked);
+  addScore(s, "kill", pts);
+  floater(s, v.x, v.lane, `+${pts}đ`, "#fbbf24");
   s.ulti = Math.min(ULTI_MAX, s.ulti + ULTI_PER_KILL);
   const color = v.type === "echo" ? "#a78bfa" : v.type === "kichdong" ? "#e879f9" : "#fb7185";
   burst(s, v.x, v.lane, color, 14);
@@ -489,14 +499,13 @@ function resolveQuiz(s: GameState) {
 }
 
 function onCorrect(s: GameState, quiz: QuizState) {
-  const speed = quiz.speed;
-  const mult = s.fever > 0 ? FEVER_SUN : 1;
-  const sun = Math.round((SUN_BASE + SUN_SPEED * speed) * mult * (quiz.kind === "clutch" ? 0.85 : 1));
+  const sun = quiz.sunGain;
   grantSun(s, sun, 2.2, quiz.lane ?? 1);
+  addScore(s, "quiz", quiz.scoreGain);
   if (s.solidarity < SOLIDARITY_MAX) s.solidarity = Math.min(SOLIDARITY_MAX, s.solidarity + 1);
   s.stats.correct++;
-  s.stats.speedSum += speed;
-  s.stats.timeSum += quiz.budget * (1 - speed);
+  s.stats.speedSum += quiz.speed;
+  s.stats.timeSum += quiz.wait;
   s.streak++;
   s.stats.maxStreak = Math.max(s.stats.maxStreak, s.streak);
   if (s.streak >= 3) {
@@ -507,7 +516,7 @@ function onCorrect(s: GameState, quiz: QuizState) {
       s.banner = { title: "Ánh chung bừng sáng", text: "Mặt trời ×2, đạn rực hơn.", life: 2.4 };
     }
   }
-  popup(s, `+${sun} mặt trời`, "+điểm", "good");
+  popup(s, `+${sun} mặt trời`, `+${quiz.scoreGain} điểm`, "good");
   if (quiz.kind === "ulti" && quiz.ulti) {
     s.ulti = 0;
     if (quiz.ulti === "sang") castSang(s);
@@ -558,6 +567,7 @@ function onWrong(s: GameState, quiz: QuizState) {
   s.streak = 0;
   s.fever = 0;
   s.stats.wrong++;
+  s.stats.timeSum += quiz.wait;
   hurtSolidarity(s, WRONG_SOLIDARITY + (quiz.kind === "clutch" ? 2 : 0));
   s.glitch = GLITCH_TIME;
   shake(s, 0.62);
@@ -715,7 +725,7 @@ function updateViruses(s: GameState, dt: number) {
     }
   }
   if (clutch && s.status === "playing" && !s.quiz) {
-    openQuiz(s, "clutch", CLUTCH_BUDGET, "clutch", { lane: clutch.lane, virusId: clutch.id });
+    openQuiz(s, "clutch", { lane: clutch.lane, virusId: clutch.id });
   }
 }
 
@@ -811,7 +821,7 @@ function simulate(s: GameState, dt: number) {
     return;
   }
 
-  if (s.status !== "playing") return;
+  if (s.status !== "playing" || s.quiz) return;
   updateUnits(s, dt);
   updateShots(s, dt);
   updateViruses(s, dt);
@@ -819,21 +829,15 @@ function simulate(s: GameState, dt: number) {
 }
 
 function advanceQuiz(s: GameState, delta: number) {
-  // Question windows stay on wall-clock time so a 2x/3x run is not a shorter exam.
-  s.manualPause = false;
-  s.clock += delta;
-  if (!s.quiz) return;
-  if (s.quiz.reveal > 0) {
-    s.quiz.reveal -= delta;
-    if (s.quiz.reveal <= 0) resolveQuiz(s);
-  } else {
-    s.quiz.time -= delta;
-    if (s.quiz.time <= 0) {
-      s.quiz.picked = -1;
-      s.quiz.speed = 0;
-      s.quiz.reveal = 1.05;
-    }
+  const quiz = s.quiz;
+  if (!quiz) return;
+  if (quiz.outcome === "wrong") return;
+  if (quiz.outcome === "correct") {
+    quiz.reveal -= delta;
+    if (quiz.reveal <= 0) resolveQuiz(s);
+    return;
   }
+  quiz.wait += delta;
 }
 
 export function step(s: GameState, dt: number) {
@@ -851,9 +855,9 @@ export function step(s: GameState, dt: number) {
     const slice = Math.min(0.05, left);
     s.clock += slice;
     simulate(s, slice);
+    if (s.status !== "playing" || s.quiz) return;
     decayFx(s, slice);
     left -= slice;
-    if (s.status !== "playing" || s.quiz) return;
   }
 }
 
@@ -884,8 +888,4 @@ export function debugLose(s: GameState) {
   s.quiz = null;
   s.solidarity = 0;
   s.status = "lost";
-}
-
-function clamp(n: number, a: number, b: number) {
-  return Math.max(a, Math.min(b, n));
 }

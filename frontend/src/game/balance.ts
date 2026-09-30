@@ -24,6 +24,20 @@ export const SUN_BASE = 18;
 export const SUN_SPEED = 40;
 export const WRONG_SOLIDARITY = 4;
 
+/** Mặt trời khi trả lời đúng, theo độ khó — cùng tầm với mức trả lời vừa phải trước đây. */
+export const QUIZ_SUN: Record<"easy" | "medium" | "hard", number> = {
+  easy: 52,
+  medium: 72,
+  hard: 100,
+};
+
+/** Điểm cộng khi trả lời đúng. Sai không cộng, không trừ. */
+export const QUIZ_POINTS: Record<"easy" | "medium" | "hard", number> = {
+  easy: 50,
+  medium: 120,
+  hard: 220,
+};
+
 export type UnitId = "den" | "tuong" | "phan" | "cau" | "moc";
 export type VirusId = "tin" | "congkich" | "echo" | "spam" | "kichdong";
 export type UltiId = "sang" | "tuonglua";
@@ -331,6 +345,21 @@ export const WAVES: WaveDef[] = [
     ],
   },
 ];
+
+/** Điểm hạ virus: yếu thấp, giữa vừa, cuối/trâu/boss cao. Virus có bài dày máu hơn một chút. */
+export function killPoints(type: VirusId, waveIndex: number, marked = false): number {
+  const t = Math.max(0, Math.min(1, waveIndex / Math.max(1, WAVES.length - 1)));
+  const band: Record<VirusId, [number, number]> = {
+    spam: [50, 70],
+    congkich: [70, 100],
+    tin: [85, 100],
+    echo: [180, 250],
+    kichdong: [480, 760],
+  };
+  const [lo, hi] = band[type];
+  const pts = Math.round((lo + (hi - lo) * t) * (marked ? 1.2 : 1));
+  return Math.min(800, Math.max(50, pts));
+}
 
 export function waveScale(waveIndex: number) {
   const late = waveIndex >= 5 ? 1 + (waveIndex - 4) * 0.14 : 1;
