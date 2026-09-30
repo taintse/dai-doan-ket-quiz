@@ -2,7 +2,7 @@ import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import { CELL, COLS, COMM, ROWS, ULTI_MAX, UNIT_LIST, UNITS, WAVES, type UnitId } from "../game/balance";
 import { castUlti, cellAction, continueQuiz, cycleSpeed, debugLose, debugRush, debugThreat, debugWin, dismissTeaser, openMarkQuiz, pickAnswer, setSelection, togglePause } from "../game/engine";
-import { difficultyLabel } from "../game/questions";
+import { difficultyLabel, explainText } from "../game/questions";
 import { LiveDock } from "./LiveBoard";
 import { TEASERS } from "../game/marks";
 import { Leaderboard } from "./Leaderboard";
@@ -556,7 +556,10 @@ function QuizModal({ state, bump }: { state: GameState; bump: () => void }) {
             <p className="mt-2 text-base font-bold leading-snug text-white sm:text-lg">
               Đáp án đúng: {LETTERS[answer]}. {quiz.question.choices[answer]}
             </p>
-            {quiz.question.explain && <p className="mt-2 text-base leading-relaxed text-amber-50">{quiz.question.explain}</p>}
+            <p className="mt-3 break-words text-base font-medium leading-relaxed text-amber-50">
+              <span className="font-black text-amber-200">Giải thích: </span>
+              {explainText(quiz.question)}
+            </p>
             <button
               type="button"
               autoFocus

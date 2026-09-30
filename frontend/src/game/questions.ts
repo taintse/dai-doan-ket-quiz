@@ -46,7 +46,7 @@ export const QUESTIONS: Question[] = [
     q: '"Đoàn kết, đoàn kết, đại đoàn kết; Thành công, thành công, ..." (điền vế còn thiếu)',
     choices: ["Đại thành công", "Đại thắng lợi", "Đại hạnh phúc", "Đại tự do"],
     answer: 0,
-    explain: "",
+    explain: "Vế còn thiếu là «Đại thành công».",
   },
   {
     id: "q03",
@@ -59,7 +59,7 @@ export const QUESTIONS: Question[] = [
       "Trí thức, học sinh, nghệ sĩ",
     ],
     answer: 1,
-    explain: "",
+    explain: "Nền tảng của khối đại đoàn kết là công nhân, nông dân và trí thức.",
   },
   {
     id: "q04",
@@ -67,7 +67,7 @@ export const QUESTIONS: Question[] = [
     q: "Hình thức tổ chức của khối đại đoàn kết toàn dân tộc là gì?",
     choices: ["Hội đồng nhân dân", "Liên đoàn lao động", "Mặt trận dân tộc thống nhất", "Quốc hội"],
     answer: 2,
-    explain: "",
+    explain: "Hình thức tổ chức của khối đại đoàn kết toàn dân tộc là Mặt trận dân tộc thống nhất.",
   },
   {
     id: "q05",
@@ -75,7 +75,7 @@ export const QUESTIONS: Question[] = [
     q: "Mặt trận Việt Minh được thành lập năm nào?",
     choices: ["1930", "1936", "1939", "1941"],
     answer: 3,
-    explain: "",
+    explain: "Mặt trận Việt Minh được thành lập năm 1941.",
   },
   {
     id: "q06",
@@ -83,7 +83,7 @@ export const QUESTIONS: Question[] = [
     q: "Mặt trận Liên Việt ra đời năm nào?",
     choices: ["1951", "1941", "1960", "1936"],
     answer: 0,
-    explain: "",
+    explain: "Mặt trận Liên Việt ra đời năm 1951.",
   },
   {
     id: "q07",
@@ -96,7 +96,7 @@ export const QUESTIONS: Question[] = [
       "Chỉ người dân ở trong nước",
     ],
     answer: 1,
-    explain: "",
+    explain: "Chủ thể là toàn thể nhân dân, mọi người Việt Nam yêu nước.",
   },
   {
     id: "q08",
@@ -104,7 +104,7 @@ export const QUESTIONS: Question[] = [
     q: 'Chính sách đối ngoại Hồ Chí Minh tuyên bố: "làm bạn với tất cả mọi nước dân chủ và ..."',
     choices: ["Chỉ hợp tác kinh tế", "Ưu tiên các nước lớn", "Không gây thù oán với một ai", "Đóng cửa với bên ngoài"],
     answer: 2,
-    explain: "",
+    explain: "Làm bạn với tất cả mọi nước dân chủ và không gây thù oán với một ai.",
   },
   {
     id: "q09",
@@ -112,7 +112,7 @@ export const QUESTIONS: Question[] = [
     q: "Cách mạng Tháng Mười Nga thắng lợi vào năm nào?",
     choices: ["1905", "1914", "1924", "1917"],
     answer: 3,
-    explain: "",
+    explain: "Cách mạng Tháng Mười Nga thắng lợi năm 1917.",
   },
   {
     id: "q10",
@@ -125,7 +125,7 @@ export const QUESTIONS: Question[] = [
       "Các quân đội đồng minh",
     ],
     answer: 0,
-    explain: "",
+    explain: "«Bốn phương vô sản đều là anh em» nói về những người lao động trên toàn thế giới.",
   },
   {
     id: "q11",
@@ -138,7 +138,7 @@ export const QUESTIONS: Question[] = [
       "Đổi mới 1986",
     ],
     answer: 1,
-    explain: "",
+    explain: "Tiêu ngữ «Độc lập - Tự do - Hạnh phúc» gắn với sự ra đời nước Việt Nam Dân chủ Cộng hòa năm 1945.",
   },
   {
     id: "q12",
@@ -151,7 +151,7 @@ export const QUESTIONS: Question[] = [
       "Xây dựng quân đội nhân dân",
     ],
     answer: 2,
-    explain: "",
+    explain: "Nghị quyết 07/NQ-TW (1993) nói về đại đoàn kết dân tộc và tăng cường Mặt trận dân tộc thống nhất.",
   },
   {
     id: "q13",
@@ -164,7 +164,7 @@ export const QUESTIONS: Question[] = [
       "Biện pháp ngoại giao",
     ],
     answer: 0,
-    explain: "",
+    explain: "Đại hội XII (2016) khẳng định đại đoàn kết dân tộc là đường lối chiến lược của cách mạng Việt Nam.",
   },
   {
     id: "q14",
@@ -177,7 +177,7 @@ export const QUESTIONS: Question[] = [
       "Vừa là thành viên, vừa là lực lượng lãnh đạo",
     ],
     answer: 3,
-    explain: "",
+    explain: "Đảng vừa là thành viên, vừa là lực lượng lãnh đạo của Mặt trận dân tộc thống nhất.",
   },
   {
     id: "q15",
@@ -190,7 +190,7 @@ export const QUESTIONS: Question[] = [
       "Tránh đối thoại với người khác quan điểm",
     ],
     answer: 1,
-    explain: "",
+    explain: "«Cầu đồng tồn dị» là lấy cái chung, hạn chế cái riêng, cái khác biệt.",
   },
   {
     id: "q16",
@@ -198,7 +198,7 @@ export const QUESTIONS: Question[] = [
     q: "Công đoàn, Hội Nông dân, Đoàn Thanh niên, Hội Phụ nữ thuộc loại tổ chức nào?",
     choices: ["Cơ quan nhà nước", "Tổ chức quân sự", "Đoàn thể, tổ chức quần chúng", "Tổ chức kinh tế"],
     answer: 2,
-    explain: "",
+    explain: "Công đoàn, Hội Nông dân, Đoàn Thanh niên, Hội Phụ nữ là đoàn thể, tổ chức quần chúng.",
   },
   {
     id: "q17",
@@ -211,7 +211,7 @@ export const QUESTIONS: Question[] = [
       "Phát triển kinh tế nhanh",
     ],
     answer: 1,
-    explain: "",
+    explain: "Một điều kiện xây dựng khối đại đoàn kết là lòng khoan dung, độ lượng với con người.",
   },
   {
     id: "q18",
@@ -224,7 +224,7 @@ export const QUESTIONS: Question[] = [
       "Cả đồng bào trong nước và kiều bào ở nước ngoài",
     ],
     answer: 3,
-    explain: "",
+    explain: "Đại đoàn kết gồm cả đồng bào trong nước và kiều bào ở nước ngoài.",
   },
   {
     id: "q19",
@@ -237,7 +237,7 @@ export const QUESTIONS: Question[] = [
       "Mặt trận Tổ quốc Việt Nam",
     ],
     answer: 0,
-    explain: "",
+    explain: "Năm 1924, Hồ Chí Minh nêu mặt trận thống nhất của nhân dân chính quốc và thuộc địa.",
   },
   {
     id: "q20",
@@ -259,7 +259,7 @@ export const QUESTIONS: Question[] = [
       "Vì họ có trình độ học vấn cao nhất",
     ],
     answer: 1,
-    explain: "",
+    explain: "Liên minh công - nông làm nền tảng vì họ trực tiếp sản xuất ra của cải, đông nhất, bị áp bức nặng nhất và có chí khí cách mạng bền bỉ.",
   },
   {
     id: "q22",
@@ -267,7 +267,7 @@ export const QUESTIONS: Question[] = [
     q: "Nguyên tắc hoạt động nào yêu cầu mọi vấn đề của Mặt trận được bàn bạc công khai để đi đến nhất trí?",
     choices: ["Tập trung dân chủ", "Hiệp thương dân chủ", "Đa số quyết định", "Lãnh đạo tuyệt đối"],
     answer: 1,
-    explain: "",
+    explain: "Hiệp thương dân chủ yêu cầu mọi vấn đề của Mặt trận được bàn bạc công khai để đi đến nhất trí.",
   },
   {
     id: "q23",
@@ -280,7 +280,7 @@ export const QUESTIONS: Question[] = [
       "Quan hệ ngoại giao",
     ],
     answer: 2,
-    explain: "",
+    explain: "Hạt nhân cần chú trọng là sự đoàn kết và thống nhất trong Đảng.",
   },
   {
     id: "q24",
@@ -293,7 +293,7 @@ export const QUESTIONS: Question[] = [
       "Lợi ích tối cao của dân tộc, lợi ích căn bản của nhân dân lao động",
     ],
     answer: 3,
-    explain: "",
+    explain: "Mẫu số chung là lợi ích tối cao của dân tộc và lợi ích căn bản của nhân dân lao động.",
   },
   {
     id: "q25",
@@ -306,7 +306,7 @@ export const QUESTIONS: Question[] = [
       "Chỉ nắm ngân sách hoạt động",
     ],
     answer: 1,
-    explain: "",
+    explain: "Đảng lãnh đạo bằng cách nắm bắt thực tiễn, phát hiện quy luật khách quan để vạch đường lối và phương pháp cách mạng phù hợp.",
   },
   {
     id: "q26",
@@ -319,7 +319,7 @@ export const QUESTIONS: Question[] = [
       "Vừa đoàn kết vừa đấu tranh, học cái tốt và phê bình cái sai của nhau trên lập trường thân ái",
     ],
     answer: 3,
-    explain: "",
+    explain: "Đoàn kết thực sự là vừa đoàn kết vừa đấu tranh, học cái tốt và phê bình cái sai của nhau trên lập trường thân ái.",
   },
   {
     id: "q27",
@@ -332,7 +332,7 @@ export const QUESTIONS: Question[] = [
       "Nguồn tài nguyên thiên nhiên",
     ],
     answer: 0,
-    explain: "",
+    explain: "Sức mạnh dân tộc trước hết là chủ nghĩa yêu nước và ý thức tự lực, tự cường dân tộc.",
   },
   {
     id: "q28",
@@ -345,7 +345,7 @@ export const QUESTIONS: Question[] = [
       "Không cần nguyên tắc",
     ],
     answer: 1,
-    explain: "",
+    explain: "«Có lý» là tuân thủ nguyên tắc cơ bản của chủ nghĩa Mác - Lênin, xuất phát từ lợi ích chung, tránh giáo điều, rập khuôn.",
   },
   {
     id: "q29",
@@ -358,7 +358,7 @@ export const QUESTIONS: Question[] = [
       "Tránh mọi bất đồng",
     ],
     answer: 0,
-    explain: "",
+    explain: "«Có tình» là thông cảm, tôn trọng lẫn nhau giữa những người cùng lý tưởng, cùng mục tiêu đấu tranh.",
   },
   {
     id: "q30",
@@ -371,7 +371,7 @@ export const QUESTIONS: Question[] = [
       "Mặt trận liên minh quân sự châu Âu",
     ],
     answer: 3,
-    explain: "",
+    explain: "Mặt trận liên minh quân sự châu Âu không nằm trong bốn tầng mặt trận theo tư tưởng Hồ Chí Minh.",
   },
   {
     id: "q31",
@@ -395,7 +395,7 @@ export const QUESTIONS: Question[] = [
     q: "Mặt trận nào được thành lập năm 1936?",
     choices: ["Mặt trận dân chủ", "Hội Phản đế đồng minh", "Mặt trận nhân dân phản đế", "Mặt trận Liên Việt"],
     answer: 0,
-    explain: "",
+    explain: "Năm 1936 thành lập Mặt trận dân chủ.",
   },
   {
     id: "q34",
@@ -403,7 +403,7 @@ export const QUESTIONS: Question[] = [
     q: "Mặt trận dân tộc giải phóng miền Nam Việt Nam ra đời năm nào?",
     choices: ["1954", "1960", "1965", "1975"],
     answer: 1,
-    explain: "",
+    explain: "Mặt trận dân tộc giải phóng miền Nam Việt Nam ra đời năm 1960.",
   },
   {
     id: "q35",
@@ -416,7 +416,7 @@ export const QUESTIONS: Question[] = [
       "Vì để tránh cạnh tranh",
     ],
     answer: 0,
-    explain: "",
+    explain: "Cần đoàn kết giai cấp công nhân quốc tế vì chủ nghĩa tư bản là lực lượng phản động quốc tế, kẻ thù chung của nhân dân lao động toàn thế giới.",
   },
   {
     id: "q36",
@@ -429,7 +429,7 @@ export const QUESTIONS: Question[] = [
       "Thành lập Mặt trận Liên Việt",
     ],
     answer: 1,
-    explain: "",
+    explain: "Hồ Chí Minh sáng lập Hội Liên hiệp thuộc địa ở Pháp và tham gia sáng lập Hội Liên hiệp các dân tộc bị áp bức ở Trung Quốc.",
   },
   {
     id: "q37",
@@ -442,7 +442,7 @@ export const QUESTIONS: Question[] = [
       "Hòa bình tạm thời",
     ],
     answer: 2,
-    explain: "",
+    explain: "Đó là hòa bình trong độc lập, tự do, xây trên công bằng và dân chủ.",
   },
   {
     id: "q38",
@@ -450,7 +450,7 @@ export const QUESTIONS: Question[] = [
     q: "Việc vận hành theo hiệp thương dân chủ nhằm loại trừ điều gì?",
     choices: ["Mọi bất đồng", "Sự tham gia của các tôn giáo", "Lợi ích riêng chính đáng", "Mọi sự áp đặt hoặc dân chủ hình thức"],
     answer: 3,
-    explain: "",
+    explain: "Hiệp thương dân chủ nhằm loại trừ mọi sự áp đặt hoặc dân chủ hình thức.",
   },
   {
     id: "q39",
@@ -463,7 +463,7 @@ export const QUESTIONS: Question[] = [
       "Giảm vai trò của Nhà nước",
     ],
     answer: 0,
-    explain: "",
+    explain: "Cần giải quyết tốt quan hệ lợi ích giữa các giai cấp, tầng lớp và kết hợp hài hòa lợi ích cá nhân, tập thể, toàn xã hội.",
   },
   {
     id: "q40",
@@ -476,7 +476,7 @@ export const QUESTIONS: Question[] = [
       "Mở cửa, hội nhập quốc tế, là bạn của tất cả các nước, đồng thời tham gia giải quyết các vấn đề toàn cầu",
     ],
     answer: 3,
-    explain: "",
+    explain: "Mở cửa, hội nhập quốc tế, là bạn của tất cả các nước, đồng thời tham gia giải quyết các vấn đề toàn cầu.",
   },
   {
     id: "q41",
@@ -489,7 +489,7 @@ export const QUESTIONS: Question[] = [
       "Đảng càng mạnh thì Mặt trận càng hẹp",
     ],
     answer: 0,
-    explain: "",
+    explain: "Mặt trận càng rộng thì liên minh công - nông - trí càng mạnh, sự lãnh đạo của Đảng càng vững, và ngược lại.",
   },
   {
     id: "q42",
@@ -502,7 +502,7 @@ export const QUESTIONS: Question[] = [
       "Vì tránh thay đổi nhân sự",
     ],
     answer: 2,
-    explain: "",
+    explain: "Chủ trương đại đoàn kết toàn dân tộc là nhân tố quyết định sự thành bại của cách mạng, nên không được thay đổi.",
   },
   {
     id: "q43",
@@ -515,7 +515,7 @@ export const QUESTIONS: Question[] = [
       "Vừa là con người Việt Nam cụ thể, vừa là tập hợp đông đảo quần chúng nhân dân",
     ],
     answer: 3,
-    explain: "",
+    explain: "«Nhân dân» vừa là từng con người Việt Nam cụ thể, vừa là tập hợp đông đảo quần chúng nhân dân.",
   },
   {
     id: "q44",
@@ -528,7 +528,7 @@ export const QUESTIONS: Question[] = [
       "Vì để không phải hợp tác với ai",
     ],
     answer: 1,
-    explain: "",
+    explain: "Ngoại lực chỉ phát huy tác dụng thông qua nội lực; đường lối độc lập, tự chủ và đúng đắn mới tạo niềm tin và sự ủng hộ.",
   },
   {
     id: "q45",
@@ -541,7 +541,7 @@ export const QUESTIONS: Question[] = [
       "Vì Đảng chỉ đại diện cho một giai cấp",
     ],
     answer: 2,
-    explain: "",
+    explain: "Đảng không có lợi ích riêng; lợi ích của Đảng gắn liền với lợi ích toàn xã hội, toàn dân tộc.",
   },
   {
     id: "q46",
@@ -554,7 +554,7 @@ export const QUESTIONS: Question[] = [
       "Sức mạnh của phong trào cách mạng thế giới và chủ nghĩa Mác - Lênin, được xác lập bởi thắng lợi của Cách mạng Tháng Mười Nga 1917",
     ],
     answer: 3,
-    explain: "",
+    explain: "Sức mạnh thời đại là sức mạnh của phong trào cách mạng thế giới và chủ nghĩa Mác - Lênin, xác lập bởi thắng lợi Cách mạng Tháng Mười Nga 1917.",
   },
   {
     id: "q47",
@@ -567,7 +567,7 @@ export const QUESTIONS: Question[] = [
       "Chỉ cần đoàn kết quốc tế là đủ",
     ],
     answer: 1,
-    explain: "",
+    explain: "Đại đoàn kết toàn dân tộc là cơ sở để thực hiện đoàn kết quốc tế, và hai việc phải gắn liền với nhau.",
   },
   {
     id: "q48",
@@ -580,7 +580,7 @@ export const QUESTIONS: Question[] = [
       "Để tách cách mạng thuộc địa khỏi chính quốc",
     ],
     answer: 0,
-    explain: "",
+    explain: "Để dọn đường cho một sự hợp tác thật sự, bảo đảm giai cấp công nhân quốc tế giành thắng lợi cuối cùng.",
   },
   {
     id: "q49",
@@ -606,7 +606,7 @@ export const QUESTIONS: Question[] = [
       "Nghị quyết 07/NQ-TW (1993) → Đại hội IX → Đại hội VIII (1996) → Đại hội XII (2016)",
     ],
     answer: 0,
-    explain: "",
+    explain: "Trình tự đúng: Nghị quyết 07/NQ-TW (1993) → Đại hội VIII (1996) → Đại hội IX → Đại hội XII (2016).",
   },
 ];
 
@@ -659,10 +659,17 @@ export function buildMatchDeck(random: () => number): Question[] {
   return shuffle(picked, random);
 }
 
+export function explainText(q: Pick<Question, "explain" | "choices" | "answer">): string {
+  const text = q.explain.trim();
+  if (text) return text;
+  return q.choices[q.answer] ?? "";
+}
+
 QUESTIONS.forEach((q) => {
   if (q.choices.length !== 4 || q.answer < 0 || q.answer > 3) {
     throw new Error("Đáp án lệch: " + q.id);
   }
+  if (!explainText(q)) throw new Error("Thiếu giải thích: " + q.id);
 });
 
 {
