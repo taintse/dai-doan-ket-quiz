@@ -63,30 +63,6 @@ function statusLabel(status: string) {
   return "";
 }
 
-export function LiveDock() {
-  const { rows, note, enabled } = useLiveRows();
-  const top = rows.slice(0, 8);
-  if (!enabled) return null;
-  return (
-    <aside className="flex max-h-full w-full flex-col overflow-hidden rounded-2xl border border-cyan-300/50 bg-slate-950/92 p-2 text-slate-100 shadow-neon backdrop-blur-md">
-      <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-cyan-200">TOP lớp</p>
-      {note && <p className="mt-1 line-clamp-3 text-[10px] leading-snug text-amber-100">{note}</p>}
-      {!note && top.length === 0 && <p className="mt-1 text-[10px] leading-snug text-slate-300">Chưa có điểm trực tiếp.</p>}
-      <ol className="mt-1 min-h-0 space-y-1 overflow-y-auto">
-        {top.map((row, i) => (
-          <li key={row.id} className="flex items-baseline justify-between gap-1 text-xs">
-            <span className="min-w-0 truncate">
-              <span className="mr-1 font-black text-slate-500">{i + 1}</span>
-              {row.name}
-            </span>
-            <span className="shrink-0 font-black tabular-nums text-amber-200">{row.score}</span>
-          </li>
-        ))}
-      </ol>
-    </aside>
-  );
-}
-
 export function ProjectorBoard({ onBack }: { onBack: () => void }) {
   const { rows, note, enabled } = useLiveRows();
   const [local, setLocal] = useState<BoardEntry[]>(() => loadBoard());

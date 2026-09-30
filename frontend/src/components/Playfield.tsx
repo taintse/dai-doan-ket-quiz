@@ -3,7 +3,6 @@ import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import { CELL, COLS, COMM, ROWS, ULTI_MAX, UNIT_LIST, UNITS, WAVES, type UnitId } from "../game/balance";
 import { castUlti, cellAction, continueQuiz, cycleSpeed, debugLose, debugRush, debugThreat, debugWin, dismissTeaser, openMarkQuiz, pickAnswer, setSelection, togglePause } from "../game/engine";
 import { difficultyLabel, explainText } from "../game/questions";
-import { LiveDock } from "./LiveBoard";
 import { TEASERS } from "../game/marks";
 import { Leaderboard } from "./Leaderboard";
 import { formatClock } from "../game/score";
@@ -168,13 +167,7 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
             </button>
           </header>
 
-          <div className="relative">
-            {!state.quiz && (
-              <div className="absolute bottom-0 left-0 top-0 z-20 w-[7.25rem]">
-                <LiveDock />
-              </div>
-            )}
-            <div className="relative mx-auto" style={{ width: BOARD_W, height: BOARD_H }}>
+          <div className="relative mx-auto" style={{ width: BOARD_W, height: BOARD_H }}>
             <div className="absolute inset-y-0 left-0" style={{ width: COMM }}>
               <p className="absolute left-2 top-1 text-[10px] font-bold uppercase tracking-wider text-cyan-200/80">Cộng đồng</p>
               {state.bonds.map((bonds, lane) => (
@@ -349,7 +342,6 @@ export function Playfield({ state, frame, bump }: { state: GameState; frame: num
                 </motion.div>
               ))}
             </AnimatePresence>
-            </div>
           </div>
 
           <div className="min-h-7 text-center text-sm text-slate-300">

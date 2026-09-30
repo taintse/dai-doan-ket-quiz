@@ -66,7 +66,7 @@ Màn kết vẫn giữ câu của nhóm và **bốn câu tự kiểm**, ghi rõ 
 
 Trang GitHub Pages là trang tĩnh. Điểm cả lớp đi qua **Firebase Realtime Database**. Nếu chưa dán cấu hình, trò chơi vẫn chạy và bảng trên máy này (kèm dán điểm) vẫn dùng được. Một dòng nhỏ sẽ nói bảng thời gian thực đang tắt.
 
-Khi đã cấu hình, biệt danh lúc vào trận được đẩy lên trong lúc chơi (khoảng mỗi 2–3 giây khi điểm đổi, và ngay khi trả lời xong hoặc hết lượt). Màn hình rộng có cột **TOP lớp**. Nút **Bảng** mở overlay. **Màn hình lớp** (`#bang`) là bảng lớn để chiếu máy chiếu. Trên GitHub Pages, nếu SDK không nghe được socket, trang đọc và ghi bằng REST (`/scores.json`, khoảng mỗi 2,5 giây) và chỉ hiện lỗi SDK khi REST cũng thất bại.
+Khi đã cấu hình, biệt danh lúc vào trận được đẩy lên trong lúc chơi (khoảng mỗi 2–3 giây khi điểm đổi, và ngay khi trả lời xong hoặc hết lượt). Nút **Bảng** mở overlay. **Màn hình lớp** (`#bang`) là bảng lớn để chiếu máy chiếu. Trên GitHub Pages, nếu SDK không nghe được socket, trang đọc và ghi bằng REST (`/scores.json`, khoảng mỗi 2,5 giây) và chỉ hiện lỗi SDK khi REST cũng thất bại.
 
 ### Tài khoản lớp học
 
