@@ -108,12 +108,82 @@ body {
   color: transparent;
 }
 
+.poster-sky {
+  background:
+    radial-gradient(ellipse 42% 32% at 50% 46%, rgba(251, 191, 36, 0.34), transparent 68%),
+    radial-gradient(ellipse 28% 26% at 16% 62%, rgba(34, 211, 238, 0.16), transparent 70%),
+    radial-gradient(ellipse 30% 28% at 86% 58%, rgba(232, 121, 249, 0.2), transparent 72%),
+    radial-gradient(ellipse 80% 42% at 50% -10%, rgba(15, 40, 80, 0.85), transparent 70%),
+    #050814;
+}
+
+.poster-floor {
+  position: absolute;
+  left: -12%;
+  right: -12%;
+  top: 52%;
+  height: 78%;
+  background-image:
+    linear-gradient(rgba(103, 232, 249, 0.38) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(103, 232, 249, 0.28) 1px, transparent 1px);
+  background-size: 100% 52px, 68px 100%;
+  transform: perspective(520px) rotateX(68deg);
+  transform-origin: center top;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent 76%);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent 76%);
+  opacity: 0.55;
+}
+
+.poster-beam {
+  background: linear-gradient(90deg, transparent, rgba(253, 224, 71, 0.15), #fff7d6, rgba(34, 211, 238, 0.2), transparent);
+  box-shadow: 0 0 18px rgba(251, 191, 36, 0.65);
+}
+
+.poster-vignette {
+  background:
+    linear-gradient(to bottom, rgba(5, 8, 20, 0.78) 0%, rgba(5, 8, 20, 0.15) 24%, transparent 42%, rgba(5, 8, 20, 0.35) 68%, rgba(5, 8, 20, 0.92) 100%),
+    radial-gradient(ellipse at center, transparent 42%, rgba(5, 8, 20, 0.45) 100%);
+}
+
+.poster-core {
+  filter: drop-shadow(0 0 18px rgba(251, 191, 36, 0.75));
+  animation: poster-glow 4.2s ease-in-out infinite;
+}
+
+.poster-rays {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: poster-spin 72s linear infinite;
+}
+
+.poster-copy {
+  animation: poster-in 0.7s ease both;
+}
+
+@keyframes poster-glow {
+  0%,
+  100% { filter: drop-shadow(0 0 14px rgba(251, 191, 36, 0.55)); }
+  50% { filter: drop-shadow(0 0 28px rgba(253, 224, 71, 0.95)); }
+}
+
+@keyframes poster-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes poster-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bob,
   .virus-bob,
   .floater,
   .glitch-overlay,
-  .glitch-overlay span {
+  .glitch-overlay span,
+  .poster-core,
+  .poster-rays,
+  .poster-copy {
     animation: none !important;
   }
 }

@@ -3,64 +3,75 @@ import { motion } from "framer-motion";
 import { CLOSING, FOUR } from "../game/questions";
 import { pushLiveScore } from "../game/liveboard";
 import { addBoardEntry, formatClock, loadBest, saveBest, shareText, type Summary } from "../game/score";
+import { HomeArt, HomeCast } from "./HomeArt";
 import { Leaderboard } from "./Leaderboard";
 
 export function StartScreen({ onStart }: { onStart: (name: string) => void }) {
   const [name, setName] = useState("");
-  const [board, setBoard] = useState(false);
   const best = loadBest();
   return (
-    <div className="grid h-full place-items-center p-4">
-      <motion.div
-        initial={{ y: 16, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="w-full max-w-3xl rounded-3xl border border-cyan-500/30 bg-slate-950/80 p-8 shadow-neon backdrop-blur-md"
-      >
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300">Tư tưởng Hồ Chí Minh · Đại đoàn kết dân tộc và đoàn kết quốc tế</p>
-        <h1 className="mt-2 text-4xl font-extrabold text-amber-300 drop-shadow-[0_0_18px_rgba(251,191,36,0.45)]">Phòng tuyến Ánh chung</h1>
-        <p className="mt-2 text-lg text-slate-200">Mỗi lượt rút 20 câu. Khi câu hỏi hiện, phòng tuyến dừng hẳn.</p>
-        <p className="mt-4 text-sm leading-relaxed text-slate-300">
-          Virus chia rẽ đi từ phải sang cột cộng đồng. Hạ virus khỏe được nhiều điểm hơn virus yếu. Trả lời đúng được thêm điểm theo độ khó.
-          Ba câu đúng liên tiếp thắp <span className="text-amber-300">Ánh chung bừng sáng</span>.
-        </p>
-        <ul className="mt-4 grid gap-2 text-sm text-slate-200 sm:grid-cols-2">
-          <li className="rounded-xl border border-emerald-400/30 bg-emerald-400/5 p-3">Đặt tường về phía virus, phản biện đứng sau.</li>
-          <li className="rounded-xl border border-cyan-400/30 bg-cyan-400/5 p-3">Tuyệt kỹ đầy thì hỏi một câu — đúng mới có hiệu lực.</li>
-          <li className="rounded-xl border border-amber-400/30 bg-amber-400/5 p-3">Câu hỏi mở thì virus, đạn và mặt trời đứng im cho đến khi trả lời xong.</li>
-          <li className="rounded-xl border border-rose-400/30 bg-rose-400/5 p-3">Sai: xem đáp án và giải thích, bấm Tiếp tục rồi trận mới chạy lại.</li>
-          <li className="rounded-xl border border-fuchsia-400/30 bg-fuchsia-400/5 p-3 sm:col-span-2">Virus huy hiệu Có bài mang một câu. Đúng thì máu nó tụt. Bỏ qua thì nó rất trâu.</li>
-        </ul>
-        <label className="mt-5 block text-sm text-slate-300">
-          Tên trên bảng hạng
-          <input
-            value={name}
-            maxLength={24}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Người kết nối"
-            className="mt-1 w-full rounded-xl border border-slate-600 bg-slate-900 px-3 py-2 text-slate-100 outline-none focus:border-cyan-400"
-          />
-        </label>
-        <div className="mt-4 flex flex-wrap items-center gap-3">
+    <div className="relative h-full overflow-hidden">
+      <HomeArt />
+      <div className="pointer-events-none absolute inset-4 sm:inset-6">
+        <span className="absolute left-0 top-0 h-8 w-8 border-l-2 border-t-2 border-amber-200/80" />
+        <span className="absolute right-0 top-0 h-8 w-8 border-r-2 border-t-2 border-amber-200/80" />
+        <span className="absolute bottom-0 left-0 h-8 w-8 border-b-2 border-l-2 border-cyan-200/70" />
+        <span className="absolute bottom-0 right-0 h-8 w-8 border-b-2 border-r-2 border-cyan-200/70" />
+      </div>
+      <div className="relative z-10 flex h-full flex-col items-center px-5 pb-6 pt-8 sm:px-8 sm:pb-10 sm:pt-12">
+        <header className="poster-copy mx-auto max-w-3xl text-center">
+          <h1 className="font-extrabold leading-none">
+            <span className="block text-[11px] uppercase tracking-[0.42em] text-cyan-100 sm:text-sm sm:tracking-[0.55em]">Phòng tuyến</span>
+            <span className="relative mt-2 block text-6xl sm:text-8xl">
+              <span className="absolute inset-0 scale-110 bg-gradient-to-b from-amber-200 to-amber-500 bg-clip-text text-transparent blur-2xl" aria-hidden>
+                Ánh chung
+              </span>
+              <span className="relative bg-gradient-to-b from-amber-50 via-amber-200 to-amber-400 bg-clip-text text-transparent">Ánh chung</span>
+            </span>
+          </h1>
+          <p className="mt-4 text-sm text-slate-100 sm:text-lg">Mỗi lượt 20 câu — giữ ánh chung.</p>
+        </header>
+        <div className="relative min-h-[9.5rem] w-full flex-1 overflow-hidden">
+          <HomeCast />
+        </div>
+        <form
+          className="poster-copy w-full max-w-sm text-center"
+          onSubmit={(e) => {
+            e.preventDefault();
+            onStart(name.trim());
+          }}
+        >
+          <label htmlFor="poster-name" className="block text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-300">
+            Tên trên bảng hạng
+            <input
+              id="poster-name"
+              value={name}
+              maxLength={24}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Người kết nối"
+              className="mt-2 w-full rounded-2xl border border-white/15 bg-slate-950/70 px-4 py-3 text-center text-base font-semibold normal-case tracking-normal text-slate-50 outline-none backdrop-blur-md placeholder:font-normal placeholder:text-slate-500 focus:border-amber-300"
+            />
+          </label>
           <button
-            type="button"
-            onClick={() => onStart(name.trim())}
-            className="rounded-full bg-amber-400 px-6 py-2.5 font-bold text-slate-950 shadow-amber hover:bg-amber-300"
+            type="submit"
+            className="mt-4 w-full rounded-full bg-gradient-to-b from-amber-200 to-amber-400 px-8 py-3.5 text-lg font-extrabold text-slate-950 shadow-[0_0_32px_rgba(251,191,36,0.45)] hover:from-amber-100 hover:to-amber-300"
           >
             Vào phòng tuyến
           </button>
-          <button type="button" onClick={() => setBoard(true)} className="rounded-full border border-cyan-400/50 px-5 py-2.5 font-bold text-cyan-100">
-            Bảng xếp hạng
-          </button>
-          <button type="button" onClick={() => { window.location.hash = "#bang"; }} className="rounded-full border border-amber-300/50 px-5 py-2.5 font-bold text-amber-100">
-            Màn hình lớp
-          </button>
-          {best && <p className="text-sm text-slate-400">Kỷ lục máy này: {best.score} · {best.rank}</p>}
-        </div>
-        <p className="mt-4 text-xs leading-relaxed text-slate-500">
-          Ngân hàng 50 câu về đại đoàn kết dân tộc và đoàn kết quốc tế. Mỗi lượt dùng 20 câu không trùng. Bốn câu tự kiểm ở màn kết là vận dụng của nhóm.
-        </p>
-      </motion.div>
-      {board && <Leaderboard onClose={() => setBoard(false)} />}
+          <div className="mt-3 flex justify-center">
+            <button
+              type="button"
+              onClick={() => {
+                window.location.hash = "#bang";
+              }}
+              className="rounded-full border border-amber-200/40 bg-slate-950/45 px-5 py-2 text-sm font-semibold text-amber-100 backdrop-blur-md hover:border-amber-100"
+            >
+              Màn hình lớp
+            </button>
+          </div>
+          {best && <p className="mt-3 text-[11px] tracking-wide text-slate-400">Kỷ lục máy này: {best.score} · {best.rank}</p>}
+        </form>
+      </div>
     </div>
   );
 }
