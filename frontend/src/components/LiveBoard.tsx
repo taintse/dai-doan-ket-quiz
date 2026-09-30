@@ -57,7 +57,7 @@ export function ProjectorBoard({ onBack }: { onBack: () => void }) {
   }, []);
   const live = rows.slice(0, 10);
   const fallback = local.slice(0, 10);
-  const showingLive = enabled && !note;
+  const showingLive = enabled && (live.length > 0 || !note);
   return (
     <div className="mx-auto flex h-full max-w-5xl flex-col p-6 sm:p-10">
       <div className="flex items-end justify-between gap-4">
@@ -69,7 +69,7 @@ export function ProjectorBoard({ onBack }: { onBack: () => void }) {
           Về trò chơi
         </button>
       </div>
-      {showingLive ? (
+      {showingLive && !note ? (
         <p className="mt-3 text-lg text-emerald-200">Đang cập nhật trực tiếp.</p>
       ) : (
         <p className="mt-3 max-w-3xl text-base leading-relaxed text-amber-100">{note || "Đang hiện bảng trên máy này."}</p>
